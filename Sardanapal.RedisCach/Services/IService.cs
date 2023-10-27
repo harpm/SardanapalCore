@@ -1,12 +1,14 @@
-﻿namespace Sardanapal.RedisCach.Services;
+﻿using Sardanapal.RedisCache.Models;
 
-public interface ICachService<TKey, TModel>
+namespace Sardanapal.RedisCache.Services;
+
+public interface ICacheService<TKey, TModel>
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TModel : new()
 {
-    Task<TModel> Get(TKey Id);
-    Task<IEnumerable<TModel>> GetAll();
-    Task<TKey> Add(TModel Model);
-    Task<bool> Edit(TKey Id, TModel Model);
-    Task<bool> Delete(TKey Id);
+    Task<CacheResponse<TModel>> Get(TKey Id);
+    Task<CacheResponse<IEnumerable<TModel>>> GetAll();
+    Task<CacheResponse<TKey>> Add(TModel Model);
+    Task<CacheResponse<bool>> Edit(TKey Id, TModel Model);
+    Task<CacheResponse<bool>> Delete(TKey Id);
 }

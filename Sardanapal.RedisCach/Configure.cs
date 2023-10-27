@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
-namespace Sardanapal.RedisCach;
+namespace Sardanapal.RedisCache;
 
 public static class Configure
 {
