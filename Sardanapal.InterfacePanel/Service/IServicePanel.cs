@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Sardanapal.DomainModel.Domain;
 using Sardanapal.Ef.Helper;
 using Sardanapal.Identity.Services.Service;
-using Sardanapal.ModelBase.Model.Domain;
-using Sardanapal.ModelBase.Model.Response;
-using Sardanapal.ModelBase.Model.Types;
-using Sardanapal.ModelBase.Model.ViewModel;
+using Sardanapal.ViewModel.Models;
+using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.InterfacePanel.Service
 {

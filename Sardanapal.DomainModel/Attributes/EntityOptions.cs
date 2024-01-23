@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sardanapal.ModelBase.Model.Attributes
+namespace Sardanapal.DomainModel.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class EntityOptions : Attribute

@@ -12,8 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Sardanapal Identity\Sardanapal.Identity.Services\Sardanapal.Identity.Services.csproj" />
+    <ProjectReference Include="..\Sardanapal.DomainModel\Sardanapal.DomainModel.csproj" />
     <ProjectReference Include="..\Sardanapal.Ef\Sardanapal.Ef.csproj" />
-    <ProjectReference Include="..\Sardanapal.ModelBase\Sardanapal.ModelBase.csproj" />
   </ItemGroup>
 
 </Project>

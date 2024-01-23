@@ -7,9 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Ef", "Sardanapal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.InterfacePanel", "Sardanapal.InterfacePanel\Sardanapal.InterfacePanel.csproj", "{1FEC20CE-D9B6-449B-9159-830BAAF0BDA2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.ModelBase", "Sardanapal.ModelBase\Sardanapal.ModelBase.csproj", "{5F4E71F4-06D2-4EED-B104-CD1BFA31D5A7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Share", "Sardanapal.Share\Sardanapal.Share.csproj", "{CA1DCB63-4A03-4D8A-930D-00E348C234B1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.ViewModel", "Sardanapal.ViewModel\Sardanapal.ViewModel.csproj", "{D3F6132C-C14B-448B-AFB7-F07AF421D8FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.RedisCach", "Sardanapal.RedisCach\Sardanapal.RedisCach.csproj", "{C95BFA68-19B6-4982-B5C2-3F538CCE33B8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.DomainModel", "Sardanapal.DomainModel\Sardanapal.DomainModel.csproj", "{1C57EC67-16AE-4330-AA22-8AF659F22F96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +29,22 @@ Global
 		{1FEC20CE-D9B6-449B-9159-830BAAF0BDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FEC20CE-D9B6-449B-9159-830BAAF0BDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FEC20CE-D9B6-449B-9159-830BAAF0BDA2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F4E71F4-06D2-4EED-B104-CD1BFA31D5A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F4E71F4-06D2-4EED-B104-CD1BFA31D5A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F4E71F4-06D2-4EED-B104-CD1BFA31D5A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F4E71F4-06D2-4EED-B104-CD1BFA31D5A7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CA1DCB63-4A03-4D8A-930D-00E348C234B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CA1DCB63-4A03-4D8A-930D-00E348C234B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA1DCB63-4A03-4D8A-930D-00E348C234B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA1DCB63-4A03-4D8A-930D-00E348C234B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3F6132C-C14B-448B-AFB7-F07AF421D8FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3F6132C-C14B-448B-AFB7-F07AF421D8FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3F6132C-C14B-448B-AFB7-F07AF421D8FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3F6132C-C14B-448B-AFB7-F07AF421D8FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C95BFA68-19B6-4982-B5C2-3F538CCE33B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C95BFA68-19B6-4982-B5C2-3F538CCE33B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C95BFA68-19B6-4982-B5C2-3F538CCE33B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C95BFA68-19B6-4982-B5C2-3F538CCE33B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C57EC67-16AE-4330-AA22-8AF659F22F96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C57EC67-16AE-4330-AA22-8AF659F22F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C57EC67-16AE-4330-AA22-8AF659F22F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C57EC67-16AE-4330-AA22-8AF659F22F96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,11 +1,10 @@
-﻿using Sardanapal.ModelBase.Model.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sardanapal.ModelBase.Model.Domain
+namespace Sardanapal.DomainModel.Domain
 {
     public interface IEntityModel<TKey>
         where TKey : IComparable<TKey>, IEquatable<TKey>

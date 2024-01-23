@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sardanapal.ModelBase.Model.ViewModel
+namespace Sardanapal.ViewModel.Models
 {
     public abstract class GridSearchModelVM
     {

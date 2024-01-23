@@ -1,7 +1,6 @@
-﻿using Sardanapal.ModelBase.Model.Types;
-using Sardanapal.Share.Extensions;
+﻿using Sardanapal.Share.Extensions;
 
-namespace Sardanapal.ModelBase.Model.Response
+namespace Sardanapal.ViewModel.Response
 {
     public interface IResponse<TVM>
     {

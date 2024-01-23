@@ -1,12 +1,12 @@
 ﻿using System.Text.Json;
-using Sardanapal.ModelBase.Model.Domain;
-using Sardanapal.ModelBase.Model.Types;
 using StackExchange.Redis;
 using Sardanapal.RedisCache.Models;
+using Sardanapal.DomainModel.Domain;
+using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.RedisCache.Services;
 
-public class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
+public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TModel : IBaseEntityModel<TKey>, new()
 {
@@ -32,12 +32,12 @@ public class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
             if (!string.IsNullOrWhiteSpace(item))
             {
                 var Value = JsonSerializer.Deserialize<TModel>(item);
-                result.Set(CacheStatusCode.Succeeded, Value);
+                result.Set(StatusCode.Succeeded, Value);
             }
         }
         catch (Exception ex)
         {
-            result.Set(CacheStatusCode.Exception, ex);
+            result.Set(StatusCode.Exception, ex);
         }
 
         return result;
@@ -56,16 +56,16 @@ public class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
                 var value = items
                     .Select(x => JsonSerializer.Deserialize<TModel>(x.Value))
                     .AsEnumerable();
-                result.Set(CacheStatusCode.Succeeded, value!);
+                result.Set(StatusCode.Succeeded, value!);
             }
             else
             {
-                result.Set(CacheStatusCode.NotExist);
+                result.Set(StatusCode.NotExists);
             }
         }
         catch (Exception ex)
         {
-            result.Set(CacheStatusCode.Exception, ex);
+            result.Set(StatusCode.Exception, ex);
         }
 
         return result;
@@ -78,26 +78,26 @@ public class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         try
         {
             var old = await Get(Model.Id);
-            if (old.Status != CacheStatusCode.Succeeded)
+            if (old.Status != StatusCode.Succeeded)
             {
                 var added = await Db.HashSetAsync(new RedisKey(Key)
                     , new RedisValue(Model.Id.ToString())
                     , new RedisValue(JsonSerializer.Serialize(Model)));
 
                 if (added)
-                    result.Set(CacheStatusCode.Succeeded, Model.Id);
+                    result.Set(StatusCode.Succeeded, Model.Id);
                 else
-                    result.Set(CacheStatusCode.Failed);
+                    result.Set(StatusCode.Failed);
             }
             else
             {
-                result.Set(CacheStatusCode.Failed);
+                result.Set(StatusCode.Failed);
                 result.Messages = new[] { "The Item has been already added!" };
             }
         }
         catch (Exception ex)
         {
-            result.Set(CacheStatusCode.Exception, ex);
+            result.Set(StatusCode.Exception, ex);
         }
 
         return result;
@@ -109,22 +109,22 @@ public class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         try
         {
             var old = await Get(Model.Id);
-            if (old.Status == CacheStatusCode.Succeeded)
+            if (old.Status == StatusCode.Succeeded)
             {
                 var value = await Db.HashSetAsync(new RedisKey(Key)
                     , new RedisValue(Id.ToString())
                     , new RedisValue(JsonSerializer.Serialize(Model)));
 
-                result.Set(CacheStatusCode.Succeeded, value);
+                result.Set(StatusCode.Succeeded, value);
             }
             else
             {
-                result.Set(CacheStatusCode.NotExist);
+                result.Set(StatusCode.NotExists);
             }
         }
         catch (Exception ex)
         {
-            result.Set(CacheStatusCode.Exception, ex);
+            result.Set(StatusCode.Exception, ex);
         }
 
         return result;
@@ -137,19 +137,19 @@ public class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         try
         {
             var old = await Get(Id);
-            if (old.Status == CacheStatusCode.Succeeded)
+            if (old.Status == StatusCode.Succeeded)
             {
                 var value = await Db.HashDeleteAsync(new RedisKey(Key), new RedisValue(Id.ToString()));
-                result.Set(CacheStatusCode.Succeeded, value);
+                result.Set(StatusCode.Succeeded, value);
             }
             else
             {
-                result.Set(CacheStatusCode.NotExist);
+                result.Set(StatusCode.NotExists);
             }
         }
         catch (Exception ex)
         {
-            result.Set(CacheStatusCode.Exception, ex);
+            result.Set(StatusCode.Exception, ex);
         }
 
         return result;

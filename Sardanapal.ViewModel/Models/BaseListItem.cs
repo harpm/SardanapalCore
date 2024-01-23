@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sardanapal.ModelBase.Model.ViewModel
+namespace Sardanapal.ViewModel.Models
 {
     public abstract class BaseListItem<TKey> where TKey : IEquatable<TKey>, IComparable<TKey>
     {

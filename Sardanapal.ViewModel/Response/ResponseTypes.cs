@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sardanapal.ModelBase.Model.Types
+namespace Sardanapal.ViewModel.Response
 {
     public enum OperationType : byte
     {

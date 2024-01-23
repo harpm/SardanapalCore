@@ -1,12 +1,13 @@
-﻿using Sardanapal.ModelBase.Model.Attributes;
-using Sardanapal.ModelBase.Model.ViewModel;
+﻿using Sardanapal.DomainModel.Attributes;
+using Sardanapal.ViewModel.Models;
 using System.Reflection;
 
 namespace Sardanapal.Ef.Helper
 {
     public static class QueryHelper
     {
-        public static IQueryable<TEntity> Search<TEntity>(IQueryable<TEntity> query, GridSearchModelVM searchModel = null) where TEntity : class
+        public static IQueryable<TEntity> Search<TEntity>(IQueryable<TEntity> query, GridSearchModelVM searchModel = null)
+            where TEntity : class
         {
             if (searchModel == null)
                 return query;

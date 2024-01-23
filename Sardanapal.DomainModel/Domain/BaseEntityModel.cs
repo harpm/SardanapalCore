@@ -1,7 +1,6 @@
-﻿using Sardanapal.ModelBase.Model.Types;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Sardanapal.ModelBase.Model.Domain
+namespace Sardanapal.DomainModel.Domain
 {
     public interface IDomainModel
     {

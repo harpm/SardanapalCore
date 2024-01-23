@@ -11,7 +11,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Sardanapal.ModelBase\Sardanapal.ModelBase.csproj" />
+      <ProjectReference Include="..\Sardanapal.DomainModel\Sardanapal.DomainModel.csproj" />
+      <ProjectReference Include="..\Sardanapal.Share\Sardanapal.Share.csproj" />
+      <ProjectReference Include="..\Sardanapal.ViewModel\Sardanapal.ViewModel.csproj" />
     </ItemGroup>
 
 
