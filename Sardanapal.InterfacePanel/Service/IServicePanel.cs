@@ -3,7 +3,6 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Sardanapal.DomainModel.Domain;
 using Sardanapal.Ef.Helper;
-using Sardanapal.Identity.Services.Service;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 

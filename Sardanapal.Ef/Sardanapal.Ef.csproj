@@ -4,6 +4,10 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
+    <Company>Sardanapal</Company>
+    <Authors>harpm</Authors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,11 +21,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Sardanapal.DomainModel\Sardanapal.DomainModel.csproj" />
-    <ProjectReference Include="..\Sardanapal.ViewModel\Sardanapal.ViewModel.csproj" />
+    <PackageReference Include="Sardanapal.DomainModel" Version="0.1.0" />
+    <PackageReference Include="Sardanapal.ViewModel" Version="0.1.0" />
   </ItemGroup>
 
 </Project>
