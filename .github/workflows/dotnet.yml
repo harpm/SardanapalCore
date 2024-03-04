@@ -17,6 +17,10 @@ jobs:
   update_share:
   
     runs-on: ubuntu-latest
+    
+    concurrency:
+      group: share
+      cancel-in-progress: true
   
     steps:
     - uses: actions/checkout@v3
@@ -40,6 +44,10 @@ jobs:
   
     runs-on: ubuntu-latest
   
+    concurrency:
+      group: view-model
+      cancel-in-progress: true
+      
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -61,6 +69,10 @@ jobs:
   update_domain_model:
   
     runs-on: ubuntu-latest
+    
+    concurrency:
+      group: domain-model
+      cancel-in-progress: true
   
     steps:
     - uses: actions/checkout@v3
@@ -83,6 +95,10 @@ jobs:
   update_redis_cach:
   
     runs-on: ubuntu-latest
+    
+    concurrency:
+      group: redis-cach
+      cancel-in-progress: true
   
     steps:
     - uses: actions/checkout@v3
@@ -105,6 +121,10 @@ jobs:
   update_ef:
   
     runs-on: ubuntu-latest
+    
+    concurrency:
+      group: ef
+      cancel-in-progress: true
   
     steps:
     - uses: actions/checkout@v3
@@ -129,6 +149,10 @@ jobs:
   update_interface_panel:
   
     runs-on: ubuntu-latest
+    
+    concurrency:
+      group: interface-panel
+      cancel-in-progress: true
   
     steps:
     - uses: actions/checkout@v3
