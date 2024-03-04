@@ -22,6 +22,8 @@ jobs:
         dotnet-version: 6.0.x
     - name: Clean the build files
       run: dotnet clean
+    - name: Add nuget source
+      run: dotnet nuget add source --username harpm --password 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 --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
