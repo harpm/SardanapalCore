@@ -60,7 +60,6 @@ jobs:
     - name: Clean the build files
       run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/Sardanapal.ViewModel.csproj
     - name: Restore dependencies
-    - name: Restore dependencies
       run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/Sardanapal.ViewModel.csproj
     - name: Build
       run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/Sardanapal.ViewModel.csproj --no-restore --configuration release
@@ -118,6 +117,8 @@ jobs:
       with:
         dotnet-version: 7.0.x
     
+    - name: Clean the build files
+      run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef/Sardanapal.Ef.csproj
     - name: Restore dependencies
       run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef/Sardanapal.Ef.csproj
     - name: Build
