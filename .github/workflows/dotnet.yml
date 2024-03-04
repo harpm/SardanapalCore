@@ -10,7 +10,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  update_packages:
+  build:
 
     runs-on: ubuntu-latest
 
@@ -19,7 +19,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 7.0.x
     - name: Clean the build files
       run: dotnet clean
     - name: Add nuget source
@@ -28,15 +28,84 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration release
+      
+  update_share:
+  
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
     - name: Push package Share
-      run: dotnet nuget push .\Sardanapal.Share\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push .\\Sardanapal.Share\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      
+  update_view_model:
+  
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
     - name: Push package ViewModel
-      run: dotnet nuget push .\Sardanapal.ViewModel\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push .\\Sardanapal.ViewModel\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+    
+  update_domain_model:
+  
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    
     - name: Push package DomainModel
-      run: dotnet nuget push .\Sardanapal.DomainModel\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push .\\Sardanapal.DomainModel\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+  
+  update_redis_cach:
+  
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    
     - name: Push package RedisCach
-      run: dotnet nuget push .\Sardanapal.RedisCach\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push .\\Sardanapal.RedisCach\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      
+  update_ef:
+  
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
     - name: Push package Ef
-      run: dotnet nuget push .\Sardanapal.Ef\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push .\\Sardanapal.Ef\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+  
+  update_interface_panel:
+  
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+        
     - name: Push package InterfacePanel
-      run: dotnet nuget push .\Sardanapal.InterfacePanel\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push .\\Sardanapal.InterfacePanel\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
