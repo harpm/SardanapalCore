@@ -20,8 +20,6 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-    - name: Clean the build files
-      run: dotnet clean
     - name: Add nuget source
       run: dotnet nuget add source --username harpm --password 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 --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
     - name: Restore dependencies
@@ -39,8 +37,14 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
+    - name: Clean the build files
+      run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Share/Sardanapal.Share.csproj
+    - name: Restore dependencies
+      run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Share/Sardanapal.Share.csproj
+    - name: Build
+      run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Share/Sardanapal.Share.csproj --no-restore --configuration release
     - name: Push package Share
-      run: dotnet nuget push .\\Sardanapal.Share\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Share/bin/Release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
       
   update_view_model:
   
@@ -52,8 +56,16 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
+    
+    - name: Clean the build files
+      run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/Sardanapal.ViewModel.csproj
+    - name: Restore dependencies
+    - name: Restore dependencies
+      run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/Sardanapal.ViewModel.csproj
+    - name: Build
+      run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/Sardanapal.ViewModel.csproj --no-restore --configuration release
     - name: Push package ViewModel
-      run: dotnet nuget push .\\Sardanapal.ViewModel\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/bin/Release/*.nupkg*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
     
   update_domain_model:
   
@@ -66,8 +78,14 @@ jobs:
       with:
         dotnet-version: 7.0.x
     
+    - name: Clean the build files
+      run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/Sardanapal.DomainModel.csproj
+    - name: Restore dependencies
+      run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/Sardanapal.DomainModel.csproj
+    - name: Build
+      run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/Sardanapal.DomainModel.csproj --no-restore --configuration release
     - name: Push package DomainModel
-      run: dotnet nuget push .\\Sardanapal.DomainModel\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/bin/Release/*.nupkg*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
   
   update_redis_cach:
   
@@ -80,8 +98,14 @@ jobs:
       with:
         dotnet-version: 7.0.x
     
+    - name: Clean the build files
+      run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach/Sardanapal.RedisCach.csproj
+    - name: Restore dependencies
+      run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach/Sardanapal.RedisCach.csproj
+    - name: Build
+      run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach/Sardanapal.RedisCach.csproj --no-restore --configuration release
     - name: Push package RedisCach
-      run: dotnet nuget push .\\Sardanapal.RedisCach\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach/bin/Release/*.nupkg*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
       
   update_ef:
   
@@ -93,8 +117,15 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
+    
+    - name: Restore dependencies
+      run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef/Sardanapal.Ef.csproj
+    - name: Build
+      run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef/Sardanapal.Ef.csproj --no-restore --configuration release
+    - name: Clean the build files
+      run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef/Sardanapal.Ef.csproj
     - name: Push package Ef
-      run: dotnet nuget push .\\Sardanapal.Ef\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef/bin/Release/*.nupkg*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
   
   update_interface_panel:
   
@@ -106,6 +137,12 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-        
+    
+    - name: Clean the build files
+      run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.InterfacePanel/Sardanapal.InterfacePanel.csproj
+    - name: Restore dependencies
+      run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.InterfacePanel/Sardanapal.InterfacePanel.csproj
+    - name: Build
+      run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.InterfacePanel/Sardanapal.InterfacePanel.csproj --no-restore --configuration release
     - name: Push package InterfacePanel
-      run: dotnet nuget push .\\Sardanapal.InterfacePanel\\bin\\Release\\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+      run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.InterfacePanel/bin/Release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
