@@ -54,7 +54,7 @@ jobs:
       - name: Build
         run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/Sardanapal.ViewModel.csproj --no-restore --configuration release
       - name: Push package ViewModel
-        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/bin/release/*.nupkg*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
+        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
 
   update_domain_model:
     runs-on: ubuntu-latest
@@ -75,7 +75,7 @@ jobs:
       - name: Build
         run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/Sardanapal.DomainModel.csproj --no-restore --configuration release
       - name: Push package DomainModel
-        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/bin/release/*.nupkg*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
+        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
 
   update_redis_cach:
     runs-on: ubuntu-latest
@@ -96,7 +96,7 @@ jobs:
       - name: Build
         run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach/Sardanapal.RedisCach.csproj --no-restore --configuration release
       - name: Push package RedisCach
-        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach/bin/release/*.nupkg*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
+        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
 
   update_ef:
     runs-on: ubuntu-latest
@@ -119,7 +119,7 @@ jobs:
       - name: Clean the build files
         run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef/Sardanapal.Ef.csproj
       - name: Push package Ef
-        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef/bin/release/*.nupkg*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
+        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
 
   update_interface_panel:
     runs-on: ubuntu-latest
