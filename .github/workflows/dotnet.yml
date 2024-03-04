@@ -1,0 +1,40 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  update_packages:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Clean the build files
+      run: dotnet clean
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore --configuration release
+    - name: Push package Share
+      run: dotnet nuget push .\Sardanapal.Share\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+    - name: Push package ViewModel
+      run: dotnet nuget push .\Sardanapal.ViewModel\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+    - name: Push package DomainModel
+      run: dotnet nuget push .\Sardanapal.DomainModel\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+    - name: Push package RedisCach
+      run: dotnet nuget push .\Sardanapal.RedisCach\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+    - name: Push package Ef
+      run: dotnet nuget push .\Sardanapal.Ef\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
+    - name: Push package InterfacePanel
+      run: dotnet nuget push .\Sardanapal.InterfacePanel\bin\Release\*.nupkg -s https://nuget.pkg.github.com/harpm/index.json
