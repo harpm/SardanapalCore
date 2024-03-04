@@ -9,18 +9,10 @@ on:
   pull_request:
     branches: [ "master" ]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:  
   update_share:
   
     runs-on: ubuntu-latest
-    
-    concurrency:
-      group: build
-      cancel-in-progress: true
   
     steps:
     - uses: actions/checkout@v3
@@ -69,10 +61,7 @@ jobs:
   update_domain_model:
   
     runs-on: ubuntu-latest
-    
-    concurrency:
-      group: build
-      cancel-in-progress: true
+
   
     steps:
     - uses: actions/checkout@v3
@@ -95,10 +84,6 @@ jobs:
   update_redis_cach:
   
     runs-on: ubuntu-latest
-    
-    concurrency:
-      group: build
-      cancel-in-progress: true
   
     steps:
     - uses: actions/checkout@v3
@@ -121,10 +106,6 @@ jobs:
   update_ef:
   
     runs-on: ubuntu-latest
-    
-    concurrency:
-      group: build
-      cancel-in-progress: true
   
     steps:
     - uses: actions/checkout@v3
@@ -149,10 +130,6 @@ jobs:
   update_interface_panel:
   
     runs-on: ubuntu-latest
-    
-    concurrency:
-      group: build
-      cancel-in-progress: true
   
     steps:
     - uses: actions/checkout@v3

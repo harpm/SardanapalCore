@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Sardanapal.ModelBase.UnitOfWork
+namespace Sardanapal.DomainModel.UnitOfWork
 {
     public interface IUnitOfWork
     {

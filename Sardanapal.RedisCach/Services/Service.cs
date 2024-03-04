@@ -12,11 +12,13 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
 {
     protected IConnectionMultiplexer ConnMultiplexer { get; set; }
     protected IDatabase Db { get; set; }
+    protected int expireTime;
 
     protected virtual string Key => "key";
 
-    public CacheService(IConnectionMultiplexer connectionMultiplexer)
+    public CacheService(IConnectionMultiplexer connectionMultiplexer, int expireTime = 0)
     {
+        this.expireTime = expireTime;
         ConnMultiplexer = connectionMultiplexer;
         Db = ConnMultiplexer.GetDatabase();
     }
@@ -27,7 +29,9 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
 
         try
         {
-            string item = await Db.HashGetAsync(new RedisKey(Key), new RedisValue(Id.ToString()));
+            var rKey = new RedisKey(Key);
+
+            string item = await Db.HashGetAsync(rKey, new RedisValue(Id.ToString()));
 
             if (!string.IsNullOrWhiteSpace(item))
             {
@@ -80,11 +84,19 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
             var old = await Get(Model.Id);
             if (old.Status != StatusCode.Succeeded)
             {
-                var added = await Db.HashSetAsync(new RedisKey(Key)
+                var rKey = new RedisKey(Key);
+                var added = await Db.HashSetAsync(rKey
                     , new RedisValue(Model.Id.ToString())
                     , new RedisValue(JsonSerializer.Serialize(Model)));
 
-                if (added)
+                bool setExpiration = true;
+
+                if (this.expireTime > 0)
+                {
+                    setExpiration = await Db.KeyExpireAsync(rKey, DateTime.UtcNow.AddMinutes(this.expireTime));
+                }
+
+                if (added && setExpiration)
                     result.Set(StatusCode.Succeeded, Model.Id);
                 else
                     result.Set(StatusCode.Failed);
