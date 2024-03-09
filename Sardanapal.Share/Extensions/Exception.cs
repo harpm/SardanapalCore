@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
+namespace Sardanapal.Share.Extensions;
 
-namespace Sardanapal.Share.Extensions
+public static class Exceptions
 {
-    public static class Exceptions
+    public static string[] GetHirachicalMessages(this Exception exception)
     {
-        public static string[] GetHirachicalMessages(this Exception exception)
+        List<string> result = new List<string>();
+
+        if (exception != null)
         {
-            List<string> result = new List<string>();
+            result.Add(exception.Message);
 
-            if (exception != null)
+            if (exception.InnerException != null)
             {
-                result.Add(exception.Message);
-
-                if (exception.InnerException != null)
-                {
-                    string[] InnerResult = exception.InnerException.GetHirachicalMessages();
-                    result.AddRange(InnerResult);
-                }
+                string[] InnerResult = exception.InnerException.GetHirachicalMessages();
+                result.AddRange(InnerResult);
             }
-
-            return result.ToArray();
         }
+
+        return result.ToArray();
     }
 }

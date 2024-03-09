@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+namespace Sardanapal.ViewModel.Models;
 
-namespace Sardanapal.ViewModel.Models
+public abstract class GridSearchModelVM
 {
-    public abstract class GridSearchModelVM
-    {
-        public string SortId { get; set; }
-        public bool SortAsccending { get; set; } = true;
-        public int PageIndex { get; set; }
-        public int PageSize { get; set; }
-        public int TotalCount { get; set; }
-    }
+    public string SortId { get; set; }
+    public bool SortAsccending { get; set; } = true;
+    public int PageIndex { get; set; }
+    public int PageSize { get; set; }
+    public int TotalCount { get; set; }
+}
 
-    public class GridSearchModelVM<TSearch> : GridSearchModelVM
-        where TSearch : class
-    {
-        public TSearch? Fields { get; set; }
-    }
+public class GridSearchModelVM<TSearchVM> : GridSearchModelVM
+    where TSearchVM : class
+{
+    public TSearchVM? Fields { get; set; }
 }

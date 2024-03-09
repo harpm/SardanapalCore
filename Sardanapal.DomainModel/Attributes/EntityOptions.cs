@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+namespace Sardanapal.DomainModel.Attributes;
 
-namespace Sardanapal.DomainModel.Attributes
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public sealed class EntityOptions : Attribute
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class EntityOptions : Attribute
-    {
-        public string Title { get; set; }
-        public string OrderBy { get; set; }
+    public string Title { get; set; }
+    public string OrderBy { get; set; }
 
-        public EntityOptions(string Title = null, string OrderBy = null)
-        {
-            this.Title = Title;
-            this.OrderBy = OrderBy;
-        }
+    public EntityOptions(string Title = null, string OrderBy = null)
+    {
+        this.Title = Title;
+        this.OrderBy = OrderBy;
     }
 }

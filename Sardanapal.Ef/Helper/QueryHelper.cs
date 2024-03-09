@@ -6,7 +6,7 @@ namespace Sardanapal.Ef.Helper
 {
     public static class QueryHelper
     {
-        public static IQueryable<TEntity> Search<TEntity>(IQueryable<TEntity> query, GridSearchModelVM searchModel = null)
+        public static IQueryable<TEntity> Search<TEntity>(this IQueryable<TEntity> query, GridSearchModelVM searchModel = null)
             where TEntity : class
         {
             if (searchModel == null)

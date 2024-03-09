@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+namespace Sardanapal.ViewModel.Models;
 
-namespace Sardanapal.ViewModel.Models
+public class SelectOptionVM<TKey, TValue>
 {
-    public class SelectOptionVM<TKey, TValue>
-    {
-        public TKey Key { get; set; }
-        public TValue Value { get; set; }
-    }
+    public TKey Key { get; set; }
+    public TValue Value { get; set; }
 }

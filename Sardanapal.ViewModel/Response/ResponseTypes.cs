@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+namespace Sardanapal.ViewModel.Response;
 
-namespace Sardanapal.ViewModel.Response
+public enum OperationType : byte
 {
-    public enum OperationType : byte
-    {
-        Fetch = 0,
-        Add = 1,
-        Edit = 2,
-        Delete = 3,
-        Function = 4
-    }
+    Fetch = 0,
+    Add = 1,
+    Edit = 2,
+    Delete = 3,
+    Function = 4
+}
 
-    public enum StatusCode : byte
-    {
-        Succeeded = 0,
-        Failed = 1,
-        Canceled = 3,
-        NotExists = 4,
-        Exception = 5
-    }
+public enum StatusCode : byte
+{
+    Succeeded = 0,
+    Failed = 1,
+    Canceled = 3,
+    NotExists = 4,
+    Exception = 5
 }

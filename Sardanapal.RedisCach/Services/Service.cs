@@ -14,7 +14,7 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
     protected IDatabase Db { get; set; }
     protected int expireTime;
 
-    protected virtual string Key => "key";
+    protected abstract string Key { get; }
 
     public CacheService(IConnectionMultiplexer connectionMultiplexer, int expireTime = 0)
     {

@@ -1,14 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Sardanapal.DomainModel.Domain;
 
-namespace Sardanapal.Ef.Helper
+namespace Sardanapal.Ef.Helper;
+
+public abstract class FluentModelConfig<T>
+    where T : class, IDomainModel
 {
-    public abstract class FluentModelConfig<T> where T : class
-    {
-        public abstract void OnModelBuild(EntityTypeBuilder<T> entity);
-    }
+    public abstract void OnModelBuild(EntityTypeBuilder<T> entity);
 }

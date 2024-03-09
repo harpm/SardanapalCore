@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sardanapal.ViewModel.Models
+namespace Sardanapal.ViewModel.Models;
+
+public abstract class BaseListItem<TKey> where TKey : IEquatable<TKey>, IComparable<TKey>
 {
-    public abstract class BaseListItem<TKey> where TKey : IEquatable<TKey>, IComparable<TKey>
-    {
-        [NotMapped]
-        public TKey Id { get; set; }
-    }
+    [NotMapped]
+    public TKey Id { get; set; }
 }
