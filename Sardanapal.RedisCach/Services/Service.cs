@@ -5,9 +5,10 @@ using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.RedisCache.Services;
 
-public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
-    where TKey : IEquatable<TKey>, IComparable<TKey>
-    where TModel : IBaseEntityModel<TKey>, new()
+public abstract class CacheService<TModel, TNewVM, TEditableVM> : ICacheService<TModel, TNewVM, TEditableVM>
+    where TModel : IBaseEntityModel<Guid>, new()
+    where TNewVM : class
+    where TEditableVM : class
 {
     protected IConnectionMultiplexer ConnMultiplexer { get; set; }
     protected IDatabase Db { get; set; }
@@ -22,7 +23,7 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         Db = ConnMultiplexer.GetDatabase();
     }
 
-    public virtual async Task<IResponse<TModel>> Get(TKey Id)
+    public virtual async Task<IResponse<TModel>> Get(Guid Id)
     {
         var result = new Response<TModel>(this.GetType().Name, OperationType.Fetch);
 
@@ -74,37 +75,30 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         return result;
     }
 
-    public virtual async Task<IResponse<TKey>> Add(TModel Model)
+    public virtual async Task<IResponse<Guid>> Add(TNewVM Model)
     {
-        var result = new Response<TKey>(this.GetType().Name, OperationType.Add);
+        var result = new Response<Guid>(this.GetType().Name, OperationType.Add);
 
         try
         {
-            var old = await Get(Model.Id);
-            if (old.StatusCode != StatusCode.Succeeded)
+            var newId = Guid.NewGuid();
+            var rKey = new RedisKey(Key);
+            var added = await Db.HashSetAsync(rKey
+                , new RedisValue(newId.ToString())
+                , new RedisValue(JsonSerializer.Serialize(Model)));
+
+            bool setExpiration = true;
+
+            if (this.expireTime > 0)
             {
-                var rKey = new RedisKey(Key);
-                var added = await Db.HashSetAsync(rKey
-                    , new RedisValue(Model.Id.ToString())
-                    , new RedisValue(JsonSerializer.Serialize(Model)));
-
-                bool setExpiration = true;
-
-                if (this.expireTime > 0)
-                {
-                    setExpiration = await Db.KeyExpireAsync(rKey, DateTime.UtcNow.AddMinutes(this.expireTime));
-                }
-
-                if (added && setExpiration)
-                    result.Set(StatusCode.Succeeded, Model.Id);
-                else
-                    result.Set(StatusCode.Failed);
+                setExpiration = await Db.KeyExpireAsync(rKey, DateTime.UtcNow.AddMinutes(this.expireTime));
             }
+
+            if (added && setExpiration)
+                result.Set(StatusCode.Succeeded, newId);
             else
-            {
                 result.Set(StatusCode.Failed);
-                result.DeveloperMessage = new[] { "The Item has been already added!" };
-            }
+
         }
         catch (Exception ex)
         {
@@ -114,12 +108,12 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         return result;
     }
 
-    public virtual async Task<IResponse<bool>> Edit(TKey Id, TModel Model)
+    public virtual async Task<IResponse<bool>> Edit(Guid Id, TEditableVM Model)
     {
         var result = new Response<bool>(this.GetType().Name, OperationType.Edit);
         try
         {
-            var old = await Get(Model.Id);
+            var old = await Get(Id);
             if (old.StatusCode == StatusCode.Succeeded)
             {
                 var value = await Db.HashSetAsync(new RedisKey(Key)
@@ -141,7 +135,7 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         return result;
     }
 
-    public virtual async Task<IResponse<bool>> Delete(TKey Id)
+    public virtual async Task<IResponse<bool>> Delete(Guid Id)
     {
         var result = new Response<bool>(this.GetType().Name, OperationType.Delete);
 
