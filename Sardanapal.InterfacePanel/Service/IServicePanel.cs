@@ -15,13 +15,13 @@ public interface _IServicePanel<TKey, TListItemVM, TSearchVM, TVM, TNewVM, TEdit
     where TNewVM : class
     where TEditableVM : class
 {
-    Task<Response<TVM>> Get(TKey Id);
-    Task<Response<GridVM<T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TSearchVM> SearchModel = null) where T : class;
-    Task<Response<TKey>> Add(TNewVM Model);
-    Task<Response<TEditableVM>> GetEditable(TKey Id);
-    Task<Response> Edit(TKey Id, TEditableVM Model);
-    Task<Response> Delete(TKey Id);
-    Task<Response<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TSearchVM> SearchModel = null);
+    Task<IResponse<TVM>> Get(TKey Id);
+    Task<IResponse<GridVM<T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TSearchVM> SearchModel = null) where T : class;
+    Task<IResponse<TKey>> Add(TNewVM Model);
+    Task<IResponse<TEditableVM>> GetEditable(TKey Id);
+    Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model);
+    Task<IResponse<bool>> Delete(TKey Id);
+    Task<IResponse<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TSearchVM> SearchModel = null);
 }
 
 public abstract class _ServicePanel<TContext, TKey, TEntity, TListItemVM, TSearchVM, TVM, TNewVM, TEditableVM> : _IServicePanel<TKey, TListItemVM, TSearchVM, TVM, TNewVM, TEditableVM>
@@ -60,7 +60,7 @@ public abstract class _ServicePanel<TContext, TKey, TEntity, TListItemVM, TSearc
         return query;
     }
 
-    public virtual async Task<Response<TVM>> Get(TKey Id)
+    public virtual async Task<IResponse<TVM>> Get(TKey Id)
     {
         var Result = new Response<TVM>(ServiceName, OperationType.Fetch);
 
@@ -88,7 +88,7 @@ public abstract class _ServicePanel<TContext, TKey, TEntity, TListItemVM, TSearc
         return Result;
     }
 
-    public virtual async Task<Response<GridVM<T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TSearchVM> SearchModel = null) where T : class
+    public virtual async Task<IResponse<GridVM<T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TSearchVM> SearchModel = null) where T : class
     {
         var Result = new Response<GridVM<T, TSearchVM>>(ServiceName, OperationType.Fetch);
         var ResultValue = new GridVM<T, TSearchVM>(SearchModel);
@@ -118,7 +118,7 @@ public abstract class _ServicePanel<TContext, TKey, TEntity, TListItemVM, TSearc
         return Result;
     }
 
-    public virtual async Task<Response<TKey>> Add(TNewVM Model)
+    public virtual async Task<IResponse<TKey>> Add(TNewVM Model)
     {
         var Result = new Response<TKey>(ServiceName, OperationType.Add);
 
@@ -138,7 +138,7 @@ public abstract class _ServicePanel<TContext, TKey, TEntity, TListItemVM, TSearc
         return Result;
     }
 
-    public virtual async Task<Response<TEditableVM>> GetEditable(TKey Id)
+    public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey Id)
     {
         var Result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
 
@@ -166,7 +166,7 @@ public abstract class _ServicePanel<TContext, TKey, TEntity, TListItemVM, TSearc
         return Result;
     }
 
-    public virtual async Task<Response> Edit(TKey Id, TEditableVM Model)
+    public virtual async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model)
     {
         var Result = new Response(ServiceName, OperationType.Edit);
 
@@ -197,7 +197,7 @@ public abstract class _ServicePanel<TContext, TKey, TEntity, TListItemVM, TSearc
         return Result;
     }
 
-    public virtual async Task<Response> Delete(TKey Id)
+    public virtual async Task<IResponse<bool>> Delete(TKey Id)
     {
         var Result = new Response(ServiceName, OperationType.Delete);
 
@@ -225,7 +225,7 @@ public abstract class _ServicePanel<TContext, TKey, TEntity, TListItemVM, TSearc
     }
 
     // Needs Review
-    public async Task<Response<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TSearchVM> SearchModel = null)
+    public async Task<IResponse<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TSearchVM> SearchModel = null)
     {
         var Result = new Response<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>(ServiceName, OperationType.Fetch);
         var ResultValue = new GridVM<SelectOptionVM<TKey, object>, TSearchVM>(SearchModel);
