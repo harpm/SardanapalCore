@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using StackExchange.Redis;
-using Sardanapal.RedisCache.Models;
 using Sardanapal.DomainModel.Domain;
 using Sardanapal.ViewModel.Response;
 
@@ -23,9 +22,9 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         Db = ConnMultiplexer.GetDatabase();
     }
 
-    public virtual async Task<CacheResponse<TModel>> Get(TKey Id)
+    public virtual async Task<IResponse<TModel>> Get(TKey Id)
     {
-        var result = new CacheResponse<TModel>(this.GetType().Name, OperationType.Fetch);
+        var result = new Response<TModel>(this.GetType().Name, OperationType.Fetch);
 
         try
         {
@@ -47,9 +46,9 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         return result;
     }
 
-    public virtual async Task<CacheResponse<IEnumerable<TModel>>> GetAll()
+    public virtual async Task<IResponse<IEnumerable<TModel>>> GetAll()
     {
-        var result = new CacheResponse<IEnumerable<TModel>>(this.GetType().Name, OperationType.Fetch);
+        var result = new Response<IEnumerable<TModel>>(this.GetType().Name, OperationType.Fetch);
 
         try
         {
@@ -75,14 +74,14 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         return result;
     }
 
-    public virtual async Task<CacheResponse<TKey>> Add(TModel Model)
+    public virtual async Task<IResponse<TKey>> Add(TModel Model)
     {
-        var result = new CacheResponse<TKey>(this.GetType().Name, OperationType.Add);
+        var result = new Response<TKey>(this.GetType().Name, OperationType.Add);
 
         try
         {
             var old = await Get(Model.Id);
-            if (old.Status != StatusCode.Succeeded)
+            if (old.StatusCode != StatusCode.Succeeded)
             {
                 var rKey = new RedisKey(Key);
                 var added = await Db.HashSetAsync(rKey
@@ -104,7 +103,7 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
             else
             {
                 result.Set(StatusCode.Failed);
-                result.Messages = new[] { "The Item has been already added!" };
+                result.DeveloperMessage = new[] { "The Item has been already added!" };
             }
         }
         catch (Exception ex)
@@ -115,13 +114,13 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         return result;
     }
 
-    public virtual async Task<CacheResponse<bool>> Edit(TKey Id, TModel Model)
+    public virtual async Task<IResponse<bool>> Edit(TKey Id, TModel Model)
     {
-        var result = new CacheResponse<bool>(this.GetType().Name, OperationType.Edit);
+        var result = new Response<bool>(this.GetType().Name, OperationType.Edit);
         try
         {
             var old = await Get(Model.Id);
-            if (old.Status == StatusCode.Succeeded)
+            if (old.StatusCode == StatusCode.Succeeded)
             {
                 var value = await Db.HashSetAsync(new RedisKey(Key)
                     , new RedisValue(Id.ToString())
@@ -142,14 +141,14 @@ public abstract class CacheService<TKey, TModel> : ICacheService<TKey, TModel>
         return result;
     }
 
-    public virtual async Task<CacheResponse<bool>> Delete(TKey Id)
+    public virtual async Task<IResponse<bool>> Delete(TKey Id)
     {
-        var result = new CacheResponse<bool>(this.GetType().Name, OperationType.Delete);
+        var result = new Response<bool>(this.GetType().Name, OperationType.Delete);
 
         try
         {
             var old = await Get(Id);
-            if (old.Status == StatusCode.Succeeded)
+            if (old.StatusCode == StatusCode.Succeeded)
             {
                 var value = await Db.HashDeleteAsync(new RedisKey(Key), new RedisValue(Id.ToString()));
                 result.Set(StatusCode.Succeeded, value);
