@@ -20,6 +20,8 @@ public interface IResponse<TValue> : IResponse
     TValue Data { get; set; }
     void Set(StatusCode statusCode, TValue data);
     IResponse<TValue> Create(Func<IResponse<TValue>> body);
+    Task<IResponse<TValue>> Create(Func<Task<IResponse<TValue>>> body);
+
 }
 
 public class Response<TValue> : IResponse<TValue>
@@ -85,6 +87,22 @@ public class Response<TValue> : IResponse<TValue>
         try
         {
             result = body();
+        }
+        catch (Exception ex)
+        {
+            this.Set(StatusCode.Exception, ex);
+        }
+
+        return result;
+    }
+
+    public async Task<IResponse<TValue>> Create(Func<Task<IResponse<TValue>>> body)
+    {
+        var result = this as IResponse<TValue>;
+
+        try
+        {
+            result = await body();
         }
         catch (Exception ex)
         {
