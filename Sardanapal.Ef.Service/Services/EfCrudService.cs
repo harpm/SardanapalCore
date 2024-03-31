@@ -49,7 +49,7 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
     {
         var Result = new Response<TVM>(ServiceName, OperationType.Fetch);
 
-        try
+        return await Result.Create(async () =>
         {
             var Item = await GetCurrentService().AsNoTracking()
                 .Where(x => x.Id.Equals(Id))
@@ -64,22 +64,19 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             {
                 Result.Set(StatusCode.NotExists);
             }
-        }
-        catch (Exception ex)
-        {
-            Result.Set(StatusCode.Exception, ex);
-        }
 
-        return Result;
+            return Result;
+        });
     }
 
     public virtual async Task<IResponse<GridVM<T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TSearchVM> SearchModel = null) where T : class
     {
         var Result = new Response<GridVM<T, TSearchVM>>(ServiceName, OperationType.Fetch);
-        var ResultValue = new GridVM<T, TSearchVM>(SearchModel);
 
-        try
+        return await Result.Create(async () =>
         {
+            var ResultValue = new GridVM<T, TSearchVM>(SearchModel);
+
             var QList = GetCurrentService().AsNoTracking();
 
             if (SearchModel != null && SearchModel.Fields != null)
@@ -94,44 +91,36 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             ResultValue.List = await QList.ProjectTo<T>(Mapper.ConfigurationProvider).ToListAsync();
 
             Result.Set(StatusCode.Succeeded, ResultValue);
-        }
-        catch (Exception ex)
-        {
-            Result.Set(StatusCode.Exception, ex);
-        }
 
-        return Result;
+            return Result;
+        });
     }
 
     public virtual async Task<IResponse<TKey>> Add(TNewVM Model)
     {
         var Result = new Response<TKey>(ServiceName, OperationType.Add);
 
-        try
+        return await Result.Create(async () =>
         {
             var Item = Mapper.Map<TEntity>(Model);
             await UnitOfWork.AddAsync(Item);
             await UnitOfWork.SaveChangesAsync();
 
             Result.Set(StatusCode.Succeeded, Item.Id);
-        }
-        catch (Exception ex)
-        {
-            Result.Set(StatusCode.Exception, ex);
-        }
 
-        return Result;
+            return Result;
+        });
     }
 
     public virtual async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model)
     {
         var Result = new Response(ServiceName, OperationType.Edit);
 
-        try
+        return await Result.Create(async () =>
         {
             var Item = await GetCurrentService()
-                .Where(x => x.Id.Equals(Id))
-                .FirstOrDefaultAsync();
+                    .Where(x => x.Id.Equals(Id))
+                    .FirstOrDefaultAsync();
 
             if (Item != null)
             {
@@ -145,22 +134,19 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
                 Result.Set(StatusCode.NotExists);
             }
 
-        }
-        catch (Exception ex)
-        {
-            Result.Set(StatusCode.Exception, ex);
-        }
-
-        return Result;
+            return Result;
+        });
     }
 
     public virtual async Task<IResponse<bool>> Delete(TKey Id)
     {
         var Result = new Response(ServiceName, OperationType.Delete);
 
-        try
+        return await Result.Create(async () =>
         {
-            var Item = await GetCurrentService().Where(x => x.Id.Equals(Id)).FirstOrDefaultAsync();
+            var Item = await GetCurrentService()
+                .Where(x => x.Id.Equals(Id))
+                .FirstOrDefaultAsync();
             if (Item != null)
             {
                 UnitOfWork.Remove(Item);
@@ -172,12 +158,8 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             {
                 Result.Set(StatusCode.NotExists);
             }
-        }
-        catch (Exception ex)
-        {
-            Result.Set(StatusCode.Exception, ex);
-        }
 
-        return Result;
+            return Result;
+        });
     }
 }

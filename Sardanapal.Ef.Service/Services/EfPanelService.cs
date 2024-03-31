@@ -44,7 +44,7 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
     {
         var Result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
 
-        try
+        return await Result.Create(async () =>
         {
             var Item = await GetCurrentService().AsNoTracking()
                 .Where(x => x.Id.Equals(Id))
@@ -59,23 +59,20 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
             {
                 Result.Set(StatusCode.NotExists);
             }
-        }
-        catch (Exception ex)
-        {
-            Result.Set(StatusCode.Exception, ex);
-        }
 
-        return Result;
+            return Result;
+        });
     }
 
     // TODO: Needs Review
     public async Task<IResponse<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TSearchVM> SearchModel = null)
     {
         var Result = new Response<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>(ServiceName, OperationType.Fetch);
-        var ResultValue = new GridVM<SelectOptionVM<TKey, object>, TSearchVM>(SearchModel);
 
-        try
+        return await Result.Create(async () =>
         {
+            var ResultValue = new GridVM<SelectOptionVM<TKey, object>, TSearchVM>(SearchModel);
+
             var QList = GetCurrentService().AsNoTracking();
 
             if (SearchModel != null && SearchModel.Fields != null)
@@ -92,12 +89,8 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
                 .ToListAsync();
 
             Result.Set(StatusCode.Succeeded, ResultValue);
-        }
-        catch (Exception ex)
-        {
-            Result.Set(StatusCode.Exception, ex);
-        }
 
-        return Result;
+            return Result;
+        });
     }
 }
