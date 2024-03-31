@@ -163,7 +163,7 @@ jobs:
       - name: Push package Ef Services
         run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef.Service/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
   
-  update_http_services:
+  update_http_service:
     runs-on: ubuntu-latest
 
     steps:
