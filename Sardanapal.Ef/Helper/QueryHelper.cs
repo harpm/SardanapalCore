@@ -7,7 +7,6 @@ namespace Sardanapal.Ef.Helper
     public static class QueryHelper
     {
         public static IQueryable<TEntity> Search<TEntity>(this IQueryable<TEntity> query, GridSearchModelVM searchModel = null)
-            where TEntity : class
         {
             if (searchModel == null)
                 return query;
@@ -28,12 +27,16 @@ namespace Sardanapal.Ef.Helper
 
             if (searchModel.PageSize > 0)
             {
-                query = query
-                    .Skip(searchModel.PageSize * searchModel.PageIndex)
-                    .Take(searchModel.PageSize);
+                query = query.Page(searchModel.PageIndex, searchModel.PageSize);
             }
 
             return query;
+        }
+
+        public static IQueryable<T> Page<T>(this IQueryable<T> query, int pageIndex, int pageSize)
+        {
+            return query.Skip(pageSize * pageIndex)
+                    .Take(pageSize);
         }
     }
 }
