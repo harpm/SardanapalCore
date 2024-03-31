@@ -5,13 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <Authors>harpm</Authors>
     <Company>Sardanapal</Company>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="sardanapal.viewmodel" Version="0.1.0" />
+    <PackageReference Include="Sardanapal.Viewmodel" Version="0.1.1" />
   </ItemGroup>
 
 </Project>
