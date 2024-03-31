@@ -2,41 +2,52 @@
 using StackExchange.Redis;
 using Sardanapal.DomainModel.Domain;
 using Sardanapal.ViewModel.Response;
+using Sardanapal.ViewModel.Models;
+using AutoMapper;
 
 namespace Sardanapal.RedisCache.Services;
 
-public abstract class CacheService<TModel, TNewVM, TEditableVM> : ICacheService<TModel, TNewVM, TEditableVM>
+public abstract class CacheService<TModel, TSearchVM, TVM, TNewVM, TEditableVM>
+    : ICacheService<TSearchVM, TVM, TNewVM, TEditableVM>
+    where TSearchVM : class, new()
+    where TVM : class, new()
+    where TNewVM : class, new()
+    where TEditableVM : class, new()
     where TModel : IBaseEntityModel<Guid>, new()
-    where TNewVM : class
-    where TEditableVM : class
 {
     protected IConnectionMultiplexer ConnMultiplexer { get; set; }
-    protected IDatabase Db { get; set; }
+    protected IMapper Mapper { get; set; }
     protected int expireTime;
 
     protected abstract string Key { get; }
 
-    public CacheService(IConnectionMultiplexer connectionMultiplexer, int expireTime = 0)
+    public CacheService(IConnectionMultiplexer connectionMultiplexer, IMapper mapper, int expireTime = 0)
     {
         this.expireTime = expireTime;
-        ConnMultiplexer = connectionMultiplexer;
-        Db = ConnMultiplexer.GetDatabase();
+        this.ConnMultiplexer = connectionMultiplexer;
+        this.Mapper = mapper;
     }
 
-    public virtual async Task<IResponse<TModel>> Get(Guid Id)
+    protected virtual IDatabase GetCurrentDatabase()
     {
-        var result = new Response<TModel>(this.GetType().Name, OperationType.Fetch);
+        return ConnMultiplexer.GetDatabase();
+    }
+
+    public virtual async Task<IResponse<TVM>> Get(Guid Id)
+    {
+        var result = new Response<TVM>(this.GetType().Name, OperationType.Fetch);
 
         try
         {
             var rKey = new RedisKey(Key);
 
-            string item = await Db.HashGetAsync(rKey, new RedisValue(Id.ToString()));
+            string item = await GetCurrentDatabase().HashGetAsync(rKey, new RedisValue(Id.ToString()));
 
             if (!string.IsNullOrWhiteSpace(item))
             {
-                var Value = JsonSerializer.Deserialize<TModel>(item);
-                result.Set(StatusCode.Succeeded, Value);
+                var model = JsonSerializer.Deserialize<TModel>(item);
+                var value = Mapper.Map<TVM>(model);
+                result.Set(StatusCode.Succeeded, value);
             }
         }
         catch (Exception ex)
@@ -47,43 +58,46 @@ public abstract class CacheService<TModel, TNewVM, TEditableVM> : ICacheService<
         return result;
     }
 
-    public virtual async Task<IResponse<IEnumerable<TModel>>> GetAll()
+    public virtual async Task<IResponse<GridVM<T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TSearchVM> model = null)
+        where T : class
     {
-        var result = new Response<IEnumerable<TModel>>(this.GetType().Name, OperationType.Fetch);
+        var result = new Response<GridVM<T, TSearchVM>>(this.GetType().Name, OperationType.Fetch);
 
-        try
+        return await result.Create(async () =>
         {
-            var items = await Db.HashGetAllAsync(new RedisKey(Key));
+            var resultValue = new GridVM<T, TSearchVM>(model);
+            var items = await GetCurrentDatabase().HashGetAllAsync(new RedisKey(Key));
 
             if (items != null && items.Length > 0)
             {
-                var value = items
-                    .Select(x => JsonSerializer.Deserialize<TModel>(x.Value))
+                var list = items
+                    .Select(x => Mapper.Map<T>(JsonSerializer.Deserialize<TModel>(x.Value)))
                     .AsEnumerable();
-                result.Set(StatusCode.Succeeded, value!);
+
+                // TODO: Search with the model
+
+                resultValue.List = list.ToList();
+
+                result.Set(StatusCode.Succeeded, resultValue!);
             }
             else
             {
                 result.Set(StatusCode.NotExists);
             }
-        }
-        catch (Exception ex)
-        {
-            result.Set(StatusCode.Exception, ex);
-        }
 
-        return result;
+            return result;
+        });
     }
 
     public virtual async Task<IResponse<Guid>> Add(TNewVM Model)
     {
         var result = new Response<Guid>(this.GetType().Name, OperationType.Add);
 
-        try
+        return await result.Create(async () =>
         {
             var newId = Guid.NewGuid();
             var rKey = new RedisKey(Key);
-            var added = await Db.HashSetAsync(rKey
+            var added = await GetCurrentDatabase().HashSetAsync(rKey
                 , new RedisValue(newId.ToString())
                 , new RedisValue(JsonSerializer.Serialize(Model)));
 
@@ -91,7 +105,8 @@ public abstract class CacheService<TModel, TNewVM, TEditableVM> : ICacheService<
 
             if (this.expireTime > 0)
             {
-                setExpiration = await Db.KeyExpireAsync(rKey, DateTime.UtcNow.AddMinutes(this.expireTime));
+                setExpiration = await GetCurrentDatabase()
+                    .KeyExpireAsync(rKey, DateTime.UtcNow.AddMinutes(this.expireTime));
             }
 
             if (added && setExpiration)
@@ -99,26 +114,23 @@ public abstract class CacheService<TModel, TNewVM, TEditableVM> : ICacheService<
             else
                 result.Set(StatusCode.Failed);
 
-        }
-        catch (Exception ex)
-        {
-            result.Set(StatusCode.Exception, ex);
-        }
-
-        return result;
+            return result;
+        });
     }
 
     public virtual async Task<IResponse<bool>> Edit(Guid Id, TEditableVM Model)
     {
         var result = new Response<bool>(this.GetType().Name, OperationType.Edit);
-        try
+
+        return await result.Create(async () =>
         {
             var old = await Get(Id);
             if (old.StatusCode == StatusCode.Succeeded)
             {
-                var value = await Db.HashSetAsync(new RedisKey(Key)
-                    , new RedisValue(Id.ToString())
-                    , new RedisValue(JsonSerializer.Serialize(Model)));
+                var value = await GetCurrentDatabase()
+                    .HashSetAsync(new RedisKey(Key)
+                        , new RedisValue(Id.ToString())
+                        , new RedisValue(JsonSerializer.Serialize(Model)));
 
                 result.Set(StatusCode.Succeeded, value);
             }
@@ -126,37 +138,30 @@ public abstract class CacheService<TModel, TNewVM, TEditableVM> : ICacheService<
             {
                 result.Set(StatusCode.NotExists);
             }
-        }
-        catch (Exception ex)
-        {
-            result.Set(StatusCode.Exception, ex);
-        }
 
-        return result;
+            return result;
+        });
     }
 
     public virtual async Task<IResponse<bool>> Delete(Guid Id)
     {
         var result = new Response<bool>(this.GetType().Name, OperationType.Delete);
 
-        try
+        return await result.Create(async () =>
         {
             var old = await Get(Id);
             if (old.StatusCode == StatusCode.Succeeded)
             {
-                var value = await Db.HashDeleteAsync(new RedisKey(Key), new RedisValue(Id.ToString()));
+                var value = await GetCurrentDatabase()
+                    .HashDeleteAsync(new RedisKey(Key), new RedisValue(Id.ToString()));
                 result.Set(StatusCode.Succeeded, value);
             }
             else
             {
                 result.Set(StatusCode.NotExists);
             }
-        }
-        catch (Exception ex)
-        {
-            result.Set(StatusCode.Exception, ex);
-        }
 
-        return result;
+            return result;
+        });
     }
 }
