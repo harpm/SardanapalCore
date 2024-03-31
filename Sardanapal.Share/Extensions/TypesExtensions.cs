@@ -3,7 +3,7 @@ namespace Sardanapal.Share.Extensions;
 
 public static class TypesExtensions
 {
-    public static bool IsSubclassOfRawGeneric(this Type generic, Type toCheck)
+    public static bool IsSubClassOfRawGeneric(this Type generic, Type toCheck)
     {
         while (toCheck != null && toCheck != typeof(object))
         {
