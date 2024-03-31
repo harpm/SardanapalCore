@@ -19,8 +19,8 @@ public interface IResponse<TValue> : IResponse
 {
     TValue Data { get; set; }
     void Set(StatusCode statusCode, TValue data);
-    IResponse<TValue> Create(Func<IResponse<TValue>> body);
-    Task<IResponse<TValue>> Create(Func<Task<IResponse<TValue>>> body);
+    IResponse<TValue> Fill(Func<IResponse<TValue>> body);
+    Task<IResponse<TValue>> FillAsync(Func<Task<IResponse<TValue>>> body);
 
 }
 
@@ -80,7 +80,7 @@ public class Response<TValue> : IResponse<TValue>
         return new Response<T>(StatusCode, ServiceName, OperationType, DeveloperMessages, UserMessage);
     }
 
-    public IResponse<TValue> Create(Func<IResponse<TValue>> body)
+    public IResponse<TValue> Fill(Func<IResponse<TValue>> body)
     {
         var result = this as IResponse<TValue>;
 
@@ -96,7 +96,7 @@ public class Response<TValue> : IResponse<TValue>
         return result;
     }
 
-    public async Task<IResponse<TValue>> Create(Func<Task<IResponse<TValue>>> body)
+    public async Task<IResponse<TValue>> FillAsync(Func<Task<IResponse<TValue>>> body)
     {
         var result = this as IResponse<TValue>;
 
