@@ -3,28 +3,13 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Sardanapal.DomainModel.Domain;
 using Sardanapal.Ef.Helper;
+using Sardanapal.InterfacePanel.Service;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 
-namespace Sardanapal.InterfacePanel.Service;
+namespace Sardanapal.Ef.Services.Services;
 
-public interface _IServicePanel<TKey, TListItemVM, TSearchVM, TVM, TNewVM, TEditableVM>
-    where TKey : IEquatable<TKey>, IComparable<TKey>
-    where TListItemVM : BaseListItem<TKey>
-    where TSearchVM : class
-    where TNewVM : class
-    where TEditableVM : class
-{
-    Task<IResponse<TVM>> Get(TKey Id);
-    Task<IResponse<GridVM<T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TSearchVM> SearchModel = null) where T : class;
-    Task<IResponse<TKey>> Add(TNewVM Model);
-    Task<IResponse<TEditableVM>> GetEditable(TKey Id);
-    Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model);
-    Task<IResponse<bool>> Delete(TKey Id);
-    Task<IResponse<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TSearchVM> SearchModel = null);
-}
-
-public abstract class _ServicePanel<TContext, TKey, TEntity, TListItemVM, TSearchVM, TVM, TNewVM, TEditableVM> : _IServicePanel<TKey, TListItemVM, TSearchVM, TVM, TNewVM, TEditableVM>
+public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSearchVM, TVM, TNewVM, TEditableVM> : _IServicePanel<TKey, TListItemVM, TSearchVM, TVM, TNewVM, TEditableVM>
     where TContext : DbContext
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TEntity : class, IBaseEntityModel<TKey>
@@ -42,7 +27,7 @@ public abstract class _ServicePanel<TContext, TKey, TEntity, TListItemVM, TSearc
     protected IRequestService CurrentRequest;
     protected IQueryable<TEntity> CurrentService;
 
-    public _ServicePanel(TContext unitOfWork, IMapper _Mapper, IRequestService _Context)
+    public EfPanelService(TContext unitOfWork, IMapper _Mapper, IRequestService _Context)
     {
         CurrentRequest = _Context;
         Mapper = _Mapper;
