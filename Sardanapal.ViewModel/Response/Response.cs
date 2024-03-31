@@ -2,19 +2,24 @@
 
 namespace Sardanapal.ViewModel.Response;
 
-public interface IResponse<TValue>
+public interface IResponse
 {
     string ServiceName { get; set; }
-    TValue Data { get; set; }
     OperationType OperationType { get; set; }
     StatusCode StatusCode { get; set; }
-    string[] DeveloperMessage { get; set; }
+    string[] DeveloperMessages { get; set; }
     string UserMessage { get; set; }
 
     void Set(StatusCode statusCode);
-    void Set(StatusCode statusCode, TValue data);
     void Set(StatusCode statusCode, Exception exception);
     IResponse<T> ConvertTo<T>() where T : class;
+}
+
+public interface IResponse<TValue> : IResponse
+{
+    TValue Data { get; set; }
+    void Set(StatusCode statusCode, TValue data);
+    IResponse<TValue> Create(Func<IResponse<TValue>> body);
 }
 
 public class Response<TValue> : IResponse<TValue>
@@ -23,7 +28,7 @@ public class Response<TValue> : IResponse<TValue>
     public TValue Data { get; set; }
     public OperationType OperationType { get; set; }
     public StatusCode StatusCode { get; set; }
-    public string[] DeveloperMessage { get; set; }
+    public string[] DeveloperMessages { get; set; }
     public string UserMessage { get; set; }
 
     public Response()
@@ -42,6 +47,15 @@ public class Response<TValue> : IResponse<TValue>
         this.OperationType = operationType;
     }
 
+    public Response(StatusCode statusCode, string serviceName, OperationType operationType, string[] developerMessages, string userMessage)
+    {
+        this.StatusCode = statusCode;
+        this.ServiceName = serviceName;
+        this.OperationType = operationType;
+        this.DeveloperMessages = developerMessages;
+        this.UserMessage = userMessage;
+    }
+
     public virtual void Set(StatusCode statusCode)
     {
         StatusCode = statusCode;
@@ -56,28 +70,28 @@ public class Response<TValue> : IResponse<TValue>
     public virtual void Set(StatusCode statusCode, Exception exception)
     {
         Set(statusCode);
-        DeveloperMessage = exception.GetHirachicalMessages();
+        DeveloperMessages = exception.GetHirachicalMessages();
     }
 
     public virtual IResponse<T> ConvertTo<T>() where T : class
     {
-        return Create<T>(StatusCode, ServiceName, OperationType, DeveloperMessage, UserMessage);
+        return new Response<T>(StatusCode, ServiceName, OperationType, DeveloperMessages, UserMessage);
     }
 
-    public static Response<T> Create<T>(string serviceName, OperationType operationType) where T : class
+    public IResponse<TValue> Create(Func<IResponse<TValue>> body)
     {
-        return new Response<T>(serviceName, operationType);
-    }
+        var result = this as IResponse<TValue>;
 
-    public static Response<T> Create<T>(StatusCode status, string serviceName, OperationType operationType, string[] developerMessages, string userMessage)
-        where T : class
-    {
-        return new Response<T>(serviceName, operationType)
+        try
         {
-            StatusCode = status,
-            DeveloperMessage = developerMessages,
-            UserMessage = userMessage
-        };
+            result = body();
+        }
+        catch (Exception ex)
+        {
+            this.Set(StatusCode.Exception, ex);
+        }
+        
+        return result;
     }
 }
 

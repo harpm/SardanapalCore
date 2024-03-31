@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Ef", "Sardanapal.Ef\Sardanapal.Ef.csproj", "{3B21148A-6219-4812-9E49-83AE51C3A68A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.InterfacePanel", "Sardanapal.InterfacePanel\Sardanapal.InterfacePanel.csproj", "{1FEC20CE-D9B6-449B-9159-830BAAF0BDA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Interface", "Sardanapal.Interface\Sardanapal.Interface.csproj", "{1FEC20CE-D9B6-449B-9159-830BAAF0BDA2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Share", "Sardanapal.Share\Sardanapal.Share.csproj", "{CA1DCB63-4A03-4D8A-930D-00E348C234B1}"
 EndProject
@@ -14,6 +14,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.RedisCach", "Sardanapal.RedisCach\Sardanapal.RedisCach.csproj", "{C95BFA68-19B6-4982-B5C2-3F538CCE33B8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.DomainModel", "Sardanapal.DomainModel\Sardanapal.DomainModel.csproj", "{1C57EC67-16AE-4330-AA22-8AF659F22F96}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Ef.Service", "Sardanapal.Ef.Service\Sardanapal.Ef.Service.csproj", "{212D4084-0BC6-4068-A3F8-CB39578FDD2F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Http.Service", "Sardanapal.Http.Service\Sardanapal.Http.Service.csproj", "{4338297F-8926-4A25-B28B-9B87EDC656D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{1C57EC67-16AE-4330-AA22-8AF659F22F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C57EC67-16AE-4330-AA22-8AF659F22F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C57EC67-16AE-4330-AA22-8AF659F22F96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{212D4084-0BC6-4068-A3F8-CB39578FDD2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{212D4084-0BC6-4068-A3F8-CB39578FDD2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{212D4084-0BC6-4068-A3F8-CB39578FDD2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{212D4084-0BC6-4068-A3F8-CB39578FDD2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4338297F-8926-4A25-B28B-9B87EDC656D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4338297F-8926-4A25-B28B-9B87EDC656D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4338297F-8926-4A25-B28B-9B87EDC656D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4338297F-8926-4A25-B28B-9B87EDC656D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
