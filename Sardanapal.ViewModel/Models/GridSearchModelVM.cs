@@ -3,6 +3,7 @@ namespace Sardanapal.ViewModel.Models;
 
 public abstract class GridSearchModelVM
 {
+    public string DynamicField { get; set; }
     public string SortId { get; set; }
     public bool SortAsccending { get; set; } = true;
     public int PageIndex { get; set; }
