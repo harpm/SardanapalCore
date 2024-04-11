@@ -34,10 +34,6 @@ jobs:
   update_view_model:
     runs-on: ubuntu-latest
 
-    concurrency:
-      group: build
-      cancel-in-progress: true
-
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
@@ -182,4 +178,4 @@ jobs:
       - name: Build
         run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Http.Service/Sardanapal.Http.Service.csproj --no-restore --configuration release
       - name: Push package Http Service
-        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Http.Service/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
+        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Http.Service/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate --api-key {{ secrets.GITHUBTOKEN }}
