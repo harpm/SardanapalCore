@@ -449,3 +449,8 @@ $RECYCLE.BIN/
 ##
 .vscode/*
 /.vscode/
+
+##
+## Nuget package configs
+##
+Nuget.config
