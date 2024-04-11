@@ -449,14 +449,3 @@ $RECYCLE.BIN/
 ##
 .vscode/*
 /.vscode/
-
-## Nuget package configs
-[Nn]uget.config
-[Nn]uget.*
-[Nn]uget.*
-./[Nn]uget.*
-/[Nn]uget.*
-nuget.config
-Nuget.config
-/Sardanapal.DomainModel/*
-Sardanapal.DomainModel/*
