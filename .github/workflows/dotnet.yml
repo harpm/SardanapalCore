@@ -21,7 +21,7 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Add nuget source
-        run: dotnet nuget add source --username harpm --password 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 --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
+        run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
         run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Share/Sardanapal.Share.csproj
       - name: Restore dependencies
@@ -46,7 +46,7 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Add nuget source
-        run: dotnet nuget add source --username harpm --password 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 --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
+        run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
         run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/Sardanapal.ViewModel.csproj
       - name: Restore dependencies
@@ -67,7 +67,7 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Add nuget source
-        run: dotnet nuget add source --username harpm --password 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 --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
+        run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
         run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/Sardanapal.DomainModel.csproj
       - name: Restore dependencies
@@ -88,7 +88,7 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Add nuget source
-        run: dotnet nuget add source --username harpm --password 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 --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
+        run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
         run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach/Sardanapal.RedisCach.csproj
       - name: Restore dependencies
@@ -109,7 +109,7 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Add nuget source
-        run: dotnet nuget add source --username harpm --password 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 --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
+        run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
         run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef/Sardanapal.Ef.csproj
       - name: Restore dependencies
@@ -132,7 +132,7 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Add nuget source
-        run: dotnet nuget add source --username harpm --password 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 --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
+        run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
         run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Interface/Sardanapal.Interface.csproj
       - name: Restore dependencies
@@ -153,7 +153,7 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Add nuget source
-        run: dotnet nuget add source --username harpm --password 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 --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
+        run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
         run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef.Service/Sardanapal.Ef.Service.csproj
       - name: Restore dependencies
@@ -174,7 +174,7 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Add nuget source
-        run: dotnet nuget add source --username harpm --password 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 --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
+        run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
         run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Http.Service/Sardanapal.Http.Service.csproj
       - name: Restore dependencies
