@@ -1,18 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Title>Sardanapal Domain Model Base</Title>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <Authors>harpm</Authors>
     <Company>Sardanapal</Company>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sardanapal.Share" Version="0.1.0" />
+    <PackageReference Include="Sardanapal.Share" Version="0.1.1" />
   </ItemGroup>
 
 </Project>
