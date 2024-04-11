@@ -14,7 +14,7 @@
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.12" />
       <PackageReference Include="Sardanapal.DomainModel" Version="0.1.2" />
       <PackageReference Include="Sardanapal.Interface" Version="0.1.4" />
-      <PackageReference Include="Sardanapal.RedisCach.Model" Version="0.1.0" />
+      <PackageReference Include="Sardanapal.RedisCach.Model" Version="0.1.1" />
     </ItemGroup>
 
 
