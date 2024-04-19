@@ -1,7 +1,7 @@
 ﻿
 namespace Sardanapal.DomainModel.Domain;
 
-public interface ITreeableEntityModel<TKey> : IBaseEntityModel<TKey>
+public interface ITreeableEntityModel<TKey> : IBaseEntityModel<TKey>, IDomainModel
     where TKey : IComparable<TKey>, IEquatable<TKey>
 {
     TKey? ParentId { get; set; }

@@ -1,7 +1,7 @@
 ﻿
 namespace Sardanapal.DomainModel.Domain;
 
-public interface ILogicalEntityModel
+public interface ILogicalEntityModel : IDomainModel
 {
     bool IsDeleted { get; set; }
 }
@@ -12,7 +12,8 @@ public abstract class LogicalBaseEntityModel<TKey> : BaseEntityModel<TKey>, ILog
     public virtual bool IsDeleted { get; set; }
 }
 
-public abstract class LogicalEntityModel<TKey> : EntityModel<TKey>, ILogicalEntityModel
+public abstract class LogicalEntityModel<TKey, TUserKey> : EntityModel<TKey, TUserKey>, ILogicalEntityModel
+    where TUserKey : IComparable<TUserKey>, IEquatable<TUserKey>
     where TKey : IComparable<TKey>, IEquatable<TKey>
 {
     public virtual bool IsDeleted { get; set; }

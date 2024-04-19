@@ -50,5 +50,21 @@ namespace Sardanapal.DomainModel.UnitOfWork
                 OnModelBuild.Invoke(null, new object[] { entity });
             }
         }
+
+        protected virtual void SetBaseValues()
+        {
+            var EntityModels = ChangeTracker
+                .Entries()
+                .Where(e => typeof(ILogicalEntityModel).IsAssignableFrom(e.Entity.GetType()) && (e.State == EntityState.Deleted))
+                .ToArray();
+
+            foreach (var model in EntityModels)
+            {
+                ILogicalEntityModel entity = (ILogicalEntityModel)model.Entity;
+
+                entity.IsDeleted = true;
+                model.State = EntityState.Modified;
+            }
+        }
     }
 }

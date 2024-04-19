@@ -1,20 +1,22 @@
 ﻿
 namespace Sardanapal.DomainModel.Domain;
 
-public interface IEntityModel<TKey>
+public interface IEntityModel<TKey, TUserKey> : IBaseEntityModel<TKey>, IDomainModel
+    where TUserKey : IComparable<TUserKey>, IEquatable<TUserKey>
     where TKey : IComparable<TKey>, IEquatable<TKey>
 {
-    TKey CreateBy { get; set; }
-    TKey ModifiedBy { get; set; }
+    TUserKey CreateBy { get; set; }
+    TUserKey ModifiedBy { get; set; }
     DateTime CreatedOnUtc { get; set; }
     DateTime ModifiedOnUtc { get; set; }
 }
 
-public abstract class EntityModel<TKey> : BaseEntityModel<TKey>, IEntityModel<TKey>
+public abstract class EntityModel<TKey, TUserKey> : BaseEntityModel<TKey>, IEntityModel<TKey, TUserKey>
     where TKey : IComparable<TKey>, IEquatable<TKey>
+    where TUserKey : IComparable<TUserKey>, IEquatable<TUserKey>
 {
-    public virtual TKey CreateBy { get; set; }
-    public virtual TKey ModifiedBy { get; set; }
+    public virtual TUserKey CreateBy { get; set; }
+    public virtual TUserKey ModifiedBy { get; set; }
     public virtual DateTime CreatedOnUtc { get; set; }
     public virtual DateTime ModifiedOnUtc { get; set; }
 }
