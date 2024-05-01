@@ -11,14 +11,15 @@ public interface ISardanapalUnitOfWork
     void ApplyFluentConfigs<T>(EntityTypeBuilder entity) where T : class, IDomainModel;
 }
 
-public abstract class SardanapalUnitOfWork : DbContext, ISardanapalUnitOfWork
+public abstract class SardanapalUnitOfWork<TUOW> : DbContext, ISardanapalUnitOfWork
+    where TUOW : DbContext, ISardanapalUnitOfWork
 {
-    public SardanapalUnitOfWork(DbContextOptions<SardanapalUnitOfWork> opt)
+    public SardanapalUnitOfWork(DbContextOptions<TUOW> opt)
         : base(opt)
     {
 
     }
-    
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         foreach (Type t in GetDomainModels())
