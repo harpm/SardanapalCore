@@ -52,7 +52,7 @@ jobs:
       - name: Push package ViewModel
         run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.ViewModel/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
 
-  update_domain_model:
+  update_domain:
     runs-on: ubuntu-latest
 
     steps:
@@ -65,13 +65,13 @@ jobs:
       - name: Add nuget source
         run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
-        run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/Sardanapal.DomainModel.csproj
+        run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Domain/Sardanapal.Domain.csproj
       - name: Restore dependencies
-        run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/Sardanapal.DomainModel.csproj
+        run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Domain/Sardanapal.Domain.csproj
       - name: Build
-        run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/Sardanapal.DomainModel.csproj --no-restore --configuration release
-      - name: Push package DomainModel
-        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.DomainModel/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
+        run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Domain/Sardanapal.Domain.csproj --no-restore --configuration release
+      - name: Push package Domain
+        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Domain/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
 
   update_redis_cach:
     runs-on: ubuntu-latest

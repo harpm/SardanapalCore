@@ -4,8 +4,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Title>Sardanapal Domain Model Base</Title>
-    <Version>0.1.7</Version>
+    <Title>Sardanapal Domain Base</Title>
+    <Version>0.1.0</Version>
     <Authors>harpm</Authors>
     <Company>Sardanapal</Company>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>

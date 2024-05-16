@@ -13,13 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.ViewModel", "Sar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.RedisCach", "Sardanapal.RedisCach\Sardanapal.RedisCach.csproj", "{C95BFA68-19B6-4982-B5C2-3F538CCE33B8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.DomainModel", "Sardanapal.DomainModel\Sardanapal.DomainModel.csproj", "{1C57EC67-16AE-4330-AA22-8AF659F22F96}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Ef.Service", "Sardanapal.Ef.Service\Sardanapal.Ef.Service.csproj", "{212D4084-0BC6-4068-A3F8-CB39578FDD2F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Http.Service", "Sardanapal.Http.Service\Sardanapal.Http.Service.csproj", "{4338297F-8926-4A25-B28B-9B87EDC656D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sardanapal.RedisCach.Model", "Sardanapal.RedisCach.Model\Sardanapal.RedisCach.Model.csproj", "{E28E15CC-6215-4A29-87BD-851A1F563A0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.RedisCach.Model", "Sardanapal.RedisCach.Model\Sardanapal.RedisCach.Model.csproj", "{E28E15CC-6215-4A29-87BD-851A1F563A0A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Domain", "Sardanapal.Domain\Sardanapal.Domain.csproj", "{7A11B59E-5B7A-4B96-8973-954746895805}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,6 @@ Global
 		{C95BFA68-19B6-4982-B5C2-3F538CCE33B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C95BFA68-19B6-4982-B5C2-3F538CCE33B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C95BFA68-19B6-4982-B5C2-3F538CCE33B8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C57EC67-16AE-4330-AA22-8AF659F22F96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C57EC67-16AE-4330-AA22-8AF659F22F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C57EC67-16AE-4330-AA22-8AF659F22F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C57EC67-16AE-4330-AA22-8AF659F22F96}.Release|Any CPU.Build.0 = Release|Any CPU
 		{212D4084-0BC6-4068-A3F8-CB39578FDD2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{212D4084-0BC6-4068-A3F8-CB39578FDD2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{212D4084-0BC6-4068-A3F8-CB39578FDD2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -63,6 +59,10 @@ Global
 		{E28E15CC-6215-4A29-87BD-851A1F563A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E28E15CC-6215-4A29-87BD-851A1F563A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E28E15CC-6215-4A29-87BD-851A1F563A0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A11B59E-5B7A-4B96-8973-954746895805}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A11B59E-5B7A-4B96-8973-954746895805}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A11B59E-5B7A-4B96-8973-954746895805}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A11B59E-5B7A-4B96-8973-954746895805}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
