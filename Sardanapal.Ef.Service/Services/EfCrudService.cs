@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using Sardanapal.DomainModel.Domain;
+using Sardanapal.Domain.Model;
 using Sardanapal.Ef.Helper;
 using Sardanapal.InterfacePanel.Service;
 using Sardanapal.ViewModel.Models;
@@ -49,7 +49,7 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
     {
         var Result = new Response<TVM>(ServiceName, OperationType.Fetch);
 
-        return await Result.Create(async () =>
+        return await Result.FillAsync(async () =>
         {
             var Item = await GetCurrentService().AsNoTracking()
                 .Where(x => x.Id.Equals(Id))
@@ -73,7 +73,7 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
     {
         var Result = new Response<GridVM<T, TSearchVM>>(ServiceName, OperationType.Fetch);
 
-        return await Result.Create(async () =>
+        return await Result.FillAsync(async () =>
         {
             var ResultValue = new GridVM<T, TSearchVM>(SearchModel);
 
@@ -100,7 +100,7 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
     {
         var Result = new Response<TKey>(ServiceName, OperationType.Add);
 
-        return await Result.Create(async () =>
+        return await Result.FillAsync(async () =>
         {
             var Item = Mapper.Map<TEntity>(Model);
             await UnitOfWork.AddAsync(Item);
@@ -116,7 +116,7 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
     {
         var Result = new Response(ServiceName, OperationType.Edit);
 
-        return await Result.Create(async () =>
+        return await Result.FillAsync(async () =>
         {
             var Item = await GetCurrentService()
                     .Where(x => x.Id.Equals(Id))
@@ -142,7 +142,7 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
     {
         var Result = new Response(ServiceName, OperationType.Delete);
 
-        return await Result.Create(async () =>
+        return await Result.FillAsync(async () =>
         {
             var Item = await GetCurrentService()
                 .Where(x => x.Id.Equals(Id))

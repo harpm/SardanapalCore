@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using Sardanapal.DomainModel.Domain;
+using Sardanapal.Domain.Model;
 using Sardanapal.Ef.Helper;
 using Sardanapal.InterfacePanel.Service;
 using Sardanapal.ViewModel.Models;
@@ -44,7 +44,7 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
     {
         var Result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
 
-        return await Result.Create(async () =>
+        return await Result.FillAsync(async () =>
         {
             var Item = await GetCurrentService().AsNoTracking()
                 .Where(x => x.Id.Equals(Id))
@@ -69,7 +69,7 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
     {
         var Result = new Response<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>(ServiceName, OperationType.Fetch);
 
-        return await Result.Create(async () =>
+        return await Result.FillAsync(async () =>
         {
             var ResultValue = new GridVM<SelectOptionVM<TKey, object>, TSearchVM>(SearchModel);
 
