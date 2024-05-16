@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Sardanapal.DomainModel.Domain;
+using Sardanapal.Domain.Model;
 using System.Reflection;
 
-namespace Sardanapal.DomainModel.UnitOfWork;
+namespace Sardanapal.Domain.UnitOfWork;
 
 public interface ISardanapalUnitOfWork
 {

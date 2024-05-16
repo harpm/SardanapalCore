@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Sardanapal.DomainModel.Domain;
+namespace Sardanapal.Domain.Model;
 
 public interface IDomainModel
 {

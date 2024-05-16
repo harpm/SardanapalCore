@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Sardanapal.DomainModel.Domain;
+using Sardanapal.Domain.Model;
 
-namespace Sardanapal.DomainModel;
+namespace Sardanapal.Domain;
 
 public abstract class FluentModelConfig<T>
     where T : class, IDomainModel

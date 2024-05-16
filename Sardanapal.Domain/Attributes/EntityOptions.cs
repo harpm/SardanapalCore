@@ -1,5 +1,5 @@
 ﻿
-namespace Sardanapal.DomainModel.Attributes;
+namespace Sardanapal.Domain.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public sealed class EntityOptions : Attribute

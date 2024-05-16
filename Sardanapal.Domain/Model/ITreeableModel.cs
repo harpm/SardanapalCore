@@ -1,5 +1,5 @@
 ﻿
-namespace Sardanapal.DomainModel.Domain;
+namespace Sardanapal.Domain.Model;
 
 public interface ITreeableEntityModel<TKey> : IBaseEntityModel<TKey>, IDomainModel
     where TKey : IComparable<TKey>, IEquatable<TKey>
