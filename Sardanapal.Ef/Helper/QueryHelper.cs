@@ -1,4 +1,4 @@
-﻿using Sardanapal.DomainModel.Attributes;
+﻿using Sardanapal.Domain.Attributes;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.Share.Extensions;
 using System.Reflection;
