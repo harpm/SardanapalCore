@@ -107,13 +107,13 @@ jobs:
       - name: Add nuget source
         run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
-        run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach.Model/Sardanapal.RedisCach.Model.csproj
+        run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach.Service/Sardanapal.RedisCach.Service.csproj
       - name: Restore dependencies
-        run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach.Model/Sardanapal.RedisCach.Model.csproj
+        run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach.Service/Sardanapal.RedisCach.Service.csproj
       - name: Build
-        run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach.Model/Sardanapal.RedisCach.Model.csproj --no-restore --configuration release
+        run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach.Service/Sardanapal.RedisCach.Service.csproj --no-restore --configuration release
       - name: Push package RedisCach
-        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach.Model/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
+        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RedisCach.Service/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
 
   update_ef:
     runs-on: ubuntu-latest
