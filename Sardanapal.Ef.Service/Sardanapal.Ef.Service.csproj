@@ -5,13 +5,13 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Version>0.1.4</Version>
+		<Version>0.1.5</Version>
 		<Authors>harpm</Authors>
 		<Company>Sardanapal</Company>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Sardanapal.Ef" Version="0.1.4" />
+		<PackageReference Include="Sardanapal.Ef" Version="0.1.5" />
 		<PackageReference Include="Sardanapal.Interface" Version="0.1.4" />
 	</ItemGroup>
 
