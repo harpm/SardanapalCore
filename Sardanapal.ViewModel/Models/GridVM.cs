@@ -7,7 +7,6 @@ public class GridVM<T, S>
 {
     public List<T> List { get; set; }
     public GridSearchModelVM<S> SearchModel { get; set; }
-    public int TotalCount { get; set; }
 
     public GridVM()
     {
