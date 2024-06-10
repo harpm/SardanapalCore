@@ -71,6 +71,9 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
 
         return await Result.FillAsync(async () =>
         {
+            if (SearchModel == null)
+                SearchModel = new GridSearchModelVM<TSearchVM>();
+
             var ResultValue = new GridVM<SelectOptionVM<TKey, object>, TSearchVM>(SearchModel);
 
             var QList = GetCurrentService().AsNoTracking();
@@ -80,7 +83,7 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
                 QList = Search(QList, SearchModel.Fields);
             }
 
-            ResultValue.TotalCount = await QList.CountAsync();
+            ResultValue.SearchModel.TotalCount = await QList.CountAsync();
 
             QList = QueryHelper.Search(QList, SearchModel);
 

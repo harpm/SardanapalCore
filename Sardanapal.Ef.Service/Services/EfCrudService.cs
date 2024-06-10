@@ -75,6 +75,9 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
 
         return await Result.FillAsync(async () =>
         {
+            if (SearchModel == null)
+                SearchModel = new GridSearchModelVM<TSearchVM>();
+
             var ResultValue = new GridVM<T, TSearchVM>(SearchModel);
 
             var QList = GetCurrentService().AsNoTracking();
@@ -84,7 +87,7 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
                 QList = Search(QList, SearchModel.Fields);
             }
 
-            ResultValue.TotalCount = await QList.CountAsync();
+            ResultValue.SearchModel.TotalCount = await QList.CountAsync();
 
             QList = QueryHelper.Search(QList, SearchModel);
 
