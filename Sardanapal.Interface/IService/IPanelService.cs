@@ -12,6 +12,5 @@ public interface IPanelService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     where TNewVM : class, new()
     where TEditableVM : class, new()
 {
-    Task<IResponse<TEditableVM>> GetEditable(TKey Id);
     Task<IResponse<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TSearchVM> SearchModel = null);
 }
