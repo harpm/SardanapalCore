@@ -9,6 +9,6 @@ public class RequestService : IRequestService
 
     public RequestService(IHttpContextAccessor _http)
     {
-
+        IP = _http.HttpContext.Connection.RemoteIpAddress.ToString();
     }
 }
