@@ -1,12 +1,36 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using AutoMapper.Execution;
+using Sardanapal.Share.Expressions;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using System.Reflection;
-using Sardanapal.Share.Expressions;
 
 namespace Sardanapal.Share.Extensions;
 
 public static class IQueryableExtensions
 {
+    public static IQueryable<T> WhereOr<T>(this IQueryable<T> query, Expression<Func<T, bool>> predications)
+    {
+        if (predications != null)
+        {
+            Expression topestBinaryExp = query.Expression.Find(x => x.Type == typeof(BinaryExpression));
+
+            if (topestBinaryExp == null)
+            {
+                query = query.Where(predications);
+            }
+            else
+            {
+                var orExpr = Expression.Or(topestBinaryExp, predications);
+                var newCondition = Expression.Lambda<Func<T, bool>>(orExpr);
+                query.Expression.Replace(topestBinaryExp, newCondition);
+            }
+            return query;
+        }
+        else
+        {
+            throw new NullReferenceException();
+        }
+    }
     /// <summary>
     /// Searches all the fields in the T class
     /// inside the queryable
