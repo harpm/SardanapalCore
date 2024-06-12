@@ -41,16 +41,16 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
     }
 
     // TODO: Needs Review
-    public async Task<IResponse<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TSearchVM> SearchModel = null)
+    public async Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null)
     {
-        var Result = new Response<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>(ServiceName, OperationType.Fetch);
+        var Result = new Response<GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>>(ServiceName, OperationType.Fetch);
 
         return await Result.FillAsync(async () =>
         {
             if (SearchModel == null)
-                SearchModel = new GridSearchModelVM<TSearchVM>();
+                SearchModel = new GridSearchModelVM<TKey, TSearchVM>();
 
-            var ResultValue = new GridVM<SelectOptionVM<TKey, object>, TSearchVM>(SearchModel);
+            var ResultValue = new GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>(SearchModel);
 
             var QList = GetCurrentService().AsNoTracking();
 

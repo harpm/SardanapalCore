@@ -69,16 +69,16 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
         });
     }
 
-    public virtual async Task<IResponse<GridVM<T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TSearchVM> SearchModel = null) where T : class
+    public virtual async Task<IResponse<GridVM<TKey, T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null) where T : class
     {
-        var Result = new Response<GridVM<T, TSearchVM>>(ServiceName, OperationType.Fetch);
+        var Result = new Response<GridVM<TKey, T, TSearchVM>>(ServiceName, OperationType.Fetch);
 
         return await Result.FillAsync(async () =>
         {
             if (SearchModel == null)
-                SearchModel = new GridSearchModelVM<TSearchVM>();
+                SearchModel = new GridSearchModelVM<TKey, TSearchVM>();
 
-            var ResultValue = new GridVM<T, TSearchVM>(SearchModel);
+            var ResultValue = new GridVM<TKey, T, TSearchVM>(SearchModel);
 
             var QList = GetCurrentService().AsNoTracking();
 
