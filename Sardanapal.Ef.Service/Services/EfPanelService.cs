@@ -68,8 +68,6 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
                 .ToListAsync();
 
             Result.Set(StatusCode.Succeeded, ResultValue);
-
-            return Result;
         });
     }
 }

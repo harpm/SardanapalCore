@@ -64,8 +64,6 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             {
                 Result.Set(StatusCode.NotExists);
             }
-
-            return Result;
         });
     }
 
@@ -94,8 +92,6 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             ResultValue.List = await QList.ProjectTo<T>(Mapper.ConfigurationProvider).ToListAsync();
 
             Result.Set(StatusCode.Succeeded, ResultValue);
-
-            return Result;
         });
     }
 
@@ -110,8 +106,6 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             await UnitOfWork.SaveChangesAsync();
 
             Result.Set(StatusCode.Succeeded, Item.Id);
-
-            return Result;
         });
     }
 
@@ -134,8 +128,6 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             {
                 Result.Set(StatusCode.NotExists);
             }
-
-            return Result;
         });
     }
 
@@ -160,8 +152,6 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             {
                 Result.Set(StatusCode.NotExists);
             }
-
-            return Result;
         });
     }
 
@@ -185,8 +175,6 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             {
                 Result.Set(StatusCode.NotExists);
             }
-
-            return Result;
         });
     }
 }
