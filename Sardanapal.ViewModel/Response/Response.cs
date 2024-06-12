@@ -19,8 +19,11 @@ public interface IResponse<TValue> : IResponse
 {
     TValue Data { get; set; }
     void Set(StatusCode statusCode, TValue data);
-    IResponse<TValue> Fill(Func<IResponse<TValue>> body);
-    Task<IResponse<TValue>> FillAsync(Func<Task<IResponse<TValue>>> body);
+    IResponse<TValue> Fill(Action body);
+    Task<IResponse<TValue>> FillAsync(Func<Task> body);
+
+    IResponse<TValue> Fill(Action body, Action<Exception> onError);
+    Task<IResponse<TValue>> FillAsync(Func<Task> body, Func<Exception, Task> onError);
 
 }
 
@@ -80,13 +83,13 @@ public class Response<TValue> : IResponse<TValue>
         return new Response<T>(StatusCode, ServiceName, OperationType, DeveloperMessages, UserMessage);
     }
 
-    public IResponse<TValue> Fill(Func<IResponse<TValue>> body)
+    public IResponse<TValue> Fill(Action body)
     {
         var result = this as IResponse<TValue>;
 
         try
         {
-            result = body();
+            body();
         }
         catch (Exception ex)
         {
@@ -96,19 +99,51 @@ public class Response<TValue> : IResponse<TValue>
         return result;
     }
 
-    public async Task<IResponse<TValue>> FillAsync(Func<Task<IResponse<TValue>>> body)
+    public async Task<IResponse<TValue>> FillAsync(Func<Task> body)
     {
         var result = this as IResponse<TValue>;
 
         try
         {
-            result = await body();
+            await body();
         }
         catch (Exception ex)
         {
             this.Set(StatusCode.Exception, ex);
         }
         
+        return result;
+    }
+
+    public IResponse<TValue> Fill(Action body, Action<Exception> onError)
+    {
+        var result = this as IResponse<TValue>;
+
+        try
+        {
+            body();
+        }
+        catch (Exception ex)
+        {
+            onError(ex);
+        }
+
+        return result;
+    }
+
+    public async Task<IResponse<TValue>> FillAsync(Func<Task> body, Func<Exception, Task> onError)
+    {
+        var result = this as IResponse<TValue>;
+
+        try
+        {
+            await body();
+        }
+        catch (Exception ex)
+        {
+            await onError(ex);
+        }
+
         return result;
     }
 }

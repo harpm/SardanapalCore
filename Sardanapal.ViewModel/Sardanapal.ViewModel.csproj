@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Sardanapal ViewModels</Title>
-    <Version>0.1.6</Version>
+    <Version>0.1.7</Version>
     <PackageId>Sardanapal.ViewModel</PackageId>
     <Authors>harpm</Authors>
     <Company>Sardanapal</Company>
