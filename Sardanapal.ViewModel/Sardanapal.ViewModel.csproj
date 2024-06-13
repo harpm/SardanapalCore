@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sardanapal.Share" Version="0.1.1" />
+    <PackageReference Include="Sardanapal.Share" Version="0.1.4" />
   </ItemGroup>
 
 </Project>

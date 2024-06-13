@@ -71,14 +71,14 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         return result;
     }
 
-    public virtual async Task<IResponse<GridVM<T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TSearchVM> model = null)
+    public virtual async Task<IResponse<GridVM<TKey, T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> model = null)
         where T : class
     {
-        var result = new Response<GridVM<T, TSearchVM>>(GetType().Name, OperationType.Fetch);
+        var result = new Response<GridVM<TKey, T, TSearchVM>>(GetType().Name, OperationType.Fetch);
 
         return await result.FillAsync(async () =>
         {
-            var resultValue = new GridVM<T, TSearchVM>(model);
+            var resultValue = new GridVM<TKey, T, TSearchVM>(model);
             var items = await GetCurrentDatabase().HashGetAllAsync(rKey);
 
             if (items != null && items.Length > 0)
@@ -98,8 +98,6 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
             {
                 result.Set(StatusCode.NotExists);
             }
-
-            return result;
         });
     }
 
@@ -126,8 +124,6 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
                 result.Set(StatusCode.Succeeded, newId);
             else
                 result.Set(StatusCode.Failed);
-
-            return result;
         });
     }
 
@@ -149,8 +145,6 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
             {
                 result.Set(StatusCode.NotExists);
             }
-
-            return result;
         });
     }
 
@@ -178,8 +172,6 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
             {
                 result.Set(StatusCode.NotExists);
             }
-
-            return result;
         });
     }
 
@@ -200,18 +192,16 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
             {
                 result.Set(StatusCode.NotExists);
             }
-
-            return result;
         });
     }
 
-    public virtual async Task<IResponse<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TSearchVM> model = null)
+    public virtual async Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> model = null)
     {
-        var result = new Response<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>(GetType().Name, OperationType.Fetch);
+        var result = new Response<GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>>(GetType().Name, OperationType.Fetch);
 
         return await result.FillAsync(async () =>
         {
-            var resultValue = new GridVM<SelectOptionVM<TKey, object>, TSearchVM>(model);
+            var resultValue = new GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>(model);
             var items = await GetCurrentDatabase().HashGetAllAsync(rKey);
 
             if (items != null && items.Length > 0)
@@ -231,8 +221,6 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
             {
                 result.Set(StatusCode.NotExists);
             }
-
-            return result;
         });
     }
 }
