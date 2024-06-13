@@ -1,4 +1,5 @@
 ﻿using Sardanapal.Share.Extensions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sardanapal.ViewModel.Response;
 
@@ -33,6 +34,13 @@ public class Response<TValue> : IResponse<TValue>
     public TValue Data { get; set; }
     public OperationType OperationType { get; set; }
     public StatusCode StatusCode { get; set; }
+
+/// <summary>
+/// This field will not be sent to the client when it is in production mode
+/// </summary>
+#if !DEBUG
+    [NotMapped]
+#endif
     public string[] DeveloperMessages { get; set; }
     public string UserMessage { get; set; }
 
