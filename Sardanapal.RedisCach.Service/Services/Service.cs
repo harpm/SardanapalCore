@@ -1,15 +1,15 @@
-﻿using System.Text.Json;
+﻿using AutoMapper;
+using System.Text.Json;
 using StackExchange.Redis;
 using Sardanapal.Domain.Model;
 using Sardanapal.ViewModel.Response;
 using Sardanapal.ViewModel.Models;
-using AutoMapper;
 using Sardanapal.RedisCach.Models;
 
 namespace Sardanapal.RedisCache.Services;
 
 public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditableVM>
-    : ICacheService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
+    : ICacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     where TModel : IBaseEntityModel<TKey>, new()
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TSearchVM : class, new()
@@ -108,6 +108,35 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         return await result.FillAsync(async () =>
         {
             TKey newId = model.Id;
+
+            var newItem = mapper.Map<TNewVM, TModel>(model);
+
+            var added = await GetCurrentDatabase().HashSetAsync(rKey
+                , new RedisValue(newId.ToString())
+                , new RedisValue(JsonSerializer.Serialize(newItem)));
+
+            bool setExpiration = true;
+
+            if (expireTime > 0)
+            {
+                setExpiration = await GetCurrentDatabase()
+                    .KeyExpireAsync(rKey, DateTime.UtcNow.AddMinutes(expireTime));
+            }
+
+            if (added && setExpiration)
+                result.Set(StatusCode.Succeeded, newId);
+            else
+                result.Set(StatusCode.Failed);
+        });
+    }
+
+    public virtual async Task<IResponse<TKey>> Add(TModel model)
+    {
+        var result = new Response<TKey>(GetType().Name, OperationType.Add);
+
+        return await result.FillAsync(async () =>
+        {
+            TKey newId = model.Id;
             var added = await GetCurrentDatabase().HashSetAsync(rKey
                 , new RedisValue(newId.ToString())
                 , new RedisValue(JsonSerializer.Serialize(model)));
@@ -161,10 +190,12 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
             if (!string.IsNullOrWhiteSpace(oldJson))
             {
+                var newValue = mapper.Map<TEditableVM, TModel>(model);
+
                 var value = await GetCurrentDatabase()
                     .HashSetAsync(rKey
                         , idValue
-                        , new RedisValue(JsonSerializer.Serialize(model)));
+                        , new RedisValue(JsonSerializer.Serialize(newValue)));
 
                 result.Set(StatusCode.Succeeded, value);
             }
