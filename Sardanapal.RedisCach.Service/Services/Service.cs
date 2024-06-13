@@ -4,6 +4,7 @@ using StackExchange.Redis;
 using Sardanapal.Domain.Model;
 using Sardanapal.ViewModel.Response;
 using Sardanapal.ViewModel.Models;
+using Sardanapal.RedisCach.Models;
 
 namespace Sardanapal.RedisCache.Services;
 
@@ -12,9 +13,9 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
     where TModel : IBaseEntityModel<TKey>, new()
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TSearchVM : class, new()
-    where TVM : class, new()
-    where TNewVM : class, new()
-    where TEditableVM : class, new()
+    where TVM : class, ICachModel<TKey>, new()
+    where TNewVM : class, ICachModel<TKey>, new()
+    where TEditableVM : class, ICachModel<TKey>, new()
 {
     protected IConnectionMultiplexer connMultiplexer { get; set; }
     protected IMapper mapper { get; set; }
