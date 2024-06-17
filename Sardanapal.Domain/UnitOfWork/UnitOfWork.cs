@@ -41,7 +41,7 @@ public abstract class SardanapalUnitOfWork : DbContext, ISardanapalUnitOfWork
             .ToArray();
     }
 
-    public virtual void ApplyFluentConfigs<T>(EntityTypeBuilder entity)
+    public virtual void ApplyFluentConfigs<T>(EntityTypeBuilder<T> entity)
         where T : class, IDomainModel
     {
         var FluentType = typeof(T).Assembly.GetTypes()
@@ -53,7 +53,7 @@ public abstract class SardanapalUnitOfWork : DbContext, ISardanapalUnitOfWork
             var fluentConfig = FluentType.GetConstructor(null).Invoke(null) as FluentModelConfig<T>;
 
             var OnModelBuild = FluentType.GetMethod("OnModelBuild");
-            OnModelBuild.Invoke(null, new object[] { entity });
+            OnModelBuild.Invoke(fluentConfig, new object[] { entity });
         }
     }
 
