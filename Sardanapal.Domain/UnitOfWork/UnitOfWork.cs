@@ -50,7 +50,7 @@ public abstract class SardanapalUnitOfWork : DbContext, ISardanapalUnitOfWork
 
         if (FluentType != null)
         {
-            var fluentConfig = FluentType.GetConstructor(null).Invoke(null) as FluentModelConfig<T>;
+            var fluentConfig = FluentType.GetConstructor(new Type[] { }).Invoke(null) as FluentModelConfig<T>;
 
             var OnModelBuild = FluentType.GetMethod("OnModelBuild");
             OnModelBuild.Invoke(fluentConfig, new object[] { entity });
