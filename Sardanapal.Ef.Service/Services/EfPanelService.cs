@@ -40,38 +40,17 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
         return query;
     }
 
-    public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey Id)
-    {
-        var Result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
-
-        return await Result.FillAsync(async () =>
-        {
-            var Item = await GetCurrentService().AsNoTracking()
-                .Where(x => x.Id.Equals(Id))
-                .ProjectTo<TEditableVM>(Mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
-
-            if (Item != null)
-            {
-                Result.Set(StatusCode.Succeeded, Item);
-            }
-            else
-            {
-                Result.Set(StatusCode.NotExists);
-            }
-
-            return Result;
-        });
-    }
-
     // TODO: Needs Review
-    public async Task<IResponse<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TSearchVM> SearchModel = null)
+    public virtual async Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null)
     {
-        var Result = new Response<GridVM<SelectOptionVM<TKey, object>, TSearchVM>>(ServiceName, OperationType.Fetch);
+        var Result = new Response<GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>>(ServiceName, OperationType.Fetch);
 
         return await Result.FillAsync(async () =>
         {
-            var ResultValue = new GridVM<SelectOptionVM<TKey, object>, TSearchVM>(SearchModel);
+            if (SearchModel == null)
+                SearchModel = new GridSearchModelVM<TKey, TSearchVM>();
+
+            var ResultValue = new GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>(SearchModel);
 
             var QList = GetCurrentService().AsNoTracking();
 
@@ -80,7 +59,7 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
                 QList = Search(QList, SearchModel.Fields);
             }
 
-            ResultValue.TotalCount = await QList.CountAsync();
+            ResultValue.SearchModel.TotalCount = await QList.CountAsync();
 
             QList = QueryHelper.Search(QList, SearchModel);
 
@@ -89,8 +68,6 @@ public abstract class EfPanelService<TContext, TKey, TEntity, TListItemVM, TSear
                 .ToListAsync();
 
             Result.Set(StatusCode.Succeeded, ResultValue);
-
-            return Result;
         });
     }
 }

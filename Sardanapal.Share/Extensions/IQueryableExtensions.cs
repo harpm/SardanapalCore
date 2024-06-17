@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using AutoMapper.Execution;
+using Sardanapal.Share.Expressions;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using System.Reflection;
-using Sardanapal.Share.Expressions;
 
 namespace Sardanapal.Share.Extensions;
 
@@ -19,9 +20,9 @@ public static class IQueryableExtensions
             }
             else
             {
-                topestBinaryExp = Expression.Or(topestBinaryExp, predications);
-                var cond = Expression.Lambda<Func<T, bool>>(topestBinaryExp);
-                query = query.Where(cond);
+                var orExpr = Expression.Or(topestBinaryExp, predications);
+                var newCondition = Expression.Lambda<Func<T, bool>>(orExpr);
+                query.Expression.Replace(topestBinaryExp, newCondition);
             }
             return query;
         }
@@ -30,7 +31,6 @@ public static class IQueryableExtensions
             throw new NullReferenceException();
         }
     }
-
     /// <summary>
     /// Searches all the fields in the T class
     /// inside the queryable
@@ -60,6 +60,7 @@ public static class IQueryableExtensions
                 && x.GetParameters().First().ParameterType == typeof(string))
             .First();
 
+        Expression predication = null;
         foreach (var field in fields)
         {
             // gets the ToString method info for this iterations field
@@ -76,8 +77,20 @@ public static class IQueryableExtensions
             // with input of the dynamicField parameter
             MethodCallExpression containsCallExpression = Expression.Call(fieldToStrExpression, strContainsMethod, searchKeywordExpression);
 
+            if (predication == null)
+            {
+                predication = containsCallExpression;
+            }
+            else
+            {
+                predication = Expression.Or(predication, containsCallExpression);
+            }
+        }
+
+        if (predication != null)
+        {
             // finally convert the whole expression into lambda expression
-            var predicate = Expression.Lambda<Func<T, bool>>(containsCallExpression, xParam);
+            var predicate = Expression.Lambda<Func<T, bool>>(predication, xParam);
 
             // and apply the entire condition expression in a where clause chained with Or (not And)
             // This should be WhereOr

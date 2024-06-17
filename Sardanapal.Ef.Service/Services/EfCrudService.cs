@@ -64,18 +64,19 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             {
                 Result.Set(StatusCode.NotExists);
             }
-
-            return Result;
         });
     }
 
-    public virtual async Task<IResponse<GridVM<T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TSearchVM> SearchModel = null) where T : class
+    public virtual async Task<IResponse<GridVM<TKey, T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null) where T : class
     {
-        var Result = new Response<GridVM<T, TSearchVM>>(ServiceName, OperationType.Fetch);
+        var Result = new Response<GridVM<TKey, T, TSearchVM>>(ServiceName, OperationType.Fetch);
 
         return await Result.FillAsync(async () =>
         {
-            var ResultValue = new GridVM<T, TSearchVM>(SearchModel);
+            if (SearchModel == null)
+                SearchModel = new GridSearchModelVM<TKey, TSearchVM>();
+
+            var ResultValue = new GridVM<TKey, T, TSearchVM>(SearchModel);
 
             var QList = GetCurrentService().AsNoTracking();
 
@@ -84,15 +85,13 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
                 QList = Search(QList, SearchModel.Fields);
             }
 
-            ResultValue.TotalCount = await QList.CountAsync();
+            ResultValue.SearchModel.TotalCount = await QList.CountAsync();
 
             QList = QueryHelper.Search(QList, SearchModel);
 
             ResultValue.List = await QList.ProjectTo<T>(Mapper.ConfigurationProvider).ToListAsync();
 
             Result.Set(StatusCode.Succeeded, ResultValue);
-
-            return Result;
         });
     }
 
@@ -107,8 +106,28 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             await UnitOfWork.SaveChangesAsync();
 
             Result.Set(StatusCode.Succeeded, Item.Id);
+        });
+    }
 
-            return Result;
+    public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey Id)
+    {
+        var Result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
+
+        return await Result.FillAsync(async () =>
+        {
+            var Item = await GetCurrentService().AsNoTracking()
+                .Where(x => x.Id.Equals(Id))
+                .ProjectTo<TEditableVM>(Mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+
+            if (Item != null)
+            {
+                Result.Set(StatusCode.Succeeded, Item);
+            }
+            else
+            {
+                Result.Set(StatusCode.NotExists);
+            }
         });
     }
 
@@ -133,8 +152,6 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             {
                 Result.Set(StatusCode.NotExists);
             }
-
-            return Result;
         });
     }
 
@@ -158,8 +175,6 @@ public abstract class EfCrudService<TContext, TKey, TEntity, TListItemVM, TSearc
             {
                 Result.Set(StatusCode.NotExists);
             }
-
-            return Result;
         });
     }
 }

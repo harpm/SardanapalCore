@@ -10,6 +10,6 @@ public interface IReadService<TKey, TSearchVM, TVM>
     where TVM : class, new()
 {
     Task<IResponse<TVM>> Get(TKey Id);
-    Task<IResponse<GridVM<T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TSearchVM> SearchModel = null) where T : class;
+    Task<IResponse<GridVM<TKey, T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null) where T : class;
 
 }
