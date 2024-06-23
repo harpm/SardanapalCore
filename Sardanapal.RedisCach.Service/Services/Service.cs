@@ -42,6 +42,20 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         return connMultiplexer.GetDatabase();
     }
 
+    protected async virtual Task<IEnumerable<TModel>> InternalGetAll()
+    {
+        var result = Enumerable.Empty<TModel>();
+
+        var items = await GetCurrentDatabase().HashGetAllAsync(rKey);
+
+        if (items != null && items.Length > 0)
+        {
+            result = items.Select(x => JsonSerializer.Deserialize<TModel>(x.Value));
+        }
+
+        return result;
+    }
+
     protected virtual IEnumerable<TModel> Search(IEnumerable<TModel> list, TSearchVM model)
     {
         return list;
