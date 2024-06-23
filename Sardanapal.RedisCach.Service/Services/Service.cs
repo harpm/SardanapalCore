@@ -93,25 +93,16 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         return await result.FillAsync(async () =>
         {
             var resultValue = new GridVM<TKey, T, TSearchVM>(model);
-            var items = await GetCurrentDatabase().HashGetAllAsync(rKey);
+            var items = await InternalGetAll();
+            var list = Search(items, model.Fields)
+                .Select(x => mapper.Map<T>(x));
 
-            if (items != null && items.Length > 0)
-            {
-                var enumerable = items
-                    .Select(x => JsonSerializer.Deserialize<TModel>(x.Value));
+            resultValue.SearchModel.TotalCount = items.Count();
 
-                // TODO: Needs test
-                var list = Search(enumerable, model.Fields)
-                    .Select(x => mapper.Map<T>(x));
+            resultValue.List = list.ToList();
 
-                resultValue.List = list.ToList();
+            result.Set(StatusCode.Succeeded, resultValue!);
 
-                result.Set(StatusCode.Succeeded, resultValue!);
-            }
-            else
-            {
-                result.Set(StatusCode.NotExists);
-            }
         });
     }
 
@@ -247,25 +238,15 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         return await result.FillAsync(async () =>
         {
             var resultValue = new GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>(model);
-            var items = await GetCurrentDatabase().HashGetAllAsync(rKey);
+            var items = await InternalGetAll();
 
-            if (items != null && items.Length > 0)
-            {
-                var enumerable = items
-                    .Select(x => JsonSerializer.Deserialize<TModel>(x.Value));
+            // TODO: Needs test
+            var list = Search(items, model.Fields)
+                .Select(x => mapper.Map<SelectOptionVM<TKey, object>>(x));
 
-                // TODO: Needs test
-                var list = Search(enumerable, model.Fields)
-                    .Select(x => mapper.Map<SelectOptionVM<TKey, object>>(x));
+            resultValue.List = list.ToList();
 
-                resultValue.List = list.ToList();
-
-                result.Set(StatusCode.Succeeded, resultValue!);
-            }
-            else
-            {
-                result.Set(StatusCode.NotExists);
-            }
+            result.Set(StatusCode.Succeeded, resultValue!);
         });
     }
 }
