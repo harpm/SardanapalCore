@@ -17,6 +17,8 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
     where TNewVM : class, ICachModel<TKey>, new()
     where TEditableVM : class, ICachModel<TKey>, new()
 {
+    public virtual string ServiceName => "ServiceName";
+
     protected IConnectionMultiplexer connMultiplexer { get; set; }
     protected IMapper mapper { get; set; }
     protected int expireTime;
