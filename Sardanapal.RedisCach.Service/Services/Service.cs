@@ -130,10 +130,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
                     .KeyExpireAsync(rKey, DateTime.UtcNow.AddMinutes(expireTime));
             }
 
-            if (added && setExpiration)
-                result.Set(StatusCode.Succeeded, newId);
-            else
-                result.Set(StatusCode.Failed);
+            result.Set(StatusCode.Succeeded, newId);
         });
     }
 
