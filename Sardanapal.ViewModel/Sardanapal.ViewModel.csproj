@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -6,14 +6,14 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Sardanapal ViewModels</Title>
-    <Version>0.1.8</Version>
+    <Version>0.1.9</Version>
     <PackageId>Sardanapal.ViewModel</PackageId>
     <Authors>harpm</Authors>
     <Company>Sardanapal</Company>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sardanapal.Share" Version="0.1.4" />
+    <PackageReference Include="Sardanapal.Share" Version="0.1.5" />
   </ItemGroup>
 
 </Project>

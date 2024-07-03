@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Title>Sardanapal Domain Base</Title>
-    <Version>0.1.6</Version>
+    <Version>0.1.7</Version>
     <Authors>harpm</Authors>
     <Company>Sardanapal</Company>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -17,7 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sardanapal.Share" Version="0.1.4" />
+    <PackageReference Include="Sardanapal.Share" Version="0.1.5" />
   </ItemGroup>
 
 </Project>
