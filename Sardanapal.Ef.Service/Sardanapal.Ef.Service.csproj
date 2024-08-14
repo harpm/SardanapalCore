@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Version>0.1.12</Version>
+		<Version>0.1.13</Version>
 		<Authors>harpm</Authors>
 		<Company>Sardanapal</Company>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Sardanapal.Ef" Version="0.1.10" />
-		<PackageReference Include="Sardanapal.Interface" Version="0.1.10" />
-		<PackageReference Include="Sardanapal.RedisCach.Service" Version="0.1.7" />
+		<PackageReference Include="Sardanapal.Ef" Version="0.1.11" />
+		<PackageReference Include="Sardanapal.Interface" Version="0.1.13" />
+		<PackageReference Include="Sardanapal.RedisCach.Service" Version="0.1.9" />
 	</ItemGroup>
 
 </Project>
