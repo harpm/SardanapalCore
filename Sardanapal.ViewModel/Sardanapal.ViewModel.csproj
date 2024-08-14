@@ -6,14 +6,14 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Sardanapal ViewModels</Title>
-    <Version>0.1.9</Version>
+    <Version>0.1.10</Version>
     <PackageId>Sardanapal.ViewModel</PackageId>
     <Authors>harpm</Authors>
     <Company>Sardanapal</Company>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sardanapal.Share" Version="0.1.5" />
+    <PackageReference Include="Sardanapal.Share" Version="0.1.6" />
   </ItemGroup>
 
 </Project>
