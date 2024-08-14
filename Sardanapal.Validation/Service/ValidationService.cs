@@ -6,10 +6,10 @@ namespace Sardanapal.Validation.Service;
 
 public class ValidationService : IValidationService
 {
-    protected IServiceProvider _serviceProvider { get; set; }
+    protected virtual IServiceProvider _serviceProvider { get; set; }
 
     protected List<string> _messages = new List<string>();
-    public List<string> Messages
+    public virtual List<string> Messages
     {
         get
         {
@@ -19,14 +19,14 @@ public class ValidationService : IValidationService
 
     protected bool _isValidGenerally = true;
 
-    public bool IsValid
+    public virtual bool IsValid
     {
         get => _isValidGenerally;
     }
 
     protected bool _isProceeded = false;
 
-    public bool IsProceeded
+    public virtual bool IsProceeded
     {
         get => _isProceeded;
     }
@@ -37,7 +37,7 @@ public class ValidationService : IValidationService
         _serviceProvider = sp;
     }
 
-    public async void ValidateParams(Type[] paramTypes, object[] paramValues)
+    public virtual async void ValidateParams(Type[] paramTypes, object[] paramValues)
     {
         if (_isProceeded) return;
         else _isProceeded = true;
@@ -56,7 +56,7 @@ public class ValidationService : IValidationService
         }
     }
 
-    protected async Task ValidateEachParam(Type paramType, object paramValue)
+    protected virtual async Task ValidateEachParam(Type paramType, object paramValue)
     {
         var nestedMembers = paramType.GetProperties()
             .Where(m => !m.PropertyType.IsPrimitive
