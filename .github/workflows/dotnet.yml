@@ -138,7 +138,7 @@ jobs:
       - name: Push package Ef
         run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Ef/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
 
-  update_interface:
+  update_contract:
     runs-on: ubuntu-latest
 
     steps:
@@ -151,13 +151,13 @@ jobs:
       - name: Add nuget source
         run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
-        run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Interface/Sardanapal.Interface.csproj
+        run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Contract/Sardanapal.Contract.csproj
       - name: Restore dependencies
-        run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Interface/Sardanapal.Interface.csproj
+        run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Contract/Sardanapal.Contract.csproj
       - name: Build
-        run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Interface/Sardanapal.Interface.csproj --no-restore --configuration release
-      - name: Push package Interface
-        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Interface/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
+        run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Contract/Sardanapal.Contract.csproj --no-restore --configuration release
+      - name: Push package Contract
+        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Contract/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
   
   update_ef_services:
     runs-on: ubuntu-latest

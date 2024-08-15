@@ -5,8 +5,6 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Ef", "Sardanapal.Ef\Sardanapal.Ef.csproj", "{3B21148A-6219-4812-9E49-83AE51C3A68A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Interface", "Sardanapal.Interface\Sardanapal.Interface.csproj", "{1FEC20CE-D9B6-449B-9159-830BAAF0BDA2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Share", "Sardanapal.Share\Sardanapal.Share.csproj", "{CA1DCB63-4A03-4D8A-930D-00E348C234B1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.ViewModel", "Sardanapal.ViewModel\Sardanapal.ViewModel.csproj", "{D3F6132C-C14B-448B-AFB7-F07AF421D8FF}"
@@ -21,12 +19,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.RedisCach", "Sar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.RedisCach.Service", "Sardanapal.RedisCach.Service\Sardanapal.RedisCach.Service.csproj", "{A73C0B96-2AC3-4D6B-8578-31BF81774449}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sardanapal.Validation", "Sardanapal.Validation\Sardanapal.Validation.csproj", "{4B3FD80B-B435-410A-82D2-7548297F7C42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Validation", "Sardanapal.Validation\Sardanapal.Validation.csproj", "{4B3FD80B-B435-410A-82D2-7548297F7C42}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Github", "Github", "{6E21CC45-B6F8-42B7-BE3C-1077A26587F8}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Contract", "Sardanapal.Contract\Sardanapal.Contract.csproj", "{BEC08AEB-60B2-40ED-A798-C36E83E9C40E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +38,6 @@ Global
 		{3B21148A-6219-4812-9E49-83AE51C3A68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B21148A-6219-4812-9E49-83AE51C3A68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B21148A-6219-4812-9E49-83AE51C3A68A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1FEC20CE-D9B6-449B-9159-830BAAF0BDA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FEC20CE-D9B6-449B-9159-830BAAF0BDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1FEC20CE-D9B6-449B-9159-830BAAF0BDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1FEC20CE-D9B6-449B-9159-830BAAF0BDA2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CA1DCB63-4A03-4D8A-930D-00E348C234B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CA1DCB63-4A03-4D8A-930D-00E348C234B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA1DCB63-4A03-4D8A-930D-00E348C234B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -74,6 +70,10 @@ Global
 		{4B3FD80B-B435-410A-82D2-7548297F7C42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B3FD80B-B435-410A-82D2-7548297F7C42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B3FD80B-B435-410A-82D2-7548297F7C42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEC08AEB-60B2-40ED-A798-C36E83E9C40E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC08AEB-60B2-40ED-A798-C36E83E9C40E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEC08AEB-60B2-40ED-A798-C36E83E9C40E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC08AEB-60B2-40ED-A798-C36E83E9C40E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
