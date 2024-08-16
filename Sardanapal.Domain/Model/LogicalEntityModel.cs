@@ -1,4 +1,6 @@
 ﻿
+using Sardanapal.Contract.IModel;
+
 namespace Sardanapal.Domain.Model;
 
 public abstract class LogicalBaseEntityModel<TKey> : BaseEntityModel<TKey>, ILogicalEntityModel

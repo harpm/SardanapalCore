@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Sardanapal.Contract.IModel;
 
 namespace Sardanapal.Domain.Config;
 

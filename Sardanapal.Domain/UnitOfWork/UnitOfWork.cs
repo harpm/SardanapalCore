@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Sardanapal.Contract.Data;
+using Sardanapal.Contract.IModel;
+using Sardanapal.Domain.Config;
 using System.Reflection;
 
 namespace Sardanapal.Domain.UnitOfWork;
 
-public abstract class SardanapalUnitOfWork : DbContext, ISardanapalUnitOfWork
+public abstract class SardanapalUnitOfWork : DbContext, ISdUnitOfWork
 {
     public SardanapalUnitOfWork(DbContextOptions opt)
         : base(opt)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sardanapal.Contract.IModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sardanapal.Domain.Model;
 

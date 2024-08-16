@@ -17,6 +17,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Sardanapal.Contract" Version="0.1.1" />
 		<PackageReference Include="Sardanapal.Share" Version="0.1.6" />
 	</ItemGroup>
 

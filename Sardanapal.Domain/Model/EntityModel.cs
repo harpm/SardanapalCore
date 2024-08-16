@@ -1,4 +1,6 @@
 ﻿
+using Sardanapal.Contract.IModel;
+
 namespace Sardanapal.Domain.Model;
 
 public abstract class EntityModel<TKey, TUserKey> : BaseEntityModel<TKey>, IEntityModel<TKey, TUserKey>
