@@ -1,5 +1,7 @@
 ﻿
+using Sardanapal.Contract.IModel;
 using Sardanapal.Interface.IService;
+using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.Contract.IService;
 
