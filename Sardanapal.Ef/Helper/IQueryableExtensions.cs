@@ -1,4 +1,4 @@
-﻿using Sardanapal.Domain.Model;
+﻿using Sardanapal.Contract.IModel;
 using Sardanapal.Share.Extensions;
 
 namespace Sardanapal.Ef.Helper;

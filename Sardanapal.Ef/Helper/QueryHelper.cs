@@ -2,7 +2,7 @@
 using Sardanapal.ViewModel.Models;
 using Sardanapal.Share.Extensions;
 using System.Reflection;
-using Sardanapal.Domain.Model;
+using Sardanapal.Contract.IModel;
 
 namespace Sardanapal.Ef.Helper;
 
