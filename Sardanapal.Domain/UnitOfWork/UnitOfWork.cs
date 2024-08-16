@@ -1,15 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Sardanapal.Domain.Model;
 using System.Reflection;
 
 namespace Sardanapal.Domain.UnitOfWork;
-
-public interface ISardanapalUnitOfWork
-{
-    Type[] GetDomainModels();
-    void ApplyFluentConfigs<T>(EntityTypeBuilder<T> entity) where T : class, IDomainModel;
-}
 
 public abstract class SardanapalUnitOfWork : DbContext, ISardanapalUnitOfWork
 {

@@ -1,14 +1,6 @@
 ﻿
 namespace Sardanapal.Domain.Model;
 
-public interface ITreeableEntityModel<TKey> : IBaseEntityModel<TKey>, IDomainModel
-    where TKey : IComparable<TKey>, IEquatable<TKey>
-{
-    TKey? ParentId { get; set; }
-    ITreeableEntityModel<TKey>? Parent { get; set; }
-    ICollection<ITreeableEntityModel<TKey>> Children { get; set; }
-}
-
 public abstract class TreeableEntityModel<TKey> : ITreeableEntityModel<TKey>
     where TKey : IComparable<TKey>, IEquatable<TKey>
 {
