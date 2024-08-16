@@ -1,8 +1,8 @@
-﻿using Sardanapal.InterfacePanel.Service;
+﻿using Sardanapal.Contract.IService;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 
-namespace Sardanapal.Interface.IService;
+namespace Sardanapal.Contract.IService;
 
 public interface IPanelService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     : ICrudService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>

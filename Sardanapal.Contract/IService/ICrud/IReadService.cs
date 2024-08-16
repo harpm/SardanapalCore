@@ -2,7 +2,7 @@
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 
-namespace Sardanapal.Interface.IService.ICrud;
+namespace Sardanapal.Contract.IService.ICrud;
 
 public interface IReadService<TKey, TSearchVM, TVM>
     where TKey : IEquatable<TKey>, IComparable<TKey>

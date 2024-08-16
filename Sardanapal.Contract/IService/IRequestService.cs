@@ -1,5 +1,5 @@
 ﻿
-namespace Sardanapal.InterfacePanel.Service;
+namespace Sardanapal.Contract.IService;
 
 public interface IRequestService
 {

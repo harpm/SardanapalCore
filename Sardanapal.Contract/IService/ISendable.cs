@@ -1,5 +1,5 @@
 ﻿
-namespace Sardanapal.Interface.IService;
+namespace Sardanapal.Contract.IService;
 
 public interface ISendable
 {

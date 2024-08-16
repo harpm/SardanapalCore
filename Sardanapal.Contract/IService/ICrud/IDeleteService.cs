@@ -1,6 +1,6 @@
 ﻿using Sardanapal.ViewModel.Response;
 
-namespace Sardanapal.Interface.IService.ICrud;
+namespace Sardanapal.Contract.IService.ICrud;
 
 public interface IDeleteService<TKey>
     where TKey : IEquatable<TKey>, IComparable<TKey>

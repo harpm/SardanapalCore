@@ -1,6 +1,6 @@
-﻿using Sardanapal.Interface.IService.ICrud;
+﻿using Sardanapal.Contract.IService.ICrud;
 
-namespace Sardanapal.InterfacePanel.Service;
+namespace Sardanapal.Contract.IService;
 
 public interface ICrudService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     : ICreateService<TKey, TNewVM>

@@ -1,7 +1,7 @@
 ﻿
 using Sardanapal.ViewModel.Response;
 
-namespace Sardanapal.Interface.IService.ICrud;
+namespace Sardanapal.Contract.IService.ICrud;
 
 public interface IUpdateService<TKey, TEditableVM>
     where TKey : IEquatable<TKey>, IComparable<TKey>
