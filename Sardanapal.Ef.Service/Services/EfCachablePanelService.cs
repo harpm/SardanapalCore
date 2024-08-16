@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Sardanapal.Domain.Model;
 using Sardanapal.Ef.Services.Services;
-using Sardanapal.Interface.IService;
-using Sardanapal.InterfacePanel.Service;
-using Sardanapal.RedisCach.Models;
-using Sardanapal.RedisCache.Services;
+using Sardanapal.Contract.IService;
+using Sardanapal.Contract.IModel;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 

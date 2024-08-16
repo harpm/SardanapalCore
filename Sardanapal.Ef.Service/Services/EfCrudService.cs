@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using Sardanapal.Domain.Model;
+using Sardanapal.Contract.IModel;
+using Sardanapal.Contract.IService;
 using Sardanapal.Ef.Helper;
-using Sardanapal.InterfacePanel.Service;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 

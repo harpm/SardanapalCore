@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Sardanapal.Interface.IService;
+using Sardanapal.Contract.IService;
 using Sardanapal.ViewModel.Response;
 using System.Net;
 

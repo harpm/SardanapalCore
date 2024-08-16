@@ -1,6 +1,6 @@
 ﻿
 using FluentValidation;
-using Sardanapal.Interface.IService;
+using Sardanapal.Contract.IService;
 
 namespace Sardanapal.Validation.Service;
 

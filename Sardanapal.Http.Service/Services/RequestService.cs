@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Sardanapal.InterfacePanel.Service;
+using Sardanapal.Contract.IService;
 
 namespace Sardanapal.Http.Service.Services;
 
