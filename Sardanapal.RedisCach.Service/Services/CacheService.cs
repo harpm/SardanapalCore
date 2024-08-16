@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using System.Text.Json;
 using StackExchange.Redis;
-using Sardanapal.Domain.Model;
+using Sardanapal.Contract.IModel;
 using Sardanapal.ViewModel.Response;
 using Sardanapal.ViewModel.Models;
-using Sardanapal.RedisCach.Models;
+using Sardanapal.Contract.IService;
 
 namespace Sardanapal.RedisCache.Services;
 
