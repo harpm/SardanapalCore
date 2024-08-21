@@ -21,7 +21,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
     protected IConnectionMultiplexer connMultiplexer { get; set; }
     protected IMapper mapper { get; set; }
-    protected int expireTime;
+    protected virtual int expireTime { get; set; }
 
     protected abstract string key { get; }
     protected RedisKey rKey
@@ -32,9 +32,8 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         }
     }
 
-    public CacheService(IConnectionMultiplexer _connectionMultiplexer, IMapper _mapper, int _expireTime = 0)
+    public CacheService(IConnectionMultiplexer _connectionMultiplexer, IMapper _mapper)
     {
-        expireTime = _expireTime;
         connMultiplexer = _connectionMultiplexer;
         mapper = _mapper;
     }
@@ -145,15 +144,13 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
                 , new RedisValue(newId.ToString())
                 , new RedisValue(JsonSerializer.Serialize(model)));
 
-            bool setExpiration = true;
-
             if (expireTime > 0)
             {
-                setExpiration = await GetCurrentDatabase()
+                await GetCurrentDatabase()
                     .KeyExpireAsync(rKey, DateTime.UtcNow.AddMinutes(expireTime));
             }
 
-            if (added && setExpiration)
+            if (added)
                 result.Set(StatusCode.Succeeded, newId);
             else
                 result.Set(StatusCode.Failed);
