@@ -17,7 +17,5 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.8" />
-		<!--<PackageReference Include="Sardanapal.Contract" Version="0.1.1" />
-		<PackageReference Include="Sardanapal.RedisCach" Version="0.1.7" />-->
 	</ItemGroup>
 </Project>
