@@ -5,15 +5,21 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Version>0.1.12</Version>
+		<Version>0.1.13</Version>
 		<Company>Sardanapal</Company>
 		<Authors>harpm</Authors>
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Sardanapal.Contract\Sardanapal.Contract.csproj" />
+	  <ProjectReference Include="..\Sardanapal.Domain\Sardanapal.Domain.csproj" />
+	  <ProjectReference Include="..\Sardanapal.ViewModel\Sardanapal.ViewModel.csproj" />
+	</ItemGroup>
+
+	<!--<ItemGroup>
 		<PackageReference Include="Sardanapal.Contract" Version="0.1.1" />
 		<PackageReference Include="Sardanapal.Domain" Version="0.1.9" />
 		<PackageReference Include="Sardanapal.ViewModel" Version="0.1.10" />
-	</ItemGroup>
+	</ItemGroup>-->
 
 </Project>
