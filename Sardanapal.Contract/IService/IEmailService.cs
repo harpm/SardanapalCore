@@ -13,33 +13,33 @@ public abstract class EmailServiceBase : IEmailService
 {
     protected abstract string OriginAddress { get; }
     protected abstract string DefaultSubject { get; }
-    protected SmtpClient client;
+    protected virtual SmtpClient client { get; set; }
 
     protected EmailServiceBase(SmtpClient _client)
     {
-        this.client = _client;
+        client = _client;
     }
 
-    public void Send(string target, string body)
+    public virtual void Send(string target, string body)
     {
         client.Send(CreateMessage(target, body));
     }
 
-    public void Send(string target, string subject, string body)
+    public virtual void Send(string target, string subject, string body)
     {
         client.Send(CreateMessage(target, subject, body));
     }
 
-    public void Send(string origin, string target, string subject, string body)
+    public virtual void Send(string origin, string target, string subject, string body)
     {
         client.Send(origin, target, subject, body);
     }
 
-    protected MailMessage CreateMessage(string target, string body)
+    protected virtual MailMessage CreateMessage(string target, string body)
     {
         return new MailMessage(OriginAddress, target, DefaultSubject, body);
     }
-    protected MailMessage CreateMessage(string target, string subject, string body)
+    protected virtual MailMessage CreateMessage(string target, string subject, string body)
     {
         return new MailMessage(OriginAddress, target, DefaultSubject, body);
     }
