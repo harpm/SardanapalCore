@@ -66,7 +66,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
     {
         var result = new Response<TVM>(GetType().Name, OperationType.Fetch);
 
-        try
+        await result.FillAsync(async () =>
         {
             string item = await GetCurrentDatabase()
                 .HashGetAsync(rKey, new RedisValue(id.ToString()));
@@ -77,12 +77,11 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
                 var value = mapper.Map<TVM>(model);
                 result.Set(StatusCode.Succeeded, value);
             }
-        }
-        catch (Exception ex)
-        {
-            result.Set(StatusCode.Exception, ex);
-        }
-
+            else
+            {
+                result.Set(StatusCode.NotExists);
+            }
+        });
         return result;
     }
 
@@ -99,11 +98,9 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
                 .Select(x => mapper.Map<T>(x));
 
             resultValue.SearchModel.TotalCount = items.Count();
-
             resultValue.List = list.ToList();
 
             result.Set(StatusCode.Succeeded, resultValue!);
-
         });
     }
 
@@ -125,8 +122,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
             if (expireTime > 0)
             {
-                setExpiration = await GetCurrentDatabase()
-                    .KeyExpireAsync(rKey, DateTime.UtcNow.AddMinutes(expireTime));
+                await GetCurrentDatabase().ExecuteAsync($"HEXPIRE {key} {expireTime * 60} FIELDS 1 {newId.ToString()}");
             }
 
             result.Set(StatusCode.Succeeded, newId);
@@ -146,8 +142,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
             if (expireTime > 0)
             {
-                await GetCurrentDatabase()
-                    .KeyExpireAsync(rKey, DateTime.UtcNow.AddMinutes(expireTime));
+                await GetCurrentDatabase().ExecuteAsync($"HEXPIRE {key} {expireTime * 60} FIELDS 1 {newId.ToString()}");
             }
 
             if (added)
