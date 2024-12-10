@@ -5,6 +5,7 @@ namespace Sardanapal.ViewModel.Response;
 
 public interface IResponse
 {
+    bool IsSuccess { get; }
     string ServiceName { get; set; }
     OperationType OperationType { get; set; }
     StatusCode StatusCode { get; set; }
@@ -30,6 +31,13 @@ public interface IResponse<TValue> : IResponse
 
 public class Response<TValue> : IResponse<TValue>
 {
+    public virtual bool IsSuccess
+    {
+        get
+        {
+            return StatusCode == StatusCode.Succeeded;
+        }
+    }
     public string ServiceName { get; set; }
     public TValue Data { get; set; }
     public OperationType OperationType { get; set; }
