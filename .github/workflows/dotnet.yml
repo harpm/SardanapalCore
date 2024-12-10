@@ -19,11 +19,10 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
-      - name: See whats there
-        run: dir
+
       - name: Set Global Version
         run: |
-          content=`cat ./home/runner/work/SardanapalCore/SardanapalCore/Build.json`
+          content=`cat ./Build.json`
           # the following lines are only required for multi line json
           content="${content//'%'/'%25'}"
           content="${content//$'\n'/'%0A'}"
