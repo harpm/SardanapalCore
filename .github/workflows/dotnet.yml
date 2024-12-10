@@ -19,6 +19,8 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
+      - name: See whats there
+        run: dir
       - name: Set Global Version
         run: |
           content=`cat ./home/runner/work/SardanapalCore/SardanapalCore/Build.json`
