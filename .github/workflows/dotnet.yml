@@ -221,3 +221,23 @@ jobs:
         run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Validation/Sardanapal.Validation.csproj --no-restore --configuration release
       - name: Push package Validation
         run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.Validation/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
+  update_rabbitmq_service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Add nuget source
+        run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
+      - name: Clean the build files
+        run: dotnet clean /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RabbitMQ.Service/Sardanapal.RabbitMQ.Service.csproj
+      - name: Restore dependencies
+        run: dotnet restore /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RabbitMQ.Service/Sardanapal.RabbitMQ.Service.csproj
+      - name: Build
+        run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RabbitMQ.Service/Sardanapal.RabbitMQ.Service.csproj --no-restore --configuration release
+      - name: Push package RabbitMQ Service
+        run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RabbitMQ.Service/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
