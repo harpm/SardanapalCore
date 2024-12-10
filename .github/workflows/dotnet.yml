@@ -19,7 +19,18 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
-
+      - name: Set Global Version
+        run: |
+          content=`cat ./home/runner/work/SardanapalCore/SardanapalCore/Build.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+      - name: Read Version
+        run: |
+          echo "${{fromJson(steps.set_var.outputs.packageJson).version}}"
       - name: Add nuget source
         run: dotnet nuget add source --username harpm --password ${{ secrets.GITHUBTOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/harpm/index.json"
       - name: Clean the build files
