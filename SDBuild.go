@@ -25,17 +25,20 @@ const (
 func Log(content string, level LogLevel) {
 
 	if level == Debug_Level {
-		fmt.Printf("Log [Debug]: %s", content)
+		fmt.Printf("\nLog [Debug]: %s\n", content)
 	} else if level == Info_Level {
-		fmt.Printf("Log [Info]: %s", content)
+		fmt.Printf("\nLog [Info]: %s\n", content)
 	} else if level == Warning_Level {
-		fmt.Printf("Log [Warning]: %s", content)
+		fmt.Printf("\nLog [Warning]: %s\n", content)
 	} else if level == Error_Level {
-		fmt.Printf("Log [Error]: %s", content)
+		fmt.Printf("\nLog [Error]: %s\n", content)
 	}
 }
 
 func main() {
+	// Setting Github Token var
+	g_token := os.Args[1]
+
 	var data BuildInfo
 	b_data, _ := os.ReadFile("Build.json")
 
@@ -44,7 +47,25 @@ func main() {
 		panic(err)
 	}
 
-	Log(fmt.Sprintf("Projects Path: %s", data.Projects_Path[:]), Info_Level)
+	Log(fmt.Sprintf("Projects Path: \n%s", data.Projects_Path[:]), Info_Level)
+
+	nuget_cmd := exec.Command("dotnet",
+		"nuget",
+		"add",
+		"source",
+		"--username",
+		"harpm",
+		"--password",
+		g_token,
+		"--store-password-in-clear-text",
+		"--name",
+		"github")
+
+	output, err := nuget_cmd.Output()
+
+	if err != nil {
+		panic(err)
+	}
 
 	for i := 0; i < len(data.Projects_Path); i++ {
 		Log(fmt.Sprintf("-------------------- Started pipeline for project: %s --------------------", data.Projects_Path[i]), Info_Level)
@@ -55,7 +76,7 @@ func main() {
 			"clean",
 			data.Projects_Path[i])
 
-		output, err := clean_cmd.Output()
+		output, err = clean_cmd.Output()
 
 		if err != nil {
 			Log(fmt.Sprintf("Failed project %s\nError: %s", data.Projects_Path[i], err), Error_Level)
@@ -119,5 +140,9 @@ func main() {
 		fmt.Printf("Output: \t%s", string(output[:]))
 
 		Log(fmt.Sprintf("-------------------- Ended pipeline for project: %s --------------------", data.Projects_Path[i]), Info_Level)
+	}
+
+	if err != nil {
+		panic(err)
 	}
 }
