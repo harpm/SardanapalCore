@@ -59,7 +59,7 @@ func main() {
 		output, err := clean_cmd.Output()
 
 		if err != nil {
-			Log(fmt.Sprintf("Failed project %s\nError: %s", data.Projects_Path[i], err), Error_Level)
+			Log(fmt.Sprintf("Failed project %s\nResult:%s\nError: %s", data.Projects_Path[i], output, err), Error_Level)
 			continue
 		}
 
@@ -74,7 +74,7 @@ func main() {
 		output, err = restore_cmd.Output()
 
 		if err != nil {
-			Log(fmt.Sprintf("Failed project %s\nError: %s", data.Projects_Path[i], err), Error_Level)
+			Log(fmt.Sprintf("Failed project %s\nResult:%s\nError: %s", data.Projects_Path[i], output, err), Error_Level)
 			continue
 		}
 
@@ -93,7 +93,7 @@ func main() {
 		output, err = build_cmd.Output()
 
 		if err != nil {
-			Log(fmt.Sprintf("Failed project %s\nError: %s", data.Projects_Path[i], err), Error_Level)
+			Log(fmt.Sprintf("Failed project %s\nResult:%s\nError: %s", data.Projects_Path[i], output, err), Error_Level)
 			continue
 		}
 
@@ -113,7 +113,7 @@ func main() {
 		output, err = publish_cmd.Output()
 
 		if err != nil {
-			Log(fmt.Sprintf("Failed project %s\nError: %s", data.Projects_Path[i], err), Error_Level)
+			Log(fmt.Sprintf("Failed project %s\nResult:%s\nError: %s", data.Projects_Path[i], output, err), Error_Level)
 			continue
 		}
 
