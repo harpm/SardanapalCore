@@ -21,4 +21,4 @@ jobs:
           go-version: '1.20'
 
       - name: Runing Build Script
-        run: go run /home/runner/work/SardanapalCore/SardanapalCore/SDBuild.go
+        run: go run /home/runner/work/SardanapalCore/SardanapalCore/SDBuild.go ${{ secrets.GITHUBTOKEN }}
