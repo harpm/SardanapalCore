@@ -56,7 +56,7 @@ func main() {
 			"clean",
 			data.Projects_Path[i])
 
-		output, err = clean_cmd.Output()
+		output, err := clean_cmd.Output()
 
 		if err != nil {
 			Log(fmt.Sprintf("Failed project %s\nError: %s", data.Projects_Path[i], err), Error_Level)
