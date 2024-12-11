@@ -20,5 +20,5 @@ jobs:
         with:
           go-version: '1.20'
 
-      - name: Add nuget source
+      - name: Runing Build Script
         run: go run /home/runner/work/SardanapalCore/SardanapalCore/SDBuild.go
