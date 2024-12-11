@@ -10,7 +10,7 @@ on:
     branches: ["master"]
 
 jobs:
-  update_share:
+  build_and_publish:
     runs-on: ubuntu-latest
 
     steps:
