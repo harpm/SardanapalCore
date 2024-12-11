@@ -253,3 +253,4 @@ jobs:
         run: dotnet build /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RabbitMQ.Service/Sardanapal.RabbitMQ.Service.csproj --no-restore --configuration release
       - name: Push package RabbitMQ Service
         run: dotnet nuget push /home/runner/work/SardanapalCore/SardanapalCore/Sardanapal.RabbitMQ.Service/bin/release/*.nupkg -s https://nuget.pkg.github.com/harpm/index.json --skip-duplicate
+
