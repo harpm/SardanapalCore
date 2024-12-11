@@ -36,6 +36,13 @@ func Log(content string, level LogLevel) {
 }
 
 func main() {
+	testcmd := exec.Command("dir")
+	out, errors := testcmd.Output()
+
+	if errors != nil {
+		panic(errors)
+	}
+	Log(string(out[:]), Debug_Level)
 
 	var data BuildInfo
 	b_data, _ := os.ReadFile("Build.json")
