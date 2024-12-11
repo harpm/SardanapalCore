@@ -13,26 +13,43 @@ type BuildInfo struct {
 	Nuget_Provider string
 }
 
+type LogLevel int
+
+const (
+	Info_Level LogLevel = iota
+	Debug_Level
+	Warning_Level
+	Error_Level
+)
+
+func Log(content string, level LogLevel) {
+
+	if level == Debug_Level {
+		fmt.Printf("Log [Debug]: %s", content)
+	} else if level == Info_Level {
+		fmt.Printf("Log [Info]: %s", content)
+	} else if level == Warning_Level {
+		fmt.Printf("Log [Warning]: %s", content)
+	} else if level == Error_Level {
+		fmt.Printf("Log [Error]: %s", content)
+	}
+}
+
 func main() {
 	var data BuildInfo
 	b_data, _ := os.ReadFile("Build.json")
-
-	// log file content
-	fmt.Println(string(b_data[:]))
 
 	err := json.Unmarshal(b_data, &data)
 	if err != nil {
 		panic(err)
 	}
 
-	// log version
-	fmt.Println("Version: ", data.Version)
-
-	fmt.Printf("Projects Path: %s", data.Projects_Path[:])
+	Log(fmt.Sprintf("Projects Path: %s", data.Projects_Path[:]), Info_Level)
 
 	for i := 0; i < len(data.Projects_Path); i++ {
+		Log(fmt.Sprintf("-------------------- Started pipeline for project: %s --------------------", data.Projects_Path[i]), Info_Level)
 
-		fmt.Printf("Cleaning project...\n\tPath: %s", data.Projects_Path[i])
+		Log(fmt.Sprintf("Cleaning project...\n\tPath: %s", data.Projects_Path[i]), Info_Level)
 
 		clean_cmd := exec.Command("dotnet",
 			"clean",
@@ -41,13 +58,13 @@ func main() {
 		output, err := clean_cmd.Output()
 
 		if err != nil {
-			fmt.Printf("Build project %s\nError: %s", data.Projects_Path[i], err)
+			Log(fmt.Sprintf("Failed project %s\nError: %s", data.Projects_Path[i], err), Error_Level)
 			continue
 		}
 
 		fmt.Printf("Output: \t%s", string(output[:]))
 
-		fmt.Printf("Restoring project...\n\tPath: %s", data.Projects_Path[i])
+		Log(fmt.Sprintf("Restoring project...\n\tPath: %s", data.Projects_Path[i]), Info_Level)
 
 		restore_cmd := exec.Command("dotnet",
 			"restore",
@@ -56,13 +73,13 @@ func main() {
 		output, err = restore_cmd.Output()
 
 		if err != nil {
-			fmt.Printf("Build project %s\nError: %s", data.Projects_Path[i], err)
+			Log(fmt.Sprintf("Failed project %s\nError: %s", data.Projects_Path[i], err), Error_Level)
 			continue
 		}
 
 		fmt.Printf("Output: \t%s", string(output[:]))
 
-		fmt.Printf("Building project...\n\tPath: %s", data.Projects_Path[i])
+		Log(fmt.Sprintf("Building project...\n\tPath: %s", data.Projects_Path[i]), Info_Level)
 
 		build_cmd := exec.Command("dotnet",
 			"build",
@@ -75,14 +92,14 @@ func main() {
 		output, err = build_cmd.Output()
 
 		if err != nil {
-			fmt.Printf("Build project %s\nError: %s", data.Projects_Path[i], err)
+			Log(fmt.Sprintf("Failed project %s\nError: %s", data.Projects_Path[i], err), Error_Level)
 			continue
 		}
 
 		// log output message
 		fmt.Printf("Output: \t%s", string(output[:]))
 
-		fmt.Printf("Publishing project artifacts...\n\tPath: %s", data.Projects_Path[i])
+		Log(fmt.Sprintf("Publishing project artifacts...\n\tPath: %s", data.Projects_Path[i]), Info_Level)
 
 		publish_cmd := exec.Command("dotnet",
 			"nuget",
@@ -95,10 +112,12 @@ func main() {
 		output, err = publish_cmd.Output()
 
 		if err != nil {
-			fmt.Printf("Build project %s\nError: %s", data.Projects_Path[i], err)
+			Log(fmt.Sprintf("Failed project %s\nError: %s", data.Projects_Path[i], err), Error_Level)
 			continue
 		}
 
 		fmt.Printf("Output: \t%s", string(output[:]))
+
+		Log(fmt.Sprintf("-------------------- Ended pipeline for project: %s --------------------", data.Projects_Path[i]), Info_Level)
 	}
 }
