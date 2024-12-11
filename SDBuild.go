@@ -39,6 +39,8 @@ func main() {
 	// Setting Github Token var
 	g_token := os.Args[1]
 
+	Log(fmt.Sprintf("GitHub Token: %s", g_token), Info_Level)
+
 	var data BuildInfo
 	b_data, _ := os.ReadFile("Build.json")
 
