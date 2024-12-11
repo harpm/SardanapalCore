@@ -36,10 +36,6 @@ func Log(content string, level LogLevel) {
 }
 
 func main() {
-	// Setting Github Token var
-	g_token := os.Args[1]
-
-	Log(fmt.Sprintf("GitHub Token: %s", g_token), Info_Level)
 
 	var data BuildInfo
 	b_data, _ := os.ReadFile("Build.json")
@@ -50,24 +46,6 @@ func main() {
 	}
 
 	Log(fmt.Sprintf("Projects Path: \n%s", data.Projects_Path[:]), Info_Level)
-
-	nuget_cmd := exec.Command("dotnet",
-		"nuget",
-		"add",
-		"source",
-		"--username",
-		"harpm",
-		"--password",
-		g_token,
-		"--store-password-in-clear-text",
-		"--name",
-		"github")
-
-	output, err := nuget_cmd.Output()
-
-	if err != nil {
-		panic(err)
-	}
 
 	for i := 0; i < len(data.Projects_Path); i++ {
 		Log(fmt.Sprintf("-------------------- Started pipeline for project: %s --------------------", data.Projects_Path[i]), Info_Level)
