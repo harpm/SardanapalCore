@@ -105,7 +105,7 @@ func main() {
 		publish_cmd := exec.Command("dotnet",
 			"nuget",
 			"push",
-			fmt.Sprintf(".\\%s\\bin\\release\\%s.%s.nupkg", data.Projects_Path[i], data.Projects_Path[i], data.Version),
+			fmt.Sprintf("/home/runner/work/SardanapalCore/SardanapalCore/%s/bin/release/%s.%s.nupkg", data.Projects_Path[i], data.Projects_Path[i], data.Version),
 			"-s",
 			data.Nuget_Provider,
 			"--skip-duplicate")
