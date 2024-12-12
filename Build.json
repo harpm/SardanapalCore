@@ -1,6 +1,6 @@
 {
 	"nuget_provider": "https://nuget.pkg.github.com/harpm/index.json",
-	"version": "0.3.1",
+	"version": "0.2.5",
 	"projects_path": [
 		"Sardanapal.Contract",
 		"Sardanapal.Domain",
