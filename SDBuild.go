@@ -114,15 +114,6 @@ func main() {
 
 		if err != nil {
 			Log(fmt.Sprintf("Failed project %s\nResult:%s\nError: %s", data.Projects_Path[i], output, err), Error_Level)
-
-			testcmd := exec.Command("tree")
-			out, errors := testcmd.Output()
-
-			if errors != nil {
-				panic(errors)
-			}
-			Log(string(out[:]), Debug_Level)
-
 			continue
 		}
 
