@@ -36,7 +36,7 @@ func Log(content string, level LogLevel) {
 }
 
 func main() {
-	testcmd := exec.Command("dir")
+	testcmd := exec.Command("tree")
 	out, errors := testcmd.Output()
 
 	if errors != nil {
