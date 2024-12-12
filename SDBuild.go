@@ -36,13 +36,6 @@ func Log(content string, level LogLevel) {
 }
 
 func main() {
-	testcmd := exec.Command("tree")
-	out, errors := testcmd.Output()
-
-	if errors != nil {
-		panic(errors)
-	}
-	Log(string(out[:]), Debug_Level)
 
 	var data BuildInfo
 	b_data, _ := os.ReadFile("Build.json")
@@ -112,7 +105,7 @@ func main() {
 		publish_cmd := exec.Command("dotnet",
 			"nuget",
 			"push",
-			fmt.Sprintf("%s\\bin\\release\\*.nupkg", data.Projects_Path[i]),
+			fmt.Sprintf("%s\\bin\\release\\%s.%s.nupkg", data.Projects_Path[i], data.Projects_Path[i], data.Version),
 			"-s",
 			data.Nuget_Provider,
 			"--skip-duplicate")
@@ -121,6 +114,15 @@ func main() {
 
 		if err != nil {
 			Log(fmt.Sprintf("Failed project %s\nResult:%s\nError: %s", data.Projects_Path[i], output, err), Error_Level)
+
+			testcmd := exec.Command("tree")
+			out, errors := testcmd.Output()
+
+			if errors != nil {
+				panic(errors)
+			}
+			Log(string(out[:]), Debug_Level)
+
 			continue
 		}
 
