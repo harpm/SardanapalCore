@@ -21,14 +21,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.RedisCach.Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Validation", "Sardanapal.Validation\Sardanapal.Validation.csproj", "{4B3FD80B-B435-410A-82D2-7548297F7C42}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Github", "Github", "{6E21CC45-B6F8-42B7-BE3C-1077A26587F8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{6E21CC45-B6F8-42B7-BE3C-1077A26587F8}"
 	ProjectSection(SolutionItems) = preProject
+		Build.json = Build.json
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		SDBuild.go = SDBuild.go
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Contract", "Sardanapal.Contract\Sardanapal.Contract.csproj", "{BEC08AEB-60B2-40ED-A798-C36E83E9C40E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sardanapal.RabbitMQ.Service", "Sardanapal.RabbitMQ.Service\Sardanapal.RabbitMQ.Service.csproj", "{A3AA4879-E1FB-4BB4-BC25-12345B1AC06D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.RabbitMQ.Service", "Sardanapal.RabbitMQ.Service\Sardanapal.RabbitMQ.Service.csproj", "{A3AA4879-E1FB-4BB4-BC25-12345B1AC06D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
