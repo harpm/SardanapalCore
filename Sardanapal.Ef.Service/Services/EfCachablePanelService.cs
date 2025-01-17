@@ -62,26 +62,18 @@ public abstract class EfCachablePanelService<TContext, TCachService, TKey, TEnti
         return result;
     }
 
-    public override Task<IResponse<GridVM<TKey, T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null)
-    {
-        return _cachService.GetAll<T>(SearchModel);
-    }
-
     public override Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null)
     {
         return _cachService.GetDictionary(SearchModel);
     }
 
-    public override async Task<IResponse<TKey>> Add(TNewVM Model)
+    public override async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model)
     {
-        var result = await base.Add(Model);
+        var result = await base.Edit(Id, Model);
 
-        if (result.StatusCode == StatusCode.Succeeded)
+        if (result.IsSuccess)
         {
-            await result.FillAsync(async () =>
-            {
-                await _cachService.Add(Model);
-            });
+            var cResult = await _cachService.Delete(Id);
         }
 
         return result;
@@ -91,12 +83,12 @@ public abstract class EfCachablePanelService<TContext, TCachService, TKey, TEnti
     {
         var result = await base.Delete(Id);
 
-        if (result.StatusCode == StatusCode.Succeeded)
+        if (result.IsSuccess)
         {
             await result.FillAsync(async () =>
             {
                 var secondRes = await _cachService.Delete(Id);
-                if (secondRes.StatusCode != StatusCode.Succeeded)
+                if (!secondRes.IsSuccess)
                 {
                     result = secondRes;
                 }

@@ -49,7 +49,7 @@ public abstract class EfRetryCrudService<TContext, TKey, TEntity, TListItemVM, T
     public virtual async Task<IResponse<TVM>> Get(TKey Id)
     {
         IResponse<TVM> Result = new Response<TVM>(ServiceName, OperationType.Fetch);
-        await RetryService.RetryUntillSuccessAsync(1, async () =>
+        await RetryService.RetryUntillAsync(1, 3, async () =>
         {
             Result = await Result.FillAsync(async () =>
             {
@@ -78,7 +78,7 @@ public abstract class EfRetryCrudService<TContext, TKey, TEntity, TListItemVM, T
     {
         IResponse<GridVM<TKey, T, TSearchVM>> Result = new Response<GridVM<TKey, T, TSearchVM>>(ServiceName, OperationType.Fetch);
 
-        await RetryService.RetryUntillSuccessAsync(1, async () =>
+        await RetryService.RetryUntillAsync(1, 3, async () =>
         {
             Result = await Result.FillAsync(async () =>
             {
@@ -113,7 +113,7 @@ public abstract class EfRetryCrudService<TContext, TKey, TEntity, TListItemVM, T
     {
         IResponse<TKey> Result = new Response<TKey>(ServiceName, OperationType.Add);
 
-        await RetryService.RetryUntillSuccessAsync(1, async () =>
+        await RetryService.RetryUntillAsync(1, 3, async () =>
         {
             Result = await Result.FillAsync(async () =>
             {
@@ -133,7 +133,7 @@ public abstract class EfRetryCrudService<TContext, TKey, TEntity, TListItemVM, T
     {
         IResponse<TEditableVM> Result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
 
-        await RetryService.RetryUntillSuccessAsync(1, async () =>
+        await RetryService.RetryUntillAsync(1, 3, async () =>
         {
             Result = await Result.FillAsync(async () =>
             {
@@ -162,7 +162,7 @@ public abstract class EfRetryCrudService<TContext, TKey, TEntity, TListItemVM, T
     {
         IResponse<bool> Result = new Response(ServiceName, OperationType.Edit);
 
-        await RetryService.RetryUntillSuccessAsync(1, async () =>
+        await RetryService.RetryUntillAsync(1, 3, async () =>
         {
             Result = await Result.FillAsync(async () =>
             {
@@ -193,7 +193,7 @@ public abstract class EfRetryCrudService<TContext, TKey, TEntity, TListItemVM, T
     {
         IResponse<bool> Result = new Response(ServiceName, OperationType.Delete);
 
-        await RetryService.RetryUntillSuccessAsync(1, async () =>
+        await RetryService.RetryUntillAsync(1, 3, async () =>
         {
             Result = await Result.FillAsync(async () =>
             {
