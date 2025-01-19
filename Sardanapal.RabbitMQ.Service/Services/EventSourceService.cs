@@ -1,5 +1,6 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IService;
 using Sardanapal.Share.EventArgModels;
 using Sardanapal.ViewModel.Response;
@@ -10,7 +11,7 @@ namespace Sardanapal.RabbitMQ.Service.Services;
 
 public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKey, TModel>, IDisposable
     where TKey : IEquatable<TKey>, IComparable<TKey>
-    where TModel : new()
+    where TModel : IBaseEntityModel<TKey>, new()
 {
     protected IConnection ampqConnection { get; set; }
     protected abstract string exchangeName { get; set; }
@@ -27,40 +28,12 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
         await channel.ExchangeDeclareAsync(exchangeName, ExchangeType.Direct);
     }
 
-    protected virtual async Task<string> GetQueueName(string suffixName) => string.Concat(typeof(TModel).AssemblyQualifiedName, ".", suffixName);
+    protected virtual Task<string> GetQueueName(string suffixName)
+        => Task.FromResult(string.Concat(typeof(TModel).AssemblyQualifiedName, ".", suffixName));
 
-    protected virtual async Task<TModel> CreateModel(TModel model)
+    protected virtual Task<TModel> CreateModel(TModel model)
     {
-        return model;
-    }
-
-    public async Task<IResponse<TModel>> Dequeue(OperationType queue)
-    {
-        IResponse<TModel> result = new Response<TModel>(serviceName, OperationType.Fetch);
-        using IChannel channel = await ampqConnection.CreateChannelAsync();
-
-        var message = await channel.BasicGetAsync(await GetQueueName(queue.ToString()), false);
-
-        if (message == null)
-        {
-            result.Set(StatusCode.NotExists);
-            return result;
-        }
-        else
-        {
-            string strBody = Encoding.Default.GetString(message.Body.ToArray());
-            var model = JsonSerializer.Deserialize<TModel>(strBody);
-            if (model != null)
-            {
-                result.Set(StatusCode.Succeeded, model);
-            }
-            else
-            {
-                result.Set(StatusCode.Failed);
-            }
-
-        }
-        return result;
+        return Task.FromResult(model);
     }
 
     public async Task<IResponse<TKey>> Enqueue(OperationType queue, TModel model)
@@ -79,8 +52,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
             var body = new ReadOnlyMemory<byte>(Encoding.Default.GetBytes(jsonModel));
             await channel.BasicPublishAsync(exchangeName, await GetQueueName(queue.ToString()), body);
 
-            // TODO: fill the result properly
-            result.Set(StatusCode.Succeeded);
+            result.Set(StatusCode.Succeeded, model.Id);
         });
         
         return result;
@@ -102,6 +74,8 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
         return result;
     }
 
+    protected abstract TKey NewId(TModel model);
+
     protected AsyncEventHandler<BasicDeliverEventArgs> ConsumeMessage(ESHandleEvent<TKey, TModel> handler)
     {
         return async (ch, ea) =>
@@ -110,8 +84,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
             var model = JsonSerializer.Deserialize<TModel>(jsonBody);
             handler(ch, new EventSourceEventArgs<TKey, TModel>()
             {
-                // TODO: assign real id
-                Id = default(TKey),
+                Id = NewId(model),
                 Model = model
             });
 

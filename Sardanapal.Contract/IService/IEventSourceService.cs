@@ -1,4 +1,5 @@
-﻿using Sardanapal.Share.EventArgModels;
+﻿using Sardanapal.Contract.IModel;
+using Sardanapal.Share.EventArgModels;
 using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.Contract.IService;
@@ -9,9 +10,8 @@ public delegate void ESHandleEvent<TKey, TModel>(object source, EventSourceEvent
 
 public interface IEventSourceService<TKey, TModel>
     where TKey : IEquatable<TKey>, IComparable<TKey>
-    where TModel : new()
+    where TModel : IBaseEntityModel<TKey>, new()
 {
     public Task<IResponse<TKey>> Enqueue(OperationType queue, TModel model);
     public Task<IResponse<bool>> RegisterTopic(OperationType queueName, ESHandleEvent<TKey, TModel> handler);
-    public Task<IResponse<TModel>> Dequeue(OperationType queue);
 }
