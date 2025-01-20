@@ -3,7 +3,8 @@ using Sardanapal.Contract.IService;
 
 namespace Sardanapal.Http.Service.Services;
 
-public class RequestService : IRequestService
+public abstract class RequestService<TUserKey> : IRequestService<TUserKey>
+    where TUserKey : IComparable<TUserKey>, IEquatable<TUserKey>
 {
     public string IP { get; set; }
 
@@ -11,4 +12,6 @@ public class RequestService : IRequestService
     {
         IP = _http.HttpContext.Connection.RemoteIpAddress.ToString();
     }
+
+    public abstract TUserKey GetUserId();
 }
