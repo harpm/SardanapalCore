@@ -62,7 +62,7 @@ public abstract class EfCachablePanelService<TContext, TCachService, TKey, TEnti
         return result;
     }
 
-    public override Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null)
+    public override Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null)
     {
         return _cachService.GetDictionary(SearchModel);
     }

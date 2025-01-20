@@ -1,5 +1,4 @@
-﻿using Sardanapal.Contract.IService;
-using Sardanapal.ViewModel.Models;
+﻿using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.Contract.IService;
@@ -12,5 +11,5 @@ public interface IPanelService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     where TNewVM : class, new()
     where TEditableVM : class, new()
 {
-    Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null);
+    Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null);
 }

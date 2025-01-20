@@ -1,7 +1,17 @@
 ﻿
 namespace Sardanapal.ViewModel.Models;
 
-public abstract class GridSearchModelVM<TKey>
+public interface IGridSearchVM
+{
+    string DynamicField { get; set; }
+    string SortId { get; set; }
+    bool SortAsccending { get; set; }
+    int PageIndex { get; set; }
+    int PageSize { get; set; }
+    int TotalCount { get; set; }
+}
+
+public abstract class GridSearchModelVM<TKey> : IGridSearchVM
     where TKey : IComparable<TKey>, IEquatable<TKey>
 {
     public string DynamicField { get; set; }

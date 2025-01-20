@@ -74,9 +74,9 @@ public abstract class EfRetryCrudService<TContext, TKey, TEntity, TListItemVM, T
         return Result;
     }
 
-    public virtual async Task<IResponse<GridVM<TKey, T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null) where T : class
+    public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null) where T : class
     {
-        IResponse<GridVM<TKey, T, TSearchVM>> Result = new Response<GridVM<TKey, T, TSearchVM>>(ServiceName, OperationType.Fetch);
+        IResponse<GridVM<TKey, T>> Result = new Response<GridVM<TKey, T>>(ServiceName, OperationType.Fetch);
 
         await RetryService.RetryUntillAsync(1, 3, async () =>
         {
@@ -85,7 +85,7 @@ public abstract class EfRetryCrudService<TContext, TKey, TEntity, TListItemVM, T
                 if (SearchModel == null)
                     SearchModel = new GridSearchModelVM<TKey, TSearchVM>();
 
-                var ResultValue = new GridVM<TKey, T, TSearchVM>(SearchModel);
+                var ResultValue = new GridVM<TKey, T>(SearchModel);
 
                 var QList = GetCurrentService().AsNoTracking();
 

@@ -85,14 +85,14 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         return result;
     }
 
-    public virtual async Task<IResponse<GridVM<TKey, T, TSearchVM>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> model = null)
+    public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> model = null)
         where T : class
     {
-        var result = new Response<GridVM<TKey, T, TSearchVM>>(GetType().Name, OperationType.Fetch);
+        var result = new Response<GridVM<TKey, T>>(GetType().Name, OperationType.Fetch);
 
         return await result.FillAsync(async () =>
         {
-            var resultValue = new GridVM<TKey, T, TSearchVM>(model);
+            var resultValue = new GridVM<TKey, T>(model);
             var items = await InternalGetAll();
             var list = Search(items, model.Fields)
                 .Select(x => mapper.Map<T>(x));
@@ -222,13 +222,13 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         });
     }
 
-    public virtual async Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> model = null)
+    public virtual async Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> model = null)
     {
-        var result = new Response<GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>>(GetType().Name, OperationType.Fetch);
+        var result = new Response<GridVM<TKey, SelectOptionVM<TKey, object>>>(GetType().Name, OperationType.Fetch);
 
         return await result.FillAsync(async () =>
         {
-            var resultValue = new GridVM<TKey, SelectOptionVM<TKey, object>, TSearchVM>(model);
+            var resultValue = new GridVM<TKey, SelectOptionVM<TKey, object>>(model);
             var items = await InternalGetAll();
 
             // TODO: Needs test
