@@ -101,7 +101,7 @@ func main() {
 		fmt.Printf("Output: \t%s", string(output[:]))
 	}
 
-	for i:= 0; i < len(data.Projects_Path[:]); i++ {
+	for i := 0; i < len(data.Projects_Path[:]); i++ {
 		Log(fmt.Sprintf("Publishing project artifacts...\n\tPath: %s", data.Projects_Path[i]), Info_Level)
 
 		publish_cmd := exec.Command("dotnet",
@@ -112,13 +112,13 @@ func main() {
 			data.Nuget_Provider,
 			"--skip-duplicate")
 
-		output, err = publish_cmd.Output()
+		output, err := publish_cmd.Output()
 
 		if err != nil {
 			Log(fmt.Sprintf("Failed project %s\nResult:%s\nError: %s", data.Projects_Path[i], output, err), Error_Level)
 		}
-		
-		if (output != nil) {
+
+		if output != nil {
 			fmt.Printf("Output: \t%s", string(output[:]))
 		}
 
