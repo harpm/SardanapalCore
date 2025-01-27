@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to CodeBase, a comprehensive framework designed to empower businesses with reliable and efficient software solutions. Our goal is to streamline the development process, enabling you to launch your projects quickly and effectively. With a unique request-response protocol, reusable static functions, and a strong service abstraction layer, CodeBase is your go-to solution for modern business applications.
+Welcome to **Sardanapal Core**, a comprehensive framework designed to empower businesses with reliable and efficient software solutions. Our goal is to streamline the development process, enabling you to launch your projects quickly and effectively. With a unique request-response protocol, reusable static functions, and a strong service abstraction layer, CodeBase is your go-to solution for modern business applications.
 
 ## Features
 
