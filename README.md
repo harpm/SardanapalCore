@@ -1,4 +1,4 @@
-# CodeBase - A Reliable Framework for Fast Business Solutions
+# Sardanapal Core - A Reliable Framework for Fast Business Solutions
 
 ## Overview
 
@@ -49,4 +49,4 @@ To get started with CodeBase, follow these steps:
 2. Add the nuget profile using the package and url Given in the email response
 3. install the provided nuget packages accordingly
 
-- ## Thanks for your attention
+### Thanks for your attention
