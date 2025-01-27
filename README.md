@@ -23,7 +23,7 @@ Our innovative request-response protocol is designed for speed and reliability. 
 - **Resilience**: Built-in mechanisms to handle message loss and delays, ensuring consistent application behavior.
 
 ### Example Protocol Structure
-
+```
 struct IResponse<TData> {
 TData Data;
 byte statusCode;
@@ -31,13 +31,13 @@ byte operationType;
 string[] developerMessages;
 string userMessages;
 };
-
+```
 ## Reusable Static Functions
 
 CodeBase includes a set of static functions that can be reused across your projects, improving efficiency and reducing redundancy. Examples include:
 
 - **Data Validation**: Simplify input validation processes.
-- - **Service Management**: Centralize service-related operations.
+- **Service Management**: Centralize service-related operations.
  
 ## Service Abstraction
 
