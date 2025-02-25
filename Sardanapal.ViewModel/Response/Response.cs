@@ -1,5 +1,8 @@
 ﻿using Sardanapal.Share.Extensions;
+
+#if !DEBUG
 using System.ComponentModel.DataAnnotations.Schema;
+#endif
 
 namespace Sardanapal.ViewModel.Response;
 
@@ -29,7 +32,7 @@ public interface IResponse<TValue> : IResponse
 
 }
 
-public class Response<TValue> : IResponse<TValue>
+public record Response<TValue> : IResponse<TValue>
 {
     public virtual bool IsSuccess
     {
@@ -88,10 +91,37 @@ public class Response<TValue> : IResponse<TValue>
         this.Data = data;
     }
 
+    public virtual void Set(StatusCode statusCode, TValue data, string userMessage)
+    {
+        Set(statusCode);
+        this.Data = data;
+        UserMessage = userMessage;
+    }
+
+    public virtual void Set(StatusCode statusCode, string userMessage)
+    {
+        Set(statusCode);
+        this.UserMessage = userMessage;
+    }
+
+    public virtual void Set(StatusCode statusCode, string[] developerMessages, string userMessage)
+    {
+        Set(statusCode);
+        this.DeveloperMessages = developerMessages;
+        this.UserMessage = userMessage;
+    }
+
     public virtual void Set(StatusCode statusCode, Exception exception)
     {
         Set(statusCode);
-        DeveloperMessages = exception.GetHirachicalMessages();
+        this.DeveloperMessages = exception.GetHirachicalMessages();
+    }
+
+    public virtual void Set(StatusCode statusCode, Exception exception, string userMessage)
+    {
+        Set(statusCode);
+        this.DeveloperMessages = exception.GetHirachicalMessages();
+        this.UserMessage = userMessage;
     }
 
     public virtual IResponse<T> ConvertTo<T>() where T : class
@@ -164,7 +194,7 @@ public class Response<TValue> : IResponse<TValue>
     }
 }
 
-public class Response : Response<bool>
+public record Response : Response<bool>
 {
     public Response() : base()
     {

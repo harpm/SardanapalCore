@@ -1,7 +1,7 @@
 ﻿
 namespace Sardanapal.ViewModel.Models;
 
-public class GridVM<TKey, T>
+public record GridVM<TKey, T>
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where T : class
 {

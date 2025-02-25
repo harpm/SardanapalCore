@@ -11,7 +11,7 @@ public interface IGridSearchVM
     int TotalCount { get; set; }
 }
 
-public abstract class GridSearchModelVM<TKey> : IGridSearchVM
+public abstract record GridSearchModelVM<TKey> : IGridSearchVM
     where TKey : IComparable<TKey>, IEquatable<TKey>
 {
     public string DynamicField { get; set; }
@@ -23,7 +23,7 @@ public abstract class GridSearchModelVM<TKey> : IGridSearchVM
     public TKey LastIdentifier { get; set; }
 }
 
-public class GridSearchModelVM<TKey, TSearchVM> : GridSearchModelVM<TKey>
+public record GridSearchModelVM<TKey, TSearchVM> : GridSearchModelVM<TKey>
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where TSearchVM : class
 {

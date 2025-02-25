@@ -1,7 +1,7 @@
 ﻿
 namespace Sardanapal.ViewModel.Model;
 
-public class RangeVM<T>
+public record RangeVM<T>
     where T : IComparable<T>, IEquatable<T>
 {
     public T Start { get; set; }
