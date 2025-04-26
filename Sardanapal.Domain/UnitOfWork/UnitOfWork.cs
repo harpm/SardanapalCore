@@ -46,10 +46,12 @@ public abstract class SardanapalUnitOfWork : DbContext, ISdUnitOfWork
 
         if (FluentType != null)
         {
-            var fluentConfig = FluentType.GetConstructor(new Type[] { }).Invoke(null) as FluentModelConfig<T>;
+            var fluentConfig = FluentType.GetConstructor(Array.Empty<Type>())?.Invoke(null) as FluentModelConfig<T>;
+
+            if (fluentConfig == null) throw new InvalidOperationException(FluentType.FullName);
 
             var OnModelBuild = FluentType.GetMethod("OnModelBuild");
-            OnModelBuild.Invoke(fluentConfig, new object[] { entity });
+            OnModelBuild?.Invoke(fluentConfig, [entity]);
         }
     }
 

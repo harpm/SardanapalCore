@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Sardanapal.Contract.IService;
 using Sardanapal.ViewModel.Response;
-using System.Net;
 
-namespace Sardanapal.Validation.Filter;
+namespace Sardanapal.Validation.Http;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
 public class SdValidation : ActionFilterAttribute
