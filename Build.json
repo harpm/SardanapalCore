@@ -5,7 +5,7 @@
 		"Sardanapal.Contract",
 		"Sardanapal.Domain",
 		"Sardanapal.Ef",
-		"Sardanapal.Ef.Service",
+		"Sardanapal.Ef.Repository",
 		"Sardanapal.Http.Service",
 		"Sardanapal.RabbitMQ.Service",
 		"Sardanapal.RedisCach",
