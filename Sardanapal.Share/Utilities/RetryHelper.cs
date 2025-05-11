@@ -1,7 +1,7 @@
 ﻿
 namespace Sardanapal.Share.Utilities;
 
-public static class RetryService
+public static class RetryHelper
 {
     public static Task RetryUntillSuccessAsync(int offsetTime, Func<Task<bool>> actToRetry)
     {
