@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Share", "Sardana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.ViewModel", "Sardanapal.ViewModel\Sardanapal.ViewModel.csproj", "{D3F6132C-C14B-448B-AFB7-F07AF421D8FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Ef.Service", "Sardanapal.Ef.Service\Sardanapal.Ef.Service.csproj", "{212D4084-0BC6-4068-A3F8-CB39578FDD2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Ef.Repository", "Sardanapal.Ef.Repository\Sardanapal.Ef.Repository.csproj", "{212D4084-0BC6-4068-A3F8-CB39578FDD2F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Http.Service", "Sardanapal.Http.Service\Sardanapal.Http.Service.csproj", "{4338297F-8926-4A25-B28B-9B87EDC656D8}"
 EndProject
@@ -31,6 +31,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Contract", "Sardanapal.Contract\Sardanapal.Contract.csproj", "{BEC08AEB-60B2-40ED-A798-C36E83E9C40E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.RabbitMQ.Service", "Sardanapal.RabbitMQ.Service\Sardanapal.RabbitMQ.Service.csproj", "{A3AA4879-E1FB-4BB4-BC25-12345B1AC06D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sardanapal.Service", "Sardanapal.Service\Sardanapal.Service.csproj", "{DB4DAA79-689A-4CC1-B972-8DE89C5B3C23}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,6 +84,10 @@ Global
 		{A3AA4879-E1FB-4BB4-BC25-12345B1AC06D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3AA4879-E1FB-4BB4-BC25-12345B1AC06D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3AA4879-E1FB-4BB4-BC25-12345B1AC06D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB4DAA79-689A-4CC1-B972-8DE89C5B3C23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB4DAA79-689A-4CC1-B972-8DE89C5B3C23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB4DAA79-689A-4CC1-B972-8DE89C5B3C23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB4DAA79-689A-4CC1-B972-8DE89C5B3C23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

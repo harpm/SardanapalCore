@@ -12,6 +12,7 @@
 		"Sardanapal.RedisCach.Service",
 		"Sardanapal.Share",
 		"Sardanapal.Validation",
-		"Sardanapal.ViewModel"
+		"Sardanapal.ViewModel",
+		"Sardanapal.Service"
 	]
 }
