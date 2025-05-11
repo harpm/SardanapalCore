@@ -28,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{6E21CC45
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Contract", "Sardanapal.Contract\Sardanapal.Contract.csproj", "{BEC08AEB-60B2-40ED-A798-C36E83E9C40E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.RabbitMQ.Service", "Sardanapal.RabbitMQ.Service\Sardanapal.RabbitMQ.Service.csproj", "{A3AA4879-E1FB-4BB4-BC25-12345B1AC06D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.RabbitMQ", "Sardanapal.RabbitMQ\Sardanapal.RabbitMQ.csproj", "{A3AA4879-E1FB-4BB4-BC25-12345B1AC06D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sardanapal.Service", "Sardanapal.Service\Sardanapal.Service.csproj", "{DB4DAA79-689A-4CC1-B972-8DE89C5B3C23}"
 EndProject
