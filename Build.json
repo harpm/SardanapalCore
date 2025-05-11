@@ -7,7 +7,7 @@
 		"Sardanapal.Ef",
 		"Sardanapal.Ef.Repository",
 		"Sardanapal.Http.Service",
-		"Sardanapal.RabbitMQ.Service",
+		"Sardanapal.RabbitMQ",
 		"Sardanapal.RedisCache",
 		"Sardanapal.Share",
 		"Sardanapal.Validation",

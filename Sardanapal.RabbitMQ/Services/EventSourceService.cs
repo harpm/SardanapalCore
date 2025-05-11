@@ -7,7 +7,7 @@ using Sardanapal.ViewModel.Response;
 using System.Text;
 using System.Text.Json;
 
-namespace Sardanapal.RabbitMQ.Service.Services;
+namespace Sardanapal.RabbitMQ.Services;
 
 public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKey, TModel>, IDisposable
     where TKey : IEquatable<TKey>, IComparable<TKey>
