@@ -4,7 +4,7 @@ using Sardanapal.Contract.IModel;
 
 namespace Sardanapal.Ef.Repository;
 
-public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<TContext, TKey, TModel>
+public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<TKey, TModel>
     where TContext : DbContext
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where TModel : class, IBaseEntityModel<TKey>, new()
