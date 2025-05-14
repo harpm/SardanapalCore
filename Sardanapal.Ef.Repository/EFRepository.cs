@@ -1,11 +1,10 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Sardanapal.Contract.IModel;
-using Sardanapal.Contract.IRepository;
 
 namespace Sardanapal.Ef.Repository;
 
-public abstract class EFRepositoryBase<TContext, TKey, TModel> : ICrudRepository<TKey, TModel>
+public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<TContext, TKey, TModel>
     where TContext : DbContext
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where TModel : class, IBaseEntityModel<TKey>, new()
@@ -53,28 +52,38 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : ICrudRepository
 
     public bool Update(TKey key, TModel model)
     {
-        _unitOfWork.Update(model);
-        return _unitOfWork.SaveChanges() > 0;
+        var res = _unitOfWork.Update(model);
+        return res.State == EntityState.Modified;
     }
 
-    public async Task<bool> UpdateAsync(TKey key, TModel model)
+    public Task<bool> UpdateAsync(TKey key, TModel model)
     {
-        _unitOfWork.Update(model);
-        return await _unitOfWork.SaveChangesAsync() > 0;
+        var res = _unitOfWork.Update(model);
+        return Task.FromResult(res.State == EntityState.Modified);
     }
 
     public bool Delete(TKey key)
     {
         var deletingEntry = this.FetchById(key);
-        _unitOfWork.Set<TModel>().Remove(deletingEntry);
-        return _unitOfWork.SaveChanges() > 0;
+        var res = _unitOfWork.Set<TModel>().Remove(deletingEntry);
+        return res.State == EntityState.Deleted;
     }
 
     public async Task<bool> DeleteAsync(TKey key)
     {
-
         var deletingEntry = await this.FetchByIdAsync(key);
-        _unitOfWork.Set<TModel>().Remove(deletingEntry);
-        return await _unitOfWork.SaveChangesAsync() > 0;
+        var res = _unitOfWork.Set<TModel>().Remove(deletingEntry);
+        return res.State == EntityState.Deleted;
+    }
+
+    public bool SaveChanges()
+    {
+        return _unitOfWork.SaveChanges() > 0;
+    }   
+
+    public async Task<bool> SaveChangesAsync()
+    {
+        var res = await _unitOfWork.SaveChangesAsync();
+        return res > 0;
     }
 }
