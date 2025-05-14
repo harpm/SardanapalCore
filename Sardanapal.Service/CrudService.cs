@@ -22,6 +22,12 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
     protected readonly TRepository _repository;
     protected readonly IMapper _mapper;
 
+    protected CrudServiceBase(TRepository repository, IMapper mapper)
+    {
+        this._repository = repository;
+        this._mapper = mapper;
+    }
+    
     public virtual async Task<IResponse<TKey>> Add(TNewVM Model)
     {
         IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add);

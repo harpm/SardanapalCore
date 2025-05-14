@@ -12,6 +12,11 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : ICrudRepository
 {
     protected readonly TContext _unitOfWork;
 
+    protected EFRepositoryBase(TContext context)
+    {
+        this._unitOfWork = context;
+    }
+
     public virtual TKey Add(TModel model)
     {
         _unitOfWork.Add(model);

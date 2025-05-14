@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
@@ -19,6 +20,14 @@ public abstract class CachablePanelServiceBase<TRepository, TCacheRepository, TK
     where TEditableVM : class, new()
 {
     protected readonly TCacheRepository _cacheRepository;
+
+    protected CachablePanelServiceBase(TRepository repository
+        , IMapper mapper
+        , TCacheRepository cacheRepository)
+        : base(repository, mapper)
+    {
+        _cacheRepository = cacheRepository;
+    }
 
     public override async Task<IResponse<TKey>> Add(TNewVM Model)
     {

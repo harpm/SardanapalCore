@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
@@ -18,6 +19,12 @@ public abstract class PanelServiceBase<TRepository, TKey, TEntity, TSearchVM, TV
     where TNewVM : class, new()
     where TEditableVM : class, new()
 {
+    protected PanelServiceBase(TRepository repository, IMapper mapper)
+        : base(repository, mapper)
+    {
+        
+    }
+
     public abstract Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>>
         GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null);
 }

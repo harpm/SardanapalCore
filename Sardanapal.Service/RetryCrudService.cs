@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Share.Utilities;
@@ -18,6 +19,12 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
 {
     protected abstract int _secondsBetweenRetries { get; }
     protected abstract int _retryCount { get; }
+
+    protected RetryCrudServiceBase(TRepository repository, IMapper mapper)
+        : base(repository, mapper)
+    {
+        
+    }
 
     public override async Task<IResponse<TKey>> Add(TNewVM Model)
     {
