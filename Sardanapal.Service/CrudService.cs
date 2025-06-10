@@ -28,27 +28,27 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         this._mapper = mapper;
     }
     
-    public virtual async Task<IResponse<TKey>> Add(TNewVM Model)
+    public virtual async Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default)
     {
         IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add);
 
         await result.FillAsync(async () =>
         {
             var entityModel = _mapper.Map<TNewVM, TEntity>(Model);
-            TKey addedId = await _repository.AddAsync(entityModel);
+            TKey addedId = await _repository.AddAsync(entityModel, ct);
             result.Set(StatusCode.Succeeded, addedId);
         });
 
         return result;
     }
 
-    public virtual async Task<IResponse<TVM>> Get(TKey Id)
+    public virtual async Task<IResponse<TVM>> Get(TKey Id, CancellationToken ct = default)
     {
         IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch);
 
         await result.FillAsync(async () =>
         {
-            var fetchModel = await _repository.FetchByIdAsync(Id);
+            var fetchModel = await _repository.FetchByIdAsync(Id, ct);
             TVM model = _mapper.Map<TEntity, TVM>(fetchModel);
             result.Set(StatusCode.Succeeded, model);
         });
@@ -56,15 +56,15 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         return result;
     }
 
-    public abstract Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null) where T : class;
+    public abstract Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default) where T : class;
 
-    public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey Id)
+    public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey Id, CancellationToken ct = default)
     {
         IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
 
         await result.FillAsync(async () =>
         {
-            var fetchModel = await _repository.FetchByIdAsync(Id);
+            var fetchModel = await _repository.FetchByIdAsync(Id, ct);
             TEditableVM model = _mapper.Map<TEntity, TEditableVM>(fetchModel);
             result.Set(StatusCode.Succeeded, model);
         });
@@ -72,14 +72,14 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         return result;
     }
 
-    public virtual async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model)
+    public virtual async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
 
         await result.FillAsync(async () =>
         {
             var editedModel = _mapper.Map<TEditableVM, TEntity>(Model);
-            var data = await _repository.UpdateAsync(Id, editedModel);
+            var data = await _repository.UpdateAsync(Id, editedModel, ct);
             
             result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
         });
@@ -87,13 +87,13 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         return result;
     }
 
-    public virtual async Task<IResponse<bool>> Delete(TKey Id)
+    public virtual async Task<IResponse<bool>> Delete(TKey Id, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
 
         await result.FillAsync(async () =>
         {
-            var data = await _repository.DeleteAsync(Id);
+            var data = await _repository.DeleteAsync(Id, ct);
 
             result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
         });

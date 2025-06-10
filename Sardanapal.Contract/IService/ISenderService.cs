@@ -3,5 +3,5 @@ namespace Sardanapal.Contract.IService;
 
 public interface ISenderService
 {
-    public void Send(string target, string message);
+    public void Send(string target, string message, CancellationToken ct = default);
 }

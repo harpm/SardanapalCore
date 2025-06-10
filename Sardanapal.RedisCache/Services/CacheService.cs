@@ -57,12 +57,12 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         return result;
     }
 
-    protected virtual IEnumerable<TModel> Search(IEnumerable<TModel> list, TSearchVM model)
+    protected virtual IEnumerable<TModel> Search(IEnumerable<TModel> list, TSearchVM model, CancellationToken ct = default)
     {
         return list;
     }
 
-    public virtual async Task<IResponse<TVM>> Get(TKey id)
+    public virtual async Task<IResponse<TVM>> Get(TKey id, CancellationToken ct = default)
     {
         var result = new Response<TVM>(GetType().Name, OperationType.Fetch);
 
@@ -85,7 +85,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         return result;
     }
 
-    public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> model = null)
+    public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> model = null, CancellationToken ct = default)
         where T : class
     {
         var result = new Response<GridVM<TKey, T>>(GetType().Name, OperationType.Fetch);
@@ -104,7 +104,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         });
     }
 
-    public virtual async Task<IResponse<TKey>> Add(TNewVM model)
+    public virtual async Task<IResponse<TKey>> Add(TNewVM model, CancellationToken ct = default)
     {
         var result = new Response<TKey>(GetType().Name, OperationType.Add);
 
@@ -129,7 +129,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         });
     }
 
-    public virtual async Task<IResponse<TKey>> Add(TModel model)
+    public virtual async Task<IResponse<TKey>> Add(TModel model, CancellationToken ct = default)
     {
         var result = new Response<TKey>(GetType().Name, OperationType.Add);
 
@@ -152,7 +152,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         });
     }
 
-    public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey id)
+    public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey id, CancellationToken ct = default)
     {
         var result = new Response<TEditableVM>(GetType().Name, OperationType.Fetch);
 
@@ -173,7 +173,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         });
     }
 
-    public virtual async Task<IResponse<bool>> Edit(TKey id, TEditableVM model)
+    public virtual async Task<IResponse<bool>> Edit(TKey id, TEditableVM model, CancellationToken ct = default)
     {
         var result = new Response<bool>(GetType().Name, OperationType.Edit);
 
@@ -202,7 +202,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         });
     }
 
-    public virtual async Task<IResponse<bool>> Delete(TKey id)
+    public virtual async Task<IResponse<bool>> Delete(TKey id, CancellationToken ct = default)
     {
         var result = new Response<bool>(GetType().Name, OperationType.Delete);
 
@@ -222,7 +222,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         });
     }
 
-    public virtual async Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> model = null)
+    public virtual async Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> model = null, CancellationToken ct = default)
     {
         var result = new Response<GridVM<TKey, SelectOptionVM<TKey, object>>>(GetType().Name, OperationType.Fetch);
 

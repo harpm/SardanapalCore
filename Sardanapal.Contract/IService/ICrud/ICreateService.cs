@@ -7,5 +7,5 @@ public interface ICreateService<TKey, TNewVM>
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TNewVM : new()
 {
-    Task<IResponse<TKey>> Add(TNewVM Model);
+    Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default);
 }

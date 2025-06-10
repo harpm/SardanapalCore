@@ -12,7 +12,7 @@ public interface ICreateRepository<TKey, TModel>
     /// </summary>
     /// <param name="model">Given model will be added to the database</param>
     /// <returns>The Id of the new added entry</returns>
-    TKey Add(TModel model);
+    TKey Add(TModel model, CancellationToken ct = default);
 
 
     /// <summary>
@@ -20,5 +20,5 @@ public interface ICreateRepository<TKey, TModel>
     /// </summary>
     /// <param name="model">Given model will be added to the database</param>
     /// <returns>The Id of the new added entry</returns>
-    Task<TKey> AddAsync(TModel model);
+    Task<TKey> AddAsync(TModel model, CancellationToken ct = default);
 }

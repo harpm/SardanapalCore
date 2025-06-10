@@ -5,8 +5,8 @@ namespace Sardanapal.Contract.IService;
 
 public interface IEmailService : ISenderService
 {
-    void Send(string target, string subject, string body);
-    void Send(string origin, string target, string subject, string body);
+    void Send(string target, string subject, string body, CancellationToken ct = default);
+    void Send(string origin, string target, string subject, string body, CancellationToken ct = default);
 }
 
 public abstract class EmailServiceBase : IEmailService
@@ -20,26 +20,26 @@ public abstract class EmailServiceBase : IEmailService
         client = _client;
     }
 
-    public virtual void Send(string target, string body)
+    public virtual void Send(string target, string body, CancellationToken ct = default)
     {
         client.Send(CreateMessage(target, body));
     }
 
-    public virtual void Send(string target, string subject, string body)
+    public virtual void Send(string target, string subject, string body, CancellationToken ct = default)
     {
         client.Send(CreateMessage(target, subject, body));
     }
 
-    public virtual void Send(string origin, string target, string subject, string body)
+    public virtual void Send(string origin, string target, string subject, string body, CancellationToken ct = default)
     {
         client.Send(origin, target, subject, body);
     }
 
-    protected virtual MailMessage CreateMessage(string target, string body)
+    protected virtual MailMessage CreateMessage(string target, string body, CancellationToken ct = default)
     {
         return new MailMessage(OriginAddress, target, DefaultSubject, body);
     }
-    protected virtual MailMessage CreateMessage(string target, string subject, string body)
+    protected virtual MailMessage CreateMessage(string target, string subject, string body, CancellationToken ct = default)
     {
         return new MailMessage(OriginAddress, target, DefaultSubject, body);
     }

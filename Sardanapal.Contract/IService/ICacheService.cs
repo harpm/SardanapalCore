@@ -13,5 +13,5 @@ public interface ICacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditableVM
     where TNewVM : class, ICachModel<TKey>, new()
     where TEditableVM : class, ICachModel<TKey>, new()
 {
-    Task<IResponse<TKey>> Add(TModel model);
+    Task<IResponse<TKey>> Add(TModel model, CancellationToken ct = default);
 }

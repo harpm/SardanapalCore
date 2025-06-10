@@ -5,7 +5,7 @@ using Sardanapal.Contract.IModel;
 using Sardanapal.Domain.Config;
 using System.Reflection;
 
-namespace Sardanapal.Domain.UnitOfWork;
+namespace Sardanapal.Ef.UnitOfWork;
 
 public abstract class SardanapalUnitOfWork : DbContext, ISdUnitOfWork
 {

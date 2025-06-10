@@ -13,5 +13,5 @@ public abstract class RequestService<TUserKey> : IRequestService<TUserKey>
         IP = _http.HttpContext.Connection.RemoteIpAddress.ToString();
     }
 
-    public abstract TUserKey GetUserId();
+    public abstract TUserKey GetUserId(CancellationToken ct = default);
 }

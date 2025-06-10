@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Sardanapal.Contract.IModel;
 
 namespace Sardanapal.Ef.Repository;
@@ -17,7 +16,7 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<T
         this._unitOfWork = context;
     }
 
-    public virtual TKey Add(TModel model)
+    public virtual TKey Add(TModel model, CancellationToken ct = default)
     {
         EnsureNotNullReference(model);
 
@@ -26,7 +25,7 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<T
         return model.Id;
     }
 
-    public virtual async Task<TKey> AddAsync(TModel model)
+    public virtual async Task<TKey> AddAsync(TModel model, CancellationToken ct = default)
     {
         EnsureNotNullReference(model);
 
@@ -35,29 +34,29 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<T
         return model.Id;
     }
 
-    public IEnumerable<TModel> FetchAll()
+    public IEnumerable<TModel> FetchAll(CancellationToken ct = default)
     {
         return _unitOfWork.Set<TModel>();
     }
 
-    public async Task<IEnumerable<TModel>> FetchAllAsync()
+    public async Task<IEnumerable<TModel>> FetchAllAsync(CancellationToken ct = default)
     {
         return _unitOfWork.Set<TModel>();
     }
 
-    public TModel FetchById(TKey id)
+    public TModel FetchById(TKey id, CancellationToken ct = default)
     {
         EnsureNotNullReference(id);
         return _unitOfWork.Set<TModel>().Where(x => x.Id.Equals(id)).FirstOrDefault();
     }
 
-    public async Task<TModel> FetchByIdAsync(TKey id)
+    public async Task<TModel> FetchByIdAsync(TKey id, CancellationToken ct = default)
     {
         EnsureNotNullReference(id);
         return await _unitOfWork.Set<TModel>().Where(x => x.Id.Equals(id)).FirstOrDefaultAsync();
     }
 
-    public bool Update(TKey key, TModel model)
+    public bool Update(TKey key, TModel model, CancellationToken ct = default)
     {
         EnsureNotNullReference(key);
         EnsureNotNullReference(model);
@@ -66,7 +65,7 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<T
         return res.State == EntityState.Modified;
     }
 
-    public Task<bool> UpdateAsync(TKey key, TModel model)
+    public Task<bool> UpdateAsync(TKey key, TModel model, CancellationToken ct = default)
     {
         EnsureNotNullReference(key);
         EnsureNotNullReference(model);
@@ -75,7 +74,7 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<T
         return Task.FromResult(res.State == EntityState.Modified);
     }
 
-    public bool Delete(TKey key)
+    public bool Delete(TKey key, CancellationToken ct = default)
     {
         EnsureNotNullReference(key);
         var deletingEntry = this.FetchById(key);
@@ -83,7 +82,7 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<T
         return res.State == EntityState.Deleted;
     }
 
-    public async Task<bool> DeleteAsync(TKey key)
+    public async Task<bool> DeleteAsync(TKey key, CancellationToken ct = default)
     {
         EnsureNotNullReference(key);
         var deletingEntry = await this.FetchByIdAsync(key);
@@ -92,7 +91,7 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<T
     }
 
 
-    public void DeleteRange(IEnumerable<TKey> keys)
+    public void DeleteRange(IEnumerable<TKey> keys, CancellationToken ct = default)
     {
         EnsureNotNullCollection(keys);
 
@@ -100,7 +99,7 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<T
         _unitOfWork.Set<TModel>().RemoveRange(deletingEntries);
     }
 
-    public async Task DeleteRangeAsync(IEnumerable<TKey> keys)
+    public async Task DeleteRangeAsync(IEnumerable<TKey> keys, CancellationToken ct = default)
     {
         EnsureNotNullCollection(keys);
 
@@ -109,22 +108,22 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<T
     }
 
 
-    private void EnsureNotNullReference<T>(T values)
+    private void EnsureNotNullReference<T>(T values, CancellationToken ct = default)
     {
         if (values == null) throw new ArgumentNullException(nameof(values));
     }
 
-    private void EnsureNotNullCollection<T>(IEnumerable<T> values)
+    private void EnsureNotNullCollection<T>(IEnumerable<T> values, CancellationToken ct = default)
     {
         if (values == null || values.Count() == 0) throw new ArgumentNullException(nameof(values));
     }
 
-    public bool SaveChanges()
+    public bool SaveChanges(CancellationToken ct = default)
     {
         return _unitOfWork.SaveChanges() > 0;
     }   
 
-    public async Task<bool> SaveChangesAsync()
+    public async Task<bool> SaveChangesAsync(CancellationToken ct = default)
     {
         var res = await _unitOfWork.SaveChangesAsync();
         return res > 0;

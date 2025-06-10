@@ -12,6 +12,6 @@ public interface IEventSourceService<TKey, TModel>
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TModel : IBaseEntityModel<TKey>, new()
 {
-    public Task<IResponse<TKey>> Enqueue(OperationType queue, TModel model);
-    public Task<IResponse<bool>> RegisterTopic(OperationType queueName, ESHandleEvent<TKey, TModel> handler);
+    public Task<IResponse<TKey>> Enqueue(OperationType queue, TModel model, CancellationToken ct = default);
+    public Task<IResponse<bool>> RegisterTopic(OperationType queueName, ESHandleEvent<TKey, TModel> handler, CancellationToken ct = default);
 }

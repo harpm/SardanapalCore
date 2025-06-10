@@ -9,5 +9,5 @@ public interface IRequestService
 public interface IRequestService<TUserKey>
     where TUserKey : IComparable<TUserKey>, IEquatable<TUserKey>
 {
-    TUserKey GetUserId();
+    TUserKey GetUserId(CancellationToken ct = default);
 }

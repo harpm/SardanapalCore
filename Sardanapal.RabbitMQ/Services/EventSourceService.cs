@@ -7,7 +7,7 @@ using Sardanapal.ViewModel.Response;
 using System.Text;
 using System.Text.Json;
 
-namespace Sardanapal.RabbitMQ.Services;
+namespace Sardanapal.RMQ.Services;
 
 public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKey, TModel>, IDisposable
     where TKey : IEquatable<TKey>, IComparable<TKey>
@@ -36,7 +36,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
         return Task.FromResult(model);
     }
 
-    public async Task<IResponse<TKey>> Enqueue(OperationType queue, TModel model)
+    public async Task<IResponse<TKey>> Enqueue(OperationType queue, TModel model, CancellationToken ct = default)
     {
         IResponse<TKey> result = new Response<TKey>(serviceName, OperationType.Add);
         
@@ -58,7 +58,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
         return result;
     }
 
-    public async Task<IResponse<bool>> RegisterTopic(OperationType queueName, ESHandleEvent<TKey, TModel> handler)
+    public async Task<IResponse<bool>> RegisterTopic(OperationType queueName, ESHandleEvent<TKey, TModel> handler, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(serviceName, OperationType.Function);
 

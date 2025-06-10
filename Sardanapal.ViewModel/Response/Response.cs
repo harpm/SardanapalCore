@@ -137,6 +137,10 @@ public record Response<TValue> : IResponse<TValue>
         {
             body();
         }
+        catch (OperationCanceledException ex)
+        {
+            this.Set(StatusCode.Canceled);
+        }
         catch (Exception ex)
         {
             this.Set(StatusCode.Exception, ex);
@@ -152,6 +156,10 @@ public record Response<TValue> : IResponse<TValue>
         try
         {
             await body();
+        }
+        catch (OperationCanceledException ex)
+        {
+            this.Set(StatusCode.Canceled);
         }
         catch (Exception ex)
         {
@@ -169,6 +177,10 @@ public record Response<TValue> : IResponse<TValue>
         {
             body();
         }
+        catch (OperationCanceledException ex)
+        {
+            this.Set(StatusCode.Canceled);
+        }
         catch (Exception ex)
         {
             onError(ex);
@@ -184,6 +196,10 @@ public record Response<TValue> : IResponse<TValue>
         try
         {
             await body();
+        }
+        catch (OperationCanceledException ex)
+        {
+            this.Set(StatusCode.Canceled);
         }
         catch (Exception ex)
         {

@@ -26,5 +26,5 @@ public abstract class PanelServiceBase<TRepository, TKey, TEntity, TSearchVM, TV
     }
 
     public abstract Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>>
-        GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null);
+        GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default);
 }

@@ -26,7 +26,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
         
     }
 
-    public override async Task<IResponse<TKey>> Add(TNewVM Model)
+    public override async Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default)
     {
         IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add);
 
@@ -40,12 +40,12 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
             });
 
             return result.IsSuccess;
-        });
+        }, ct);
 
         return result;
     }
 
-    public override async Task<IResponse<TVM>> Get(TKey Id)
+    public override async Task<IResponse<TVM>> Get(TKey Id, CancellationToken ct = default)
     {
         IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch);
 
@@ -59,12 +59,12 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
             });
 
             return result.IsSuccess;
-        });
+        }, ct);
 
         return result;
     }
 
-    public override async Task<IResponse<TEditableVM>> GetEditable(TKey Id)
+    public override async Task<IResponse<TEditableVM>> GetEditable(TKey Id, CancellationToken ct = default)
     {
         IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
 
@@ -78,12 +78,12 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
             });
 
             return result.IsSuccess;
-        });
+        }, ct);
 
         return result;
     }
 
-    public override async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model)
+    public override async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
 
@@ -97,12 +97,12 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
                 result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
             });
             return result.IsSuccess;
-        });
+        }, ct);
 
         return result;
     }
 
-    public override async Task<IResponse<bool>> Delete(TKey Id)
+    public override async Task<IResponse<bool>> Delete(TKey Id, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
 
@@ -116,7 +116,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
             });
 
             return result.IsSuccess;
-        });
+        }, ct);
 
         return result;
     }

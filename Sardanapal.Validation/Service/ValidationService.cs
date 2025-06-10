@@ -37,7 +37,7 @@ public class ValidationService : IValidationService
         _serviceProvider = sp;
     }
 
-    public virtual async void ValidateParams(Type[] paramTypes, object[] paramValues)
+    public virtual async void ValidateParams(Type[] paramTypes, object[] paramValues, CancellationToken ct = default)
     {
         if (_isProceeded) return;
         else _isProceeded = true;
@@ -51,6 +51,8 @@ public class ValidationService : IValidationService
         {
             for (int i = 0; i < paramTypes.Length; i++)
             {
+                if (ct.IsCancellationRequested) throw new OperationCanceledException(ct);
+
                 await ValidateEachParam(paramTypes[i], paramValues[i]);
             }
         }
