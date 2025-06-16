@@ -4,7 +4,6 @@ using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
 using Sardanapal.Contract.IService;
 using Sardanapal.Share.EventArgModels;
-using Microsoft.Extensions.Logging;
 
 namespace Sardanapal.RMQ.Services;
 
