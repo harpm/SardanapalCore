@@ -9,7 +9,7 @@ public static class Exceptions
 
         if (exception != null)
         {
-            result.Add(exception.Message);
+            result.Add($"Message:\t'{exception.Message}'\nStackTrace:\t{exception.StackTrace}");
 
             if (exception.InnerException != null)
             {
