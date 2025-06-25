@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IModel;
 
 namespace Sardanapal.Ef.Repository;
