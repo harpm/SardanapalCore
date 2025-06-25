@@ -1,8 +1,7 @@
 ﻿
 using Sardanapal.Contract.IModel;
-using Sardanapal.Contract.IRepository;
 
-namespace Sardanapal.Ef.Repository;
+namespace Sardanapal.Contract.IRepository;
 
 public interface IEFRepository<TKey, TModel> : ICrudRepository<TKey, TModel>
     where TKey : IComparable<TKey>, IEquatable<TKey>
