@@ -17,7 +17,7 @@ public interface IResponse
 
     void Set(StatusCode statusCode);
     void Set(StatusCode statusCode, Exception exception);
-    IResponse<T> ConvertTo<T>();
+    void ConvertTo<T>(IResponse target);
 }
 
 public interface IResponse<TValue> : IResponse
@@ -124,9 +124,18 @@ public record Response<TValue> : IResponse<TValue>
         this.UserMessage = userMessage;
     }
 
-    public virtual IResponse<T> ConvertTo<T>()
+    /// <summary>
+    /// Convert
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public virtual void ConvertTo<T>(IResponse target)
     {
-        return new Response<T>(StatusCode, ServiceName, OperationType, DeveloperMessages, UserMessage);
+        target.StatusCode = StatusCode;
+        target.ServiceName = ServiceName;
+        target.OperationType = OperationType;
+        target.DeveloperMessages = DeveloperMessages;
+        target.UserMessage = UserMessage;
     }
 
     public IResponse<TValue> Fill(Action body)
