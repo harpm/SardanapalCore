@@ -14,18 +14,19 @@ public interface IGridSearchVM
 public abstract record GridSearchModelVM<TKey> : IGridSearchVM
     where TKey : IComparable<TKey>, IEquatable<TKey>
 {
-    public string DynamicField { get; set; }
-    public string SortId { get; set; }
-    public bool SortAsccending { get; set; } = true;
-    public int PageIndex { get; set; }
-    public int PageSize { get; set; }
-    public int TotalCount { get; set; }
-    public TKey LastIdentifier { get; set; }
+    public virtual string DynamicField { get; set; }
+    public virtual string SortId { get; set; }
+    public virtual bool SortAsccending { get; set; } = true;
+    public virtual int PageIndex { get; set; }
+    public virtual int PageSize { get; set; }
+    public virtual int TotalCount { get; set; }
+    public virtual TKey LastIdentifier { get; set; }
 }
 
 public record GridSearchModelVM<TKey, TSearchVM> : GridSearchModelVM<TKey>
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where TSearchVM : class
 {
+    public override int PageSize { get; set; } = 25;
     public TSearchVM? Fields { get; set; }
 }
