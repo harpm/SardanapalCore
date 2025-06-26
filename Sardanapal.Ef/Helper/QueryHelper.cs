@@ -1,14 +1,14 @@
-﻿using Sardanapal.Domain.Attributes;
+﻿using System.Reflection;
+using Sardanapal.Domain.Attributes;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.Share.Extensions;
-using System.Reflection;
 using Sardanapal.Contract.IModel;
 
 namespace Sardanapal.Ef.Helper;
 
 public static class QueryHelper
 {
-    public static IQueryable<TEntity> Search<TKey, TEntity>(this IQueryable<TEntity> query, GridSearchModelVM<TKey> searchModel = null)
+    public static IEnumerable<TEntity> Search<TKey, TEntity>(this IEnumerable<TEntity> query, GridSearchModelVM<TKey> searchModel = null)
         where TKey : IComparable<TKey>, IEquatable<TKey>
         where TEntity : IBaseEntityModel<TKey>
     {

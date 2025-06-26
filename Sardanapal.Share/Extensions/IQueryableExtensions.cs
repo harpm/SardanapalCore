@@ -100,7 +100,7 @@ public static class IQueryableExtensions
         return query;
     }
 
-    public static IQueryable<T> Page<T>(this IQueryable<T> query, int pageIndex, int pageSize)
+    public static IEnumerable<T> Page<T>(this IEnumerable<T> query, int pageIndex, int pageSize)
     {
         return query.Skip(pageSize * pageIndex)
                 .Take(pageSize);
