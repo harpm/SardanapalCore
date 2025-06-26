@@ -16,5 +16,6 @@ public enum StatusCode : byte
     Failed = 1,
     Canceled = 3,
     NotExists = 4,
-    Exception = 5
+    Exception = 5,
+    Duplicate = 6
 }
