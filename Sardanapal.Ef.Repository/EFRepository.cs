@@ -110,12 +110,12 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<T
     }
 
 
-    private void EnsureNotNullReference<T>(T values, CancellationToken ct = default)
+    protected void EnsureNotNullReference<T>(T values, CancellationToken ct = default)
     {
         if (values == null) throw new ArgumentNullException(nameof(values));
     }
 
-    private void EnsureNotNullCollection<T>(IEnumerable<T> values, CancellationToken ct = default)
+    protected void EnsureNotNullCollection<T>(IEnumerable<T> values, CancellationToken ct = default)
     {
         if (values == null || values.Count() == 0) throw new ArgumentNullException(nameof(values));
     }
