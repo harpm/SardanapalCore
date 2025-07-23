@@ -85,8 +85,9 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
 
         await result.FillAsync(async () =>
         {
-            var editedModel = _mapper.Map<TEditableVM, TEntity>(Model);
-            var data = await _repository.UpdateAsync(Id, editedModel, ct);
+            var entity = await _repository.FetchByIdAsync(Id, ct);
+            _mapper.Map(Model, entity);
+            var data = await _repository.UpdateAsync(Id, entity, ct);
 
             result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
         });
