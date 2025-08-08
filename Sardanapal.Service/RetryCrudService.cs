@@ -2,6 +2,7 @@
 using AutoMapper;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
+using Sardanapal.Localization;
 using Sardanapal.Share.Utilities;
 using Sardanapal.ViewModel.Response;
 
@@ -23,7 +24,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
     protected RetryCrudServiceBase(TRepository repository, IMapper mapper)
         : base(repository, mapper)
     {
-        
+
     }
 
     public override async Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default)
@@ -54,11 +55,18 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
             await result.FillAsync(async () =>
             {
                 var fetchModel = await _repository.FetchByIdAsync(Id);
-                TVM model = _mapper.Map<TEntity, TVM>(fetchModel);
-                result.Set(StatusCode.Succeeded, model);
+                if (fetchModel != null)
+                {
+                    TVM model = _mapper.Map<TEntity, TVM>(fetchModel);
+                    result.Set(StatusCode.Succeeded, model);
+                }
+                else
+                {
+                    result.Set(StatusCode.NotExists, [], Messages.NotExist);
+                }
             });
 
-            return result.IsSuccess;
+            return result.StatusCode != StatusCode.Exception;
         }, ct);
 
         return result;
@@ -73,11 +81,18 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
             await result.FillAsync(async () =>
             {
                 var fetchModel = await _repository.FetchByIdAsync(Id);
-                TEditableVM model = _mapper.Map<TEntity, TEditableVM>(fetchModel);
-                result.Set(StatusCode.Succeeded, model);
+                if (fetchModel != null)
+                {
+                    TEditableVM model = _mapper.Map<TEntity, TEditableVM>(fetchModel);
+                    result.Set(StatusCode.Succeeded, model);
+                }
+                else
+                {
+                    result.Set(StatusCode.NotExists, [], Messages.NotExist);
+                }
             });
 
-            return result.IsSuccess;
+            return result.StatusCode != StatusCode.Exception;
         }, ct);
 
         return result;
@@ -91,12 +106,20 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
         {
             await result.FillAsync(async () =>
             {
-                var editedModel = _mapper.Map<TEditableVM, TEntity>(Model);
-                var data = await _repository.UpdateAsync(Id, editedModel);
+                var entity = _repository.FetchByIdAsync(Id, ct);
+                if (entity != null)
+                {
+                    var editedModel = _mapper.Map<TEditableVM, TEntity>(Model);
+                    var data = await _repository.UpdateAsync(Id, editedModel);
+                    result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
+                }
+                else
+                {
+                    result.Set(StatusCode.NotExists, [], Messages.NotExist);
+                }
 
-                result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
             });
-            return result.IsSuccess;
+            return result.StatusCode != StatusCode.Exception;
         }, ct);
 
         return result;

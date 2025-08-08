@@ -24,7 +24,7 @@ public abstract class SardanapalUnitOfWork : DbContext, ISdUnitOfWork
                 .First()
                 .MakeGenericMethod(t)
                 .Invoke(builder, null);
-            this.GetType().GetMethod(nameof(ApplyFluentConfigs))?.MakeGenericMethod(t).Invoke(this, new[] { entity });
+            this.GetType().GetMethod(nameof(ApplyFluentConfigs))?.MakeGenericMethod(t).Invoke(this, [entity]);
         }
 
         base.OnModelCreating(builder);
@@ -50,7 +50,7 @@ public abstract class SardanapalUnitOfWork : DbContext, ISdUnitOfWork
 
             if (fluentConfig == null) throw new InvalidOperationException(FluentType.FullName);
 
-            var OnModelBuild = FluentType.GetMethod("OnModelBuild");
+            var OnModelBuild = FluentType.GetMethod(nameof(FluentModelConfig<T>.OnModelBuild));
             OnModelBuild?.Invoke(fluentConfig, [entity]);
         }
     }

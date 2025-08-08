@@ -5,6 +5,7 @@ using Sardanapal.Contract.IModel;
 using Sardanapal.ViewModel.Response;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.Contract.IService;
+using Sardanapal.Localization;
 
 namespace Sardanapal.RedisCache.Services;
 
@@ -79,7 +80,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
             }
             else
             {
-                result.Set(StatusCode.NotExists);
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
             }
         });
         return result;
@@ -168,7 +169,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
             }
             else
             {
-                result.Set(StatusCode.NotExists);
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
             }
         });
     }
@@ -197,7 +198,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
             }
             else
             {
-                result.Set(StatusCode.NotExists);
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
             }
         });
     }
@@ -217,7 +218,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
             }
             else
             {
-                result.Set(StatusCode.NotExists);
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
             }
         });
     }

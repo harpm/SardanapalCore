@@ -1,0 +1,11 @@
+<Project>
+   <PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Authors>harpm</Authors>
+		<Company>Sardanapal</Company>
+   </PropertyGroup>
+</Project>

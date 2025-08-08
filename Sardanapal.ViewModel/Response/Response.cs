@@ -1,4 +1,5 @@
-﻿using Sardanapal.Share.Extensions;
+﻿using Sardanapal.Localization;
+using Sardanapal.Share.Extensions;
 
 #if !DEBUG
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,7 +17,11 @@ public interface IResponse
     string UserMessage { get; set; }
 
     void Set(StatusCode statusCode);
+    void Set(StatusCode statusCode, string userMessage);
+    void Set(StatusCode statusCode, string[] developerMessages, string userMessage);
     void Set(StatusCode statusCode, Exception exception);
+    void Set(StatusCode statusCode, Exception exception, string userMessage);
+    void Set(StatusCode statusCode, Exception exception, string[] developerMessages, string userMessage);
     void ConvertTo<T>(IResponse target);
 }
 
@@ -45,13 +50,6 @@ public record Response<TValue> : IResponse<TValue>
     public TValue Data { get; set; }
     public OperationType OperationType { get; set; }
     public StatusCode StatusCode { get; set; }
-
-/// <summary>
-/// This field will not be sent to the client when it is in production mode
-/// </summary>
-#if !DEBUG
-    [NotMapped]
-#endif
     public string[] DeveloperMessages { get; set; }
     public string UserMessage { get; set; }
 
@@ -124,6 +122,13 @@ public record Response<TValue> : IResponse<TValue>
         this.UserMessage = userMessage;
     }
 
+    public virtual void Set(StatusCode statusCode, Exception exception, string[] developerMessages, string userMessage)
+    {
+        Set(statusCode);
+        this.DeveloperMessages = exception.GetHirachicalMessages();
+        this.UserMessage = userMessage;
+    }
+
     /// <summary>
     /// Convert
     /// </summary>
@@ -148,11 +153,11 @@ public record Response<TValue> : IResponse<TValue>
         }
         catch (OperationCanceledException ex)
         {
-            this.Set(StatusCode.Canceled);
+            this.Set(StatusCode.Canceled, [], Messages.OperationCancelled);
         }
         catch (Exception ex)
         {
-            this.Set(StatusCode.Exception, ex);
+            this.Set(StatusCode.Exception, ex, Messages.InternalError);
         }
 
         return result;
@@ -168,11 +173,11 @@ public record Response<TValue> : IResponse<TValue>
         }
         catch (OperationCanceledException ex)
         {
-            this.Set(StatusCode.Canceled);
+            this.Set(StatusCode.Canceled, [], Messages.OperationCancelled);
         }
         catch (Exception ex)
         {
-            this.Set(StatusCode.Exception, ex);
+            this.Set(StatusCode.Exception, ex, Messages.InternalError);
         }
         
         return result;
@@ -188,7 +193,7 @@ public record Response<TValue> : IResponse<TValue>
         }
         catch (OperationCanceledException ex)
         {
-            this.Set(StatusCode.Canceled);
+            this.Set(StatusCode.Canceled, [], Messages.OperationCancelled);
         }
         catch (Exception ex)
         {
@@ -208,7 +213,7 @@ public record Response<TValue> : IResponse<TValue>
         }
         catch (OperationCanceledException ex)
         {
-            this.Set(StatusCode.Canceled);
+            this.Set(StatusCode.Canceled, [], Messages.OperationCancelled);
         }
         catch (Exception ex)
         {

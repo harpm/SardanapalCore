@@ -3,6 +3,7 @@ using AutoMapper;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
+using Sardanapal.Localization;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 
@@ -27,7 +28,7 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         this._repository = repository;
         this._mapper = mapper;
     }
-    
+
     public virtual async Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default)
     {
         IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add);
@@ -49,8 +50,16 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         await result.FillAsync(async () =>
         {
             var fetchModel = await _repository.FetchByIdAsync(Id, ct);
-            TVM model = _mapper.Map<TEntity, TVM>(fetchModel);
-            result.Set(StatusCode.Succeeded, model);
+
+            if (fetchModel != null)
+            {
+                TVM model = _mapper.Map<TEntity, TVM>(fetchModel);
+                result.Set(StatusCode.Succeeded, model);
+            }
+            else
+            {
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
+            }
         });
 
         return result;
@@ -81,7 +90,7 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
             var entity = await _repository.FetchByIdAsync(Id, ct);
             _mapper.Map<TEditableVM, TEntity>(Model, entity);
             var data = await _repository.UpdateAsync(Id, entity, ct);
-            
+
             result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
         });
 

@@ -3,6 +3,7 @@ using AutoMapper;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
+using Sardanapal.Localization;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 
@@ -56,8 +57,15 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
         await result.FillAsync(async () =>
         {
             var fetchModel = await _repository.FetchByIdAsync(Id, ct);
-            TVM model = _mapper.Map<TEntity, TVM>(fetchModel);
-            result.Set(StatusCode.Succeeded, model);
+            if (fetchModel != null)
+            {
+                TVM model = _mapper.Map<TEntity, TVM>(fetchModel);
+                result.Set(StatusCode.Succeeded, model);
+            }
+            else
+            {
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
+            }
         });
 
         return result;
@@ -86,10 +94,16 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
         await result.FillAsync(async () =>
         {
             var entity = await _repository.FetchByIdAsync(Id, ct);
-            _mapper.Map(Model, entity);
-            var data = await _repository.UpdateAsync(Id, entity, ct);
-
-            result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
+            if (entity != null)
+            {
+                _mapper.Map(Model, entity);
+                var data = await _repository.UpdateAsync(Id, entity, ct);
+                result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
+            }
+            else
+            {
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
+            }
         });
 
         return result;
