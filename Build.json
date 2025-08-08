@@ -1,6 +1,6 @@
 {
 	"nuget_provider": "https://nuget.pkg.github.com/harpm/index.json",
-	"version": "0.6.17",
+	"version": "0.6.19",
 	"projects_path": [
 		"Sardanapal.Contract",
 		"Sardanapal.Domain",
@@ -10,6 +10,7 @@
 		"Sardanapal.RabbitMQ",
 		"Sardanapal.RedisCache",
 		"Sardanapal.Share",
+		"Sardanapal.Localization",
 		"Sardanapal.Validation",
 		"Sardanapal.ViewModel",
 		"Sardanapal.Service"
