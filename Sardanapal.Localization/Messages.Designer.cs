@@ -61,7 +61,7 @@ namespace Sardanapal.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An internal server error has been occured..
+        ///   Looks up a localized string similar to An internal server error has been occured, our exprets are investigating the issue; Thanks for your patience..
         /// </summary>
         public static string InternalError {
             get {

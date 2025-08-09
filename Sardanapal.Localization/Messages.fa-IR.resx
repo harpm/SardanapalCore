@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="InternalError" xml:space="preserve">
-    <value>An internal server error has been occured, our exprets are investigating the issue; Thanks for your patience.</value>
+    <value>خطای داخلی سرور رخ داده است، کارشناسان ما در حال بررسی مشکل هستند؛ پیشاپیش از صبوری شما سپاسگزاریم.</value>
   </data>
   <data name="NotExist" xml:space="preserve">
-    <value>Entry looking for has not found.</value>
+    <value>موجودیت مورد نظر یافت نشد.</value>
   </data>
   <data name="OperationCancelled" xml:space="preserve">
-    <value>Operation has been cancelled.</value>
+    <value>عملیات مورد نظر لغو شد.</value>
   </data>
 </root>
