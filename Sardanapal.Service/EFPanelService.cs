@@ -1,8 +1,10 @@
-﻿
+
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
+using Sardanapal.Ef.Helper;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 
@@ -25,6 +27,35 @@ public abstract class EFPanelServiceBase<TRepository, TKey, TEntity, TSearchVM, 
 
     }
 
-    public abstract Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>>
-        GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default);
+    public virtual async Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>>
+        GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default)
+    {
+        IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>> result
+            = new Response<GridVM<TKey, SelectOptionVM<TKey, object>>>(ServiceName, OperationType.Fetch);
+
+        await result.FillAsync(async () =>
+        {
+            if (SearchModel is null)
+                SearchModel = new();
+            if (SearchModel.Fields is null)
+                SearchModel.Fields = new();
+
+            var data = new GridVM<TKey, SelectOptionVM<TKey, object>>(SearchModel);
+
+            var entities = await _repository.FetchAllAsync(ct);
+            entities = Search(entities, SearchModel.Fields);
+
+            data.SearchModel.TotalCount = entities.Count();
+
+            var list = QueryHelper.Search(entities, SearchModel)
+                .ProjectTo<SelectOptionVM<TKey, object>>(_mapper.ConfigurationProvider)
+                .ToList();
+
+            data.List = list;
+
+            result.Set(StatusCode.Succeeded, data);
+        });
+
+        return result;
+    }
 }

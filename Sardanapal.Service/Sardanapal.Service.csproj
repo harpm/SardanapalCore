@@ -6,6 +6,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Sardanapal.Contract\Sardanapal.Contract.csproj" />
+		<ProjectReference Include="..\Sardanapal.Ef\Sardanapal.Ef.csproj" />
 	</ItemGroup>
 
 </Project>

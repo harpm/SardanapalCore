@@ -1,4 +1,4 @@
-﻿using AutoMapper.Execution;
+using AutoMapper.Execution;
 using Sardanapal.Share.Expressions;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
@@ -31,6 +31,7 @@ public static class IQueryableExtensions
             throw new NullReferenceException();
         }
     }
+
     /// <summary>
     /// Searches all the fields in the T class
     /// inside the queryable
@@ -100,7 +101,7 @@ public static class IQueryableExtensions
         return query;
     }
 
-    public static IEnumerable<T> Page<T>(this IEnumerable<T> query, int pageIndex, int pageSize)
+    public static IQueryable<T> Page<T>(this IQueryable<T> query, int pageIndex, int pageSize)
     {
         return query.Skip(pageSize * pageIndex)
                 .Take(pageSize);

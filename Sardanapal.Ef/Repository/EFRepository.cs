@@ -1,8 +1,8 @@
-﻿
+
 using Microsoft.EntityFrameworkCore;
-using Sardanapal.Contract.IRepository;
-using Sardanapal.Contract.IModel;
 using Microsoft.EntityFrameworkCore.Storage;
+using Sardanapal.Contract.IModel;
+using Sardanapal.Contract.IRepository;
 
 namespace Sardanapal.Ef.Repository;
 
@@ -36,12 +36,12 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<T
         return model.Id;
     }
 
-    public IEnumerable<TModel> FetchAll(CancellationToken ct = default)
+    public IQueryable<TModel> FetchAll(CancellationToken ct = default)
     {
         return _unitOfWork.Set<TModel>();
     }
 
-    public async Task<IEnumerable<TModel>> FetchAllAsync(CancellationToken ct = default)
+    public async Task<IQueryable<TModel>> FetchAllAsync(CancellationToken ct = default)
     {
         return _unitOfWork.Set<TModel>();
     }

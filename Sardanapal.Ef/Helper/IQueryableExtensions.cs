@@ -1,4 +1,4 @@
-﻿using Sardanapal.Contract.IModel;
+using Sardanapal.Contract.IModel;
 using Sardanapal.Share.Extensions;
 
 namespace Sardanapal.Ef.Helper;
@@ -15,7 +15,7 @@ public static class QueryableExtensions
     /// <param name="pageSize"></param>
     /// <param name="lastIdentifier"></param>
     /// <returns></returns>
-    public static IEnumerable<T> Page<T, TKey>(this IEnumerable<T> query, int pageIndex, int pageSize, TKey lastIdentifier)
+    public static IQueryable<T> Page<T, TKey>(this IQueryable<T> query, int pageIndex, int pageSize, TKey lastIdentifier)
         where TKey : IComparable<TKey>, IEquatable<TKey>
         where T : IBaseEntityModel<TKey>
     {

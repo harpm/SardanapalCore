@@ -1,8 +1,10 @@
-﻿
+
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
+using Sardanapal.Ef.Helper;
 using Sardanapal.Localization;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
@@ -28,6 +30,9 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
         this._repository = repository;
         this._mapper = mapper;
     }
+
+    protected abstract IQueryable<TEntity> Search(IQueryable<TEntity> entities, TSearchVM searchVM);
+
 
     protected virtual Task FillEntityKey(TEntity entity)
     {
@@ -71,7 +76,34 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
         return result;
     }
 
-    public abstract Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default) where T : class;
+    public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default) where T : class
+    {
+        IResponse<GridVM<TKey, T>> result = new Response<GridVM<TKey, T>>(ServiceName, OperationType.Fetch);
+
+        await result.FillAsync(async () =>
+        {
+            if (SearchModel is null)
+                SearchModel = new();
+            if (SearchModel.Fields is null)
+                SearchModel.Fields = new();
+
+            var data = new GridVM<TKey, T>(SearchModel);
+
+            var entities = await _repository.FetchAllAsync(ct);
+            entities = Search(entities, SearchModel.Fields);
+
+            data.SearchModel.TotalCount = entities.Count();
+
+            var list = QueryHelper.Search(entities, SearchModel)
+                .ProjectTo<T>(_mapper.ConfigurationProvider)
+                .ToList();
+            data.List = list;
+
+            result.Set(StatusCode.Succeeded, data);
+        });
+
+        return result;
+    }
 
     public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey Id, CancellationToken ct = default)
     {

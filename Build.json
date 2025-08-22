@@ -1,11 +1,10 @@
 {
 	"nuget_provider": "https://nuget.pkg.github.com/harpm/index.json",
-	"version": "0.7.0",
+	"version": "0.7.1",
 	"projects_path": [
 		"Sardanapal.Contract",
 		"Sardanapal.Domain",
 		"Sardanapal.Ef",
-		"Sardanapal.Ef.Repository",
 		"Sardanapal.Http.Service",
 		"Sardanapal.RabbitMQ",
 		"Sardanapal.RedisCache",
