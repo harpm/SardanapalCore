@@ -6,7 +6,7 @@ using Sardanapal.Contract.IRepository;
 
 namespace Sardanapal.Ef.Repository;
 
-public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFRepository<TKey, TModel>
+public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFCrudRepository<TKey, TModel>
     where TContext : DbContext
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where TModel : class, IBaseEntityModel<TKey>, new()

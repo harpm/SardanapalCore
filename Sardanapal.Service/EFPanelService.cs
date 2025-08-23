@@ -13,7 +13,7 @@ namespace Sardanapal.Service;
 public abstract class EFPanelServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
     : EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
     , IEFPanelService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
-    where TRepository : IEFRepository<TKey, TEntity>
+    where TRepository : IEFCrudRepository<TKey, TEntity>
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where TEntity : class, IBaseEntityModel<TKey>, new()
     where TSearchVM : class, new()
