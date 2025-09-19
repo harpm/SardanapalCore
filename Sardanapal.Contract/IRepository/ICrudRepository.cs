@@ -30,6 +30,5 @@ public interface ICrudRepository<TKey, TModel> : IReadRepository<TKey, TModel>
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where TModel : class, IDomainModel, new()
 {
-    IEnumerable<TModel> FetchAll(CancellationToken ct = default);
-    Task<IEnumerable<TModel>> FetchAllAsync(CancellationToken ct = default);
+
 }
