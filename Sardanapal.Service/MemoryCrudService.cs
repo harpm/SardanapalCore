@@ -12,7 +12,7 @@ namespace Sardanapal.Service;
 
 public abstract class MemoryCrudServiceBase<TRepository, TModel, TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     : ICrudService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
-    where TRepository : class, IMemoryRepository<TKey, TModel>, new()
+    where TRepository : class, IMemoryRepository<TKey, TModel>
     where TModel : class, IBaseEntityModel<TKey>, new()
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TSearchVM : class, new()

@@ -10,9 +10,9 @@ using Sardanapal.ViewModel.Response;
 namespace Sardanapal.Service;
 
 public abstract class MemoryPanelServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
-    : CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
+    : MemoryCrudServiceBase<TRepository, TEntity, TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     , IPanelService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
-    where TRepository : ICrudRepository<TKey, TEntity>, IMemoryRepository<TKey, TEntity>
+    where TRepository : class, ICrudRepository<TKey, TEntity>, IMemoryRepository<TKey, TEntity>
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where TEntity : class, IBaseEntityModel<TKey>, new()
     where TSearchVM : class, new()
