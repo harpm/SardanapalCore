@@ -1,5 +1,6 @@
-﻿
+
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
@@ -19,8 +20,8 @@ public abstract class PanelServiceBase<TRepository, TKey, TEntity, TSearchVM, TV
     where TNewVM : class, new()
     where TEditableVM : class, new()
 {
-    protected PanelServiceBase(TRepository repository, IMapper mapper)
-        : base(repository, mapper)
+    protected PanelServiceBase(TRepository repository, IMapper mapper, ILogger logger)
+        : base(repository, mapper, logger)
     {
         
     }

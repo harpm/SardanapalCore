@@ -1,11 +1,14 @@
-﻿using RabbitMQ.Client;
+
+using System.Text;
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IService;
+using Sardanapal.Localization;
 using Sardanapal.Share.EventArgModels;
 using Sardanapal.ViewModel.Response;
-using System.Text;
-using System.Text.Json;
 
 namespace Sardanapal.RMQ.Services;
 
@@ -13,13 +16,15 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TModel : IBaseEntityModel<TKey>, new()
 {
-    protected IConnection ampqConnection { get; set; }
+    protected readonly IConnection ampqConnection;
+    protected readonly ILogger _logger;
     protected abstract string exchangeName { get; set; }
     protected abstract string serviceName { get; set; }
 
-    public EventSourceService(IConnection conn)
+    public EventSourceService(IConnection conn, ILogger logger)
     {
         ampqConnection = conn;
+        this._logger = logger;
     }
 
     protected virtual async void Init()
@@ -38,7 +43,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
 
     public async Task<IResponse<TKey>> Enqueue(OperationType queue, TModel model, CancellationToken ct = default)
     {
-        IResponse<TKey> result = new Response<TKey>(serviceName, OperationType.Add);
+        IResponse<TKey> result = new Response<TKey>(serviceName, OperationType.Add, _logger);
         
         if (model == null)
             throw new ArgumentNullException(nameof(model));
@@ -60,7 +65,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
 
     public async Task<IResponse<bool>> RegisterTopic(OperationType queueName, ESHandleEvent<TKey, TModel> handler, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(serviceName, OperationType.Function);
+        IResponse<bool> result = new Response<bool>(serviceName, OperationType.Function, _logger);
 
         result = await result.FillAsync(async () =>
         {
@@ -89,6 +94,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
             });
 
             await (ch as IChannel).BasicAckAsync(ea.DeliveryTag, true);
+            _logger.LogInformation(ResourceHelper.CraeteRabbitMQMessageHandled(model.Id.ToString(), DateTime.UtcNow.ToString("yyyy-MM-dd | HH:mm")));
         };
     }
 

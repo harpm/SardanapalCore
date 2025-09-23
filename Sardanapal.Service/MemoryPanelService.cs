@@ -1,5 +1,6 @@
 
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
@@ -20,8 +21,8 @@ public abstract class MemoryPanelServiceBase<TRepository, TKey, TEntity, TSearch
     where TNewVM : class, new()
     where TEditableVM : class, new()
 {
-    protected MemoryPanelServiceBase(TRepository repository, IMapper mapper)
-        : base(repository, mapper)
+    protected MemoryPanelServiceBase(TRepository repository, IMapper mapper, ILogger logger)
+        : base(repository, mapper, logger)
     {
         
     }
@@ -30,7 +31,7 @@ public abstract class MemoryPanelServiceBase<TRepository, TKey, TEntity, TSearch
             GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default)
     {
         IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>> result
-            = new Response<GridVM<TKey, SelectOptionVM<TKey, object>>>(ServiceName, OperationType.Fetch);
+            = new Response<GridVM<TKey, SelectOptionVM<TKey, object>>>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {

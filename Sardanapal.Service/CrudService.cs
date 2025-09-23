@@ -1,5 +1,6 @@
-﻿
+
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
@@ -22,16 +23,18 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
     protected abstract string ServiceName { get; }
     protected readonly TRepository _repository;
     protected readonly IMapper _mapper;
+    protected readonly ILogger _logger;
 
-    protected CrudServiceBase(TRepository repository, IMapper mapper)
+    protected CrudServiceBase(TRepository repository, IMapper mapper, ILogger logger)
     {
         this._repository = repository;
         this._mapper = mapper;
+        this._logger = logger;
     }
 
     public virtual async Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default)
     {
-        IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add);
+        IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -45,7 +48,7 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
 
     public virtual async Task<IResponse<TVM>> Get(TKey Id, CancellationToken ct = default)
     {
-        IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch);
+        IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -69,7 +72,7 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
 
     public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey Id, CancellationToken ct = default)
     {
-        IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
+        IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -83,7 +86,7 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
 
     public virtual async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -99,7 +102,7 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
 
     public virtual async Task<IResponse<bool>> Delete(TKey Id, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await result.FillAsync(async () =>
         {

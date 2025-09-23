@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using System.Text.Json;
 using StackExchange.Redis;
 using Sardanapal.Contract.IModel;
@@ -6,6 +6,7 @@ using Sardanapal.ViewModel.Response;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.Contract.IService;
 using Sardanapal.Localization;
+using Microsoft.Extensions.Logging;
 
 namespace Sardanapal.RedisCache.Services;
 
@@ -22,6 +23,8 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
     protected IConnectionMultiplexer connMultiplexer { get; set; }
     protected IMapper mapper { get; set; }
+    protected readonly ILogger _logger;
+
     protected virtual int expireTime { get; set; }
 
     protected abstract string key { get; }
@@ -33,10 +36,11 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
         }
     }
 
-    public CacheService(IConnectionMultiplexer _connectionMultiplexer, IMapper _mapper)
+    public CacheService(IConnectionMultiplexer _connectionMultiplexer, IMapper _mapper, ILogger logger)
     {
         connMultiplexer = _connectionMultiplexer;
         mapper = _mapper;
+        this._logger = logger;
     }
 
     protected virtual IDatabase GetCurrentDatabase()
@@ -65,7 +69,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
     public virtual async Task<IResponse<TVM>> Get(TKey id, CancellationToken ct = default)
     {
-        var result = new Response<TVM>(GetType().Name, OperationType.Fetch);
+        var result = new Response<TVM>(GetType().Name, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -89,7 +93,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
     public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> model = null, CancellationToken ct = default)
         where T : class
     {
-        var result = new Response<GridVM<TKey, T>>(GetType().Name, OperationType.Fetch);
+        var result = new Response<GridVM<TKey, T>>(GetType().Name, OperationType.Fetch, _logger);
 
         return await result.FillAsync(async () =>
         {
@@ -107,7 +111,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
     public virtual async Task<IResponse<TKey>> Add(TNewVM model, CancellationToken ct = default)
     {
-        var result = new Response<TKey>(GetType().Name, OperationType.Add);
+        var result = new Response<TKey>(GetType().Name, OperationType.Add, _logger);
 
         return await result.FillAsync(async () =>
         {
@@ -132,7 +136,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
     public virtual async Task<IResponse<TKey>> Add(TModel model, CancellationToken ct = default)
     {
-        var result = new Response<TKey>(GetType().Name, OperationType.Add);
+        var result = new Response<TKey>(GetType().Name, OperationType.Add, _logger);
 
         return await result.FillAsync(async () =>
         {
@@ -155,7 +159,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
     public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey id, CancellationToken ct = default)
     {
-        var result = new Response<TEditableVM>(GetType().Name, OperationType.Fetch);
+        var result = new Response<TEditableVM>(GetType().Name, OperationType.Fetch, _logger);
 
         return await result.FillAsync(async () =>
         {
@@ -176,7 +180,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
     public virtual async Task<IResponse<bool>> Edit(TKey id, TEditableVM model, CancellationToken ct = default)
     {
-        var result = new Response<bool>(GetType().Name, OperationType.Edit);
+        var result = new Response<bool>(GetType().Name, OperationType.Edit, _logger);
 
         return await result.FillAsync(async () =>
         {
@@ -205,7 +209,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
     public virtual async Task<IResponse<bool>> Delete(TKey id, CancellationToken ct = default)
     {
-        var result = new Response<bool>(GetType().Name, OperationType.Delete);
+        var result = new Response<bool>(GetType().Name, OperationType.Delete, _logger);
 
         return await result.FillAsync(async () =>
         {
@@ -225,7 +229,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
     public virtual async Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> model = null, CancellationToken ct = default)
     {
-        var result = new Response<GridVM<TKey, SelectOptionVM<TKey, object>>>(GetType().Name, OperationType.Fetch);
+        var result = new Response<GridVM<TKey, SelectOptionVM<TKey, object>>>(GetType().Name, OperationType.Fetch, _logger);
 
         return await result.FillAsync(async () =>
         {

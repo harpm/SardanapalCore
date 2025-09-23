@@ -1,5 +1,6 @@
-﻿
+
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Localization;
@@ -21,15 +22,15 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
     protected abstract int _secondsBetweenRetries { get; }
     protected abstract int _retryCount { get; }
 
-    protected RetryCrudServiceBase(TRepository repository, IMapper mapper)
-        : base(repository, mapper)
+    protected RetryCrudServiceBase(TRepository repository, IMapper mapper, ILogger logger)
+        : base(repository, mapper, logger)
     {
 
     }
 
     public override async Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default)
     {
-        IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add);
+        IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add, _logger);
 
         await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
         {
@@ -48,7 +49,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
 
     public override async Task<IResponse<TVM>> Get(TKey Id, CancellationToken ct = default)
     {
-        IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch);
+        IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch, _logger);
 
         await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
         {
@@ -74,7 +75,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
 
     public override async Task<IResponse<TEditableVM>> GetEditable(TKey Id, CancellationToken ct = default)
     {
-        IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
+        IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch, _logger);
 
         await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
         {
@@ -100,7 +101,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
 
     public override async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
         {
@@ -127,7 +128,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
 
     public override async Task<IResponse<bool>> Delete(TKey Id, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
         {

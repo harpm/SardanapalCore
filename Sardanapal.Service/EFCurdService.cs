@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
@@ -24,11 +25,13 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
     protected abstract string ServiceName { get; }
     protected readonly TRepository _repository;
     protected readonly IMapper _mapper;
+    protected readonly ILogger _logger;
 
-    protected EFCurdServiceBase(TRepository repository, IMapper mapper)
+    protected EFCurdServiceBase(TRepository repository, IMapper mapper, ILogger logger)
     {
         this._repository = repository;
         this._mapper = mapper;
+        this._logger = logger;
     }
 
     protected abstract IQueryable<TEntity> Search(IQueryable<TEntity> entities, TSearchVM searchVM);
@@ -41,7 +44,7 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
 
     public virtual async Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default)
     {
-        IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add);
+        IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -57,7 +60,7 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
 
     public virtual async Task<IResponse<TVM>> Get(TKey Id, CancellationToken ct = default)
     {
-        IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch);
+        IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -78,7 +81,7 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
 
     public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default) where T : class
     {
-        IResponse<GridVM<TKey, T>> result = new Response<GridVM<TKey, T>>(ServiceName, OperationType.Fetch);
+        IResponse<GridVM<TKey, T>> result = new Response<GridVM<TKey, T>>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -107,7 +110,7 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
 
     public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey Id, CancellationToken ct = default)
     {
-        IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
+        IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -121,7 +124,7 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
 
     public virtual async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -143,7 +146,7 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
 
     public virtual async Task<IResponse<bool>> Delete(TKey Id, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await result.FillAsync(async () =>
         {

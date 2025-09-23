@@ -1,6 +1,7 @@
 // Licensed under the MIT license.
 
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
@@ -24,18 +25,20 @@ public abstract class MemoryCrudServiceBase<TRepository, TModel, TKey, TSearchVM
     protected abstract string ServiceName { get; }
     protected readonly IMapper _mapper;
     protected readonly TRepository _repository;
+    protected readonly ILogger _logger;
 
-    public MemoryCrudServiceBase(TRepository repository, IMapper mapper)
+    public MemoryCrudServiceBase(TRepository repository, IMapper mapper, ILogger logger)
     {
         this._repository = repository;
         this._mapper = mapper;
+        this._logger = logger;
     }
 
     protected abstract IEnumerable<TModel> Search(IEnumerable<TModel> entities, TSearchVM searchVM);
 
     public async Task<IResponse<TKey>> Add(TNewVM model, CancellationToken ct = default)
     {
-        IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add);
+        IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -49,7 +52,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TModel, TKey, TSearchVM
 
     public async Task<IResponse<TVM>> Get(TKey Id, CancellationToken ct = default)
     {
-        IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch);
+        IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -63,7 +66,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TModel, TKey, TSearchVM
 
     public async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default) where T : class
     {
-        IResponse<GridVM<TKey, T>> result = new Response<GridVM<TKey, T>>(ServiceName, OperationType.Fetch);
+        IResponse<GridVM<TKey, T>> result = new Response<GridVM<TKey, T>>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -90,7 +93,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TModel, TKey, TSearchVM
 
     public async Task<IResponse<TEditableVM>> GetEditable(TKey Id, CancellationToken ct = default)
     {
-        IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
+        IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -103,7 +106,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TModel, TKey, TSearchVM
     }
     public async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -119,7 +122,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TModel, TKey, TSearchVM
 
     public async Task<IResponse<bool>> Delete(TKey Id, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Delete);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Delete, _logger);
 
         await result.FillAsync(async () =>
         {

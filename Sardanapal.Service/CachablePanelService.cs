@@ -1,5 +1,6 @@
-﻿
+
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
@@ -23,15 +24,16 @@ public abstract class CachablePanelServiceBase<TRepository, TCacheRepository, TK
 
     protected CachablePanelServiceBase(TRepository repository
         , IMapper mapper
-        , TCacheRepository cacheRepository)
-        : base(repository, mapper)
+        , TCacheRepository cacheRepository
+        , ILogger logger)
+        : base(repository, mapper, logger)
     {
         _cacheRepository = cacheRepository;
     }
 
     public override async Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default)
     {
-        IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add);
+        IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -48,7 +50,7 @@ public abstract class CachablePanelServiceBase<TRepository, TCacheRepository, TK
 
     public override async Task<IResponse<TVM>> Get(TKey Id, CancellationToken ct = default)
     {
-        IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch);
+        IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -68,7 +70,7 @@ public abstract class CachablePanelServiceBase<TRepository, TCacheRepository, TK
 
     public override async Task<IResponse<TEditableVM>> GetEditable(TKey Id, CancellationToken ct = default)
     {
-        IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch);
+        IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -88,7 +90,7 @@ public abstract class CachablePanelServiceBase<TRepository, TCacheRepository, TK
 
     public override async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await result.FillAsync(async () =>
         {
@@ -105,7 +107,7 @@ public abstract class CachablePanelServiceBase<TRepository, TCacheRepository, TK
 
     public override async Task<IResponse<bool>> Delete(TKey Id, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Delete, _logger);
 
         await result.FillAsync(async () =>
         {
