@@ -1,21 +1,26 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
 using Sardanapal.Contract.IService;
 using Sardanapal.Share.EventArgModels;
+using Sardanapal.Localization;
 
 namespace Sardanapal.RMQ.Services;
 
 
 public class EventBusRabbitMQ : ISardanapalEventBus
 {
-    private readonly IRabbitMQPersistentConnection _persistentConnection;
-    private readonly string _exchangeName = "event_bus";
+    protected readonly ILogger _logger;
+    protected readonly IRabbitMQPersistentConnection _persistentConnection;
+    protected virtual string _exchangeName => "event_bus";
 
-    public EventBusRabbitMQ(IRabbitMQPersistentConnection persistentConnection)
+    public EventBusRabbitMQ(IRabbitMQPersistentConnection persistentConnection, ILogger<EventBusRabbitMQ> logger)
     {
         _persistentConnection = persistentConnection;
+        _logger = logger;
+
         if (!_persistentConnection.IsConnected)
             _persistentConnection.TryConnect();
         Task.Run(async () =>
@@ -41,6 +46,8 @@ public class EventBusRabbitMQ : ISardanapalEventBus
             basicProperties: prop,
             routingKey: routingKey,
             body: body);
+
+        _logger.LogInformation(ResourceHelper.CraeteRabbitMQMessagePublished(e.Id.ToString(), e.CreationDate.ToString("yyyy-MM-dd | HH:mm")));
     }
 
     public async Task Subscribe<T, TH>(string eventType)
@@ -65,6 +72,7 @@ public class EventBusRabbitMQ : ISardanapalEventBus
                 await handler.Handle(e);
 
             await channel.BasicAckAsync(ea.DeliveryTag, multiple: false);
+            _logger.LogInformation(ResourceHelper.CraeteRabbitMQMessageHandled(e.Id.ToString(), e.CreationDate.ToString("yyyy-MM-dd | HH:mm")));
         };
 
         await channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer);

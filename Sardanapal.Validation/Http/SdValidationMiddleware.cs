@@ -1,8 +1,9 @@
-﻿
+
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.IService;
 
 namespace Sardanapal.Validation.Http;
@@ -18,6 +19,7 @@ public class SdValidationMiddleware
 
     public virtual async Task InvokeAsync(HttpContext context)
     {
+        ILogger logger = context?.RequestServices?.GetService(typeof(ILogger<SdValidation>)) as ILogger<SdValidation>;
         IValidationService validationService = context?.RequestServices?.GetService(typeof(IValidationService)) as IValidationService;
 
         var metadata = context?.GetEndpoint()?.Metadata;
@@ -28,7 +30,7 @@ public class SdValidationMiddleware
 
         var action = metadata?.GetMetadata<ActionDescriptor>();
 
-        if (validationService == null)
+        if (validationService == null || logger == null)
         {
             throw new NullReferenceException(string.Format("Requiered Service {0} cannot be resolved."
                 , nameof(IValidationService)));

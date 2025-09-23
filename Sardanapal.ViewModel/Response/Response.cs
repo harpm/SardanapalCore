@@ -1,4 +1,5 @@
-﻿using Sardanapal.Localization;
+using Microsoft.Extensions.Logging;
+using Sardanapal.Localization;
 using Sardanapal.Share.Extensions;
 
 #if !DEBUG
@@ -46,6 +47,8 @@ public record Response<TValue> : IResponse<TValue>
             return StatusCode == StatusCode.Succeeded;
         }
     }
+    protected ILogger _logger;
+
     public string ServiceName { get; set; }
     public TValue Data { get; set; }
     public OperationType OperationType { get; set; }
@@ -53,27 +56,26 @@ public record Response<TValue> : IResponse<TValue>
     public string[] DeveloperMessages { get; set; }
     public string UserMessage { get; set; }
 
-    public Response()
+    public Response(ILogger logger)
     {
         ServiceName = "Default";
+        this._logger = logger;
     }
 
-    public Response(string serviceName)
+    public Response(string serviceName, ILogger logger) : this(logger)
     {
         this.ServiceName = serviceName;
     }
 
-    public Response(string serviceName, OperationType operationType)
+    public Response(string serviceName, OperationType operationType, ILogger logger) : this(serviceName, logger)
     {
-        this.ServiceName = serviceName;
         this.OperationType = operationType;
     }
 
-    public Response(StatusCode statusCode, string serviceName, OperationType operationType, string[] developerMessages, string userMessage)
+    public Response(StatusCode statusCode, string serviceName, OperationType operationType, string[] developerMessages, string userMessage, ILogger logger)
+        : this(serviceName, operationType, logger)
     {
         this.StatusCode = statusCode;
-        this.ServiceName = serviceName;
-        this.OperationType = operationType;
         this.DeveloperMessages = developerMessages;
         this.UserMessage = userMessage;
     }
@@ -153,10 +155,12 @@ public record Response<TValue> : IResponse<TValue>
         }
         catch (OperationCanceledException ex)
         {
+            this._logger?.LogWarning(ex, Messages.OperationCancelled);
             this.Set(StatusCode.Canceled, [], Messages.OperationCancelled);
         }
         catch (Exception ex)
         {
+            this._logger?.LogError(ex, Messages.InternalError);
             this.Set(StatusCode.Exception, ex, Messages.InternalError);
         }
 
@@ -173,10 +177,12 @@ public record Response<TValue> : IResponse<TValue>
         }
         catch (OperationCanceledException ex)
         {
+            this._logger?.LogWarning(ex, Messages.OperationCancelled);
             this.Set(StatusCode.Canceled, [], Messages.OperationCancelled);
         }
         catch (Exception ex)
         {
+            this._logger?.LogError(ex, Messages.InternalError);
             this.Set(StatusCode.Exception, ex, Messages.InternalError);
         }
         
@@ -193,6 +199,7 @@ public record Response<TValue> : IResponse<TValue>
         }
         catch (OperationCanceledException ex)
         {
+            this._logger?.LogWarning(ex, Messages.OperationCancelled);
             this.Set(StatusCode.Canceled, [], Messages.OperationCancelled);
         }
         catch (Exception ex)
@@ -213,6 +220,7 @@ public record Response<TValue> : IResponse<TValue>
         }
         catch (OperationCanceledException ex)
         {
+            this._logger?.LogWarning(ex, Messages.OperationCancelled);
             this.Set(StatusCode.Canceled, [], Messages.OperationCancelled);
         }
         catch (Exception ex)
@@ -226,17 +234,17 @@ public record Response<TValue> : IResponse<TValue>
 
 public record Response : Response<bool>
 {
-    public Response() : base()
+    public Response(ILogger logger) : base(logger)
     {
 
     }
 
-    public Response(string serviceName) : base(serviceName)
+    public Response(string serviceName, ILogger logger) : base(serviceName, logger)
     {
 
     }
 
-    public Response(string serviceName, OperationType operationType) : base(serviceName, operationType)
+    public Response(string serviceName, OperationType operationType, ILogger logger) : base(serviceName, operationType, logger)
     {
 
     }

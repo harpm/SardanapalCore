@@ -86,5 +86,32 @@ namespace Sardanapal.Localization {
                 return ResourceManager.GetString("OperationCancelled", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No RabbitMQ connections are available..
+        /// </summary>
+        public static string RabbitMQConnectionIssue {
+            get {
+                return ResourceManager.GetString("RabbitMQConnectionIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message with Id: &apos;{0}&apos; handled successfully on &apos;{1}&apos;..
+        /// </summary>
+        public static string RabbitMQMessageHandled {
+            get {
+                return ResourceManager.GetString("RabbitMQMessageHandled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message with Id: &apos;{0}&apos; published successfully on {1}..
+        /// </summary>
+        public static string RabbitMQMessagePublished {
+            get {
+                return ResourceManager.GetString("RabbitMQMessagePublished", resourceCulture);
+            }
+        }
     }
 }

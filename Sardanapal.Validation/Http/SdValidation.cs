@@ -1,6 +1,7 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.IService;
 using Sardanapal.ViewModel.Response;
 
@@ -20,8 +21,8 @@ public class SdValidation : ActionFilterAttribute
 
         try
         {
+            ILogger logger = action.HttpContext.RequestServices.GetService(typeof(ILogger<SdValidation>)) as ILogger<SdValidation>;
             IValidationService validationService = action.HttpContext.RequestServices.GetService(typeof(IValidationService)) as IValidationService;
-
             if (validationService == null)
                 throw new NullReferenceException(string.Format("Requiered Service {0} cannot be resolved."
                     , nameof(IValidationService)));
@@ -47,7 +48,9 @@ public class SdValidation : ActionFilterAttribute
             }
             if (!validationService.IsValid)
             {
-                IResponse<object> response = new Response<object>()
+                logger?.LogDebug($"Messages: {string.Join(", ", validationService.Messages)}");
+
+                IResponse<object> response = new Response<object>(nameof(SdValidation), logger)
                 {
                     StatusCode = StatusCode.Exception,
                     DeveloperMessages = validationService.Messages.ToArray()
@@ -57,6 +60,7 @@ public class SdValidation : ActionFilterAttribute
         }
         catch (Exception ex)
         {
+
             action.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             action.Result = new BadRequestResult();
         }

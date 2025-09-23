@@ -1,18 +1,22 @@
-﻿
+
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using Sardanapal.Contract.IService;
+using Sardanapal.Localization;
 
 namespace Sardanapal.RMQ.Services;
 
 public class RabbitMQPersistentConnection : IRabbitMQPersistentConnection
 {
-    private readonly IConnectionFactory _connectionFactory;
-    private IConnection _connection;
-    private bool _disposed;
+    protected readonly ILogger _logger;
+    protected readonly IConnectionFactory _connectionFactory;
+    protected IConnection _connection;
+    protected bool _disposed;
 
-    public RabbitMQPersistentConnection(IConnectionFactory connectionFactory)
+    public RabbitMQPersistentConnection(IConnectionFactory connectionFactory, ILogger<RabbitMQPersistentConnection> logger)
     {
         _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
+        _logger = logger;
     }
 
     public bool IsConnected => _connection != null && _connection.IsOpen && !_disposed;
@@ -20,7 +24,10 @@ public class RabbitMQPersistentConnection : IRabbitMQPersistentConnection
     public Task<IChannel> CreateModel()
     {
         if (!IsConnected)
-            throw new InvalidOperationException("No RabbitMQ connections are available.");
+        {
+            _logger.LogCritical(Messages.RabbitMQConnectionIssue);
+            throw new InvalidOperationException(Messages.RabbitMQConnectionIssue);
+        }
         return _connection.CreateChannelAsync();
     }
 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -125,5 +125,14 @@
   </data>
   <data name="OperationCancelled" xml:space="preserve">
     <value>عملیات مورد نظر لغو شد.</value>
+  </data>
+  <data name="RabbitMQConnectionIssue" xml:space="preserve">
+    <value>اتصال RabbitMQ یافت نشد.</value>
+  </data>
+  <data name="RabbitMQMessageHandled" xml:space="preserve">
+    <value>Message with Id: '{0}' handled successfully on '{1}'.</value>
+  </data>
+  <data name="RabbitMQMessagePublished" xml:space="preserve">
+    <value>Message with Id: '{0}' published successfully on {1}.</value>
   </data>
 </root>
