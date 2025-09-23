@@ -1,12 +1,12 @@
 using AutoMapper;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using Sardanapal.Contract.IModel;
 using Sardanapal.ViewModel.Response;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.Contract.IService;
 using Sardanapal.Localization;
-using Microsoft.Extensions.Logging;
 
 namespace Sardanapal.RedisCache.Services;
 
