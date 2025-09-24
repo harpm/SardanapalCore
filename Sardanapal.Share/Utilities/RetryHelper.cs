@@ -1,6 +1,11 @@
-﻿
+
 namespace Sardanapal.Share.Utilities;
 
+/// <summary>
+/// This static class provides helper methods to retry an action until it succeeds or a specified number of attempts is reached.
+/// Please note that the action to be retried should return a boolean indicating success (true) or failure (false).
+/// Consider running these methods inside Response.FillAsync to properly handle and capture exceptions and log them.
+/// </summary>
 public static class RetryHelper
 {
     public static Task RetryUntillSuccessAsync(int offsetTime, Func<Task<bool>> actToRetry, CancellationToken ct = default)

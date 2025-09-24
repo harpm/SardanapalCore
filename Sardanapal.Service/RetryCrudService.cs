@@ -32,69 +32,17 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
     {
         IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add, _logger);
 
-        await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
+        await result.FillAsync(async () =>
         {
-            await result.FillAsync(async () =>
+            await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
             {
                 var entityModel = _mapper.Map<TNewVM, TEntity>(Model);
                 TKey addedId = await _repository.AddAsync(entityModel);
                 result.Set(StatusCode.Succeeded, addedId);
-            });
 
-            return result.IsSuccess;
-        }, ct);
-
-        return result;
-    }
-
-    public override async Task<IResponse<TVM>> Get(TKey Id, CancellationToken ct = default)
-    {
-        IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch, _logger);
-
-        await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
-        {
-            await result.FillAsync(async () =>
-            {
-                var fetchModel = await _repository.FetchByIdAsync(Id);
-                if (fetchModel != null)
-                {
-                    TVM model = _mapper.Map<TEntity, TVM>(fetchModel);
-                    result.Set(StatusCode.Succeeded, model);
-                }
-                else
-                {
-                    result.Set(StatusCode.NotExists, [], Messages.NotExist);
-                }
-            });
-
-            return result.StatusCode != StatusCode.Exception;
-        }, ct);
-
-        return result;
-    }
-
-    public override async Task<IResponse<TEditableVM>> GetEditable(TKey Id, CancellationToken ct = default)
-    {
-        IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch, _logger);
-
-        await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
-        {
-            await result.FillAsync(async () =>
-            {
-                var fetchModel = await _repository.FetchByIdAsync(Id);
-                if (fetchModel != null)
-                {
-                    TEditableVM model = _mapper.Map<TEntity, TEditableVM>(fetchModel);
-                    result.Set(StatusCode.Succeeded, model);
-                }
-                else
-                {
-                    result.Set(StatusCode.NotExists, [], Messages.NotExist);
-                }
-            });
-
-            return result.StatusCode != StatusCode.Exception;
-        }, ct);
+                return result.IsSuccess;
+            }, ct);
+        });
 
         return result;
     }
@@ -103,9 +51,9 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
-        await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
+        await result.FillAsync(async () =>
         {
-            await result.FillAsync(async () =>
+            await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
             {
                 var entity = _repository.FetchByIdAsync(Id, ct);
                 if (entity != null)
@@ -119,9 +67,9 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
                     result.Set(StatusCode.NotExists, [], Messages.NotExist);
                 }
 
-            });
-            return result.StatusCode != StatusCode.Exception;
-        }, ct);
+                return result.StatusCode != StatusCode.Exception;
+            }, ct);
+        });
 
         return result;
     }
@@ -130,17 +78,17 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
-        await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
+        await result.FillAsync(async () =>
         {
-            await result.FillAsync(async () =>
+            await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
             {
                 var data = await _repository.DeleteAsync(Id);
 
                 result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
-            });
 
-            return result.IsSuccess;
-        }, ct);
+                return result.IsSuccess;
+            }, ct);
+        });
 
         return result;
     }

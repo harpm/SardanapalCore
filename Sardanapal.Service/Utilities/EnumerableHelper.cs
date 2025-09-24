@@ -1,8 +1,10 @@
 // Licensed under the MIT license.
 
+using System.Reflection;
 using Sardanapal.Contract.IModel;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.Share.Extensions;
+using Sardanapal.Domain.Attributes;
 
 namespace Sardanapal.Service.Utilities;
 
@@ -15,15 +17,15 @@ public static class EnumerableHelper
         if (searchModel == null)
             return query;
 
-        // TODO: Add Domain as reference
-        //if (string.IsNullOrWhiteSpace(searchModel.SortId))
-        //{
-        //    var opt = (EntityOptions)typeof(TEntity).GetCustomAttribute(typeof(EntityOptions));
-        //    if (opt != null)
-        //    {
-        //        searchModel.SortId = opt.OrderBy;
-        //    }
-        //}
+        //TODO: Add Domain as reference
+        if (string.IsNullOrWhiteSpace(searchModel.SortId))
+        {
+            var opt = (EntityOptions)typeof(TEntity).GetCustomAttribute(typeof(EntityOptions));
+            if (opt != null)
+            {
+                searchModel.SortId = opt.OrderBy;
+            }
+        }
 
         if (!string.IsNullOrWhiteSpace(searchModel.SortId))
         {
