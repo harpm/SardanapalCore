@@ -15,7 +15,7 @@ public class SdValidation : ActionFilterAttribute
 
     }
 
-    public override async void OnActionExecuting(ActionExecutingContext action)
+    public override void OnActionExecuting(ActionExecutingContext action)
     {
         base.OnActionExecuting(action);
 
