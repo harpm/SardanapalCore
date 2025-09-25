@@ -53,7 +53,7 @@ public class SdValidation : ActionFilterAttribute
                 IResponse<object> response = new Response<object>(nameof(SdValidation), logger)
                 {
                     StatusCode = StatusCode.Exception,
-                    DeveloperMessages = validationService.Messages.ToArray()
+                    UserMessage = string.Join("\r\n", validationService.Messages.ToArray())
                 };
                 action.Result = new BadRequestObjectResult(response);
             }
