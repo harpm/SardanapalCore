@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Sardanapal.Contract.IService;
+using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.Http.Service.Services;
 
@@ -13,5 +14,6 @@ public abstract class RequestService<TUserKey> : IRequestService<TUserKey>
         IP = _http.HttpContext.Connection.RemoteIpAddress.ToString();
     }
 
-    public abstract TUserKey GetUserId(CancellationToken ct = default);
+    public abstract IResponse<TUserKey> GetUserId(CancellationToken ct = default);
+    public abstract Task<IResponse<TUserKey>> GetUserIdAsync(CancellationToken ct = default);
 }
