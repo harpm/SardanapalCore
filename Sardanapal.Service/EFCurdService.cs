@@ -42,13 +42,13 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
         return Task.CompletedTask;
     }
 
-    public virtual async Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default)
+    public virtual async Task<IResponse<TKey>> Add(TNewVM model, CancellationToken ct = default)
     {
         IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add, _logger);
 
         await result.FillAsync(async () =>
         {
-            var entityModel = _mapper.Map<TNewVM, TEntity>(Model);
+            var entityModel = _mapper.Map<TNewVM, TEntity>(model);
             await FillEntityKey(entityModel);
             TKey addedId = await _repository.AddAsync(entityModel, ct);
             await _repository.SaveChangesAsync(ct);
@@ -58,13 +58,13 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
         return result;
     }
 
-    public virtual async Task<IResponse<TVM>> Get(TKey Id, CancellationToken ct = default)
+    public virtual async Task<IResponse<TVM>> Get(TKey id, CancellationToken ct = default)
     {
         IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
-            var fetchModel = await _repository.FetchByIdAsync(Id, ct);
+            var fetchModel = await _repository.FetchByIdAsync(id, ct);
             if (fetchModel != null)
             {
                 TVM model = _mapper.Map<TEntity, TVM>(fetchModel);
@@ -79,25 +79,25 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
         return result;
     }
 
-    public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default) where T : class
+    public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> searchModel = null, CancellationToken ct = default) where T : class
     {
         IResponse<GridVM<TKey, T>> result = new Response<GridVM<TKey, T>>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
-            if (SearchModel is null)
-                SearchModel = new();
-            if (SearchModel.Fields is null)
-                SearchModel.Fields = new();
+            if (searchModel is null)
+                searchModel = new();
+            if (searchModel.Fields is null)
+                searchModel.Fields = new();
 
-            var data = new GridVM<TKey, T>(SearchModel);
+            var data = new GridVM<TKey, T>(searchModel);
 
             var entities = await _repository.FetchAllAsync(ct);
-            entities = Search(entities, SearchModel.Fields);
+            entities = Search(entities, searchModel.Fields);
 
             data.SearchModel.TotalCount = entities.Count();
 
-            var list = QueryHelper.Search(entities, SearchModel)
+            var list = QueryHelper.Search(entities, searchModel)
                 .ProjectTo<T>(_mapper.ConfigurationProvider)
                 .ToList();
             data.List = list;
@@ -108,13 +108,13 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
         return result;
     }
 
-    public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey Id, CancellationToken ct = default)
+    public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey id, CancellationToken ct = default)
     {
         IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
-            var fetchModel = await _repository.FetchByIdAsync(Id, ct);
+            var fetchModel = await _repository.FetchByIdAsync(id, ct);
             TEditableVM model = _mapper.Map<TEntity, TEditableVM>(fetchModel);
             result.Set(StatusCode.Succeeded, model);
         });
@@ -122,17 +122,17 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
         return result;
     }
 
-    public virtual async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model, CancellationToken ct = default)
+    public virtual async Task<IResponse<bool>> Edit(TKey id, TEditableVM Model, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await result.FillAsync(async () =>
         {
-            var entity = await _repository.FetchByIdAsync(Id, ct);
+            var entity = await _repository.FetchByIdAsync(id, ct);
             if (entity != null)
             {
                 _mapper.Map(Model, entity);
-                var data = await _repository.UpdateAsync(Id, entity, ct);
+                var data = await _repository.UpdateAsync(id, entity, ct);
                 result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
             }
             else
@@ -144,13 +144,13 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
         return result;
     }
 
-    public virtual async Task<IResponse<bool>> Delete(TKey Id, CancellationToken ct = default)
+    public virtual async Task<IResponse<bool>> Delete(TKey id, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await result.FillAsync(async () =>
         {
-            var data = await _repository.DeleteAsync(Id, ct);
+            var data = await _repository.DeleteAsync(id, ct);
 
             result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
         });

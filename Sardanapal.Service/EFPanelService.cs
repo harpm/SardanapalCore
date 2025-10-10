@@ -29,26 +29,26 @@ public abstract class EFPanelServiceBase<TRepository, TKey, TEntity, TSearchVM, 
     }
 
     public virtual async Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>>
-        GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default)
+        GetDictionary(GridSearchModelVM<TKey, TSearchVM> searchModel = null, CancellationToken ct = default)
     {
         IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>> result
             = new Response<GridVM<TKey, SelectOptionVM<TKey, object>>>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
-            if (SearchModel is null)
-                SearchModel = new();
-            if (SearchModel.Fields is null)
-                SearchModel.Fields = new();
+            if (searchModel is null)
+                searchModel = new();
+            if (searchModel.Fields is null)
+                searchModel.Fields = new();
 
-            var data = new GridVM<TKey, SelectOptionVM<TKey, object>>(SearchModel);
+            var data = new GridVM<TKey, SelectOptionVM<TKey, object>>(searchModel);
 
             var entities = await _repository.FetchAllAsync(ct);
-            entities = Search(entities, SearchModel.Fields);
+            entities = Search(entities, searchModel.Fields);
 
             data.SearchModel.TotalCount = entities.Count();
 
-            var list = QueryHelper.Search(entities, SearchModel)
+            var list = QueryHelper.Search(entities, searchModel)
                 .ProjectTo<SelectOptionVM<TKey, object>>(_mapper.ConfigurationProvider)
                 .ToList();
 

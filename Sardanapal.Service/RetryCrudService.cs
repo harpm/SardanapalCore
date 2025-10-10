@@ -28,7 +28,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
 
     }
 
-    public override async Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default)
+    public override async Task<IResponse<TKey>> Add(TNewVM model, CancellationToken ct = default)
     {
         IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add, _logger);
 
@@ -36,7 +36,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
         {
             await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
             {
-                var entityModel = _mapper.Map<TNewVM, TEntity>(Model);
+                var entityModel = _mapper.Map<TNewVM, TEntity>(model);
                 TKey addedId = await _repository.AddAsync(entityModel);
                 result.Set(StatusCode.Succeeded, addedId);
 
@@ -47,7 +47,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
         return result;
     }
 
-    public override async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model, CancellationToken ct = default)
+    public override async Task<IResponse<bool>> Edit(TKey id, TEditableVM model, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
@@ -55,11 +55,11 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
         {
             await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
             {
-                var entity = _repository.FetchByIdAsync(Id, ct);
+                var entity = await _repository.FetchByIdAsync(id, ct);
                 if (entity != null)
                 {
-                    var editedModel = _mapper.Map<TEditableVM, TEntity>(Model);
-                    var data = await _repository.UpdateAsync(Id, editedModel);
+                    entity = _mapper.Map(model, entity);
+                    var data = await _repository.UpdateAsync(id, entity);
                     result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
                 }
                 else
@@ -74,7 +74,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
         return result;
     }
 
-    public override async Task<IResponse<bool>> Delete(TKey Id, CancellationToken ct = default)
+    public override async Task<IResponse<bool>> Delete(TKey id, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
@@ -82,7 +82,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
         {
             await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
             {
-                var data = await _repository.DeleteAsync(Id);
+                var data = await _repository.DeleteAsync(id);
 
                 result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
 

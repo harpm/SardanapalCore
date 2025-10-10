@@ -32,13 +32,13 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         this._logger = logger;
     }
 
-    public virtual async Task<IResponse<TKey>> Add(TNewVM Model, CancellationToken ct = default)
+    public virtual async Task<IResponse<TKey>> Add(TNewVM model, CancellationToken ct = default)
     {
         IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add, _logger);
 
         await result.FillAsync(async () =>
         {
-            var entityModel = _mapper.Map<TNewVM, TEntity>(Model);
+            var entityModel = _mapper.Map<TNewVM, TEntity>(model);
             TKey addedId = await _repository.AddAsync(entityModel, ct);
             result.Set(StatusCode.Succeeded, addedId);
         });
@@ -46,13 +46,13 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         return result;
     }
 
-    public virtual async Task<IResponse<TVM>> Get(TKey Id, CancellationToken ct = default)
+    public virtual async Task<IResponse<TVM>> Get(TKey id, CancellationToken ct = default)
     {
         IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
-            var fetchModel = await _repository.FetchByIdAsync(Id, ct);
+            var fetchModel = await _repository.FetchByIdAsync(id, ct);
 
             if (fetchModel != null)
             {
@@ -68,15 +68,15 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         return result;
     }
 
-    public abstract Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default) where T : class;
+    public abstract Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> searchModel = null, CancellationToken ct = default) where T : class;
 
-    public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey Id, CancellationToken ct = default)
+    public virtual async Task<IResponse<TEditableVM>> GetEditable(TKey id, CancellationToken ct = default)
     {
         IResponse<TEditableVM> result = new Response<TEditableVM>(ServiceName, OperationType.Fetch, _logger);
 
         await result.FillAsync(async () =>
         {
-            var fetchModel = await _repository.FetchByIdAsync(Id, ct);
+            var fetchModel = await _repository.FetchByIdAsync(id, ct);
             TEditableVM model = _mapper.Map<TEntity, TEditableVM>(fetchModel);
             result.Set(StatusCode.Succeeded, model);
         });
@@ -84,15 +84,15 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         return result;
     }
 
-    public virtual async Task<IResponse<bool>> Edit(TKey Id, TEditableVM Model, CancellationToken ct = default)
+    public virtual async Task<IResponse<bool>> Edit(TKey id, TEditableVM model, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await result.FillAsync(async () =>
         {
-            var entity = await _repository.FetchByIdAsync(Id, ct);
-            _mapper.Map<TEditableVM, TEntity>(Model, entity);
-            var data = await _repository.UpdateAsync(Id, entity, ct);
+            var entity = await _repository.FetchByIdAsync(id, ct);
+            _mapper.Map<TEditableVM, TEntity>(model, entity);
+            var data = await _repository.UpdateAsync(id, entity, ct);
 
             result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
         });
@@ -100,13 +100,13 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         return result;
     }
 
-    public virtual async Task<IResponse<bool>> Delete(TKey Id, CancellationToken ct = default)
+    public virtual async Task<IResponse<bool>> Delete(TKey id, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
         await result.FillAsync(async () =>
         {
-            var data = await _repository.DeleteAsync(Id, ct);
+            var data = await _repository.DeleteAsync(id, ct);
 
             result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
         });

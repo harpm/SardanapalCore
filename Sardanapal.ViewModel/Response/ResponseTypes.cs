@@ -1,4 +1,4 @@
-﻿
+
 namespace Sardanapal.ViewModel.Response;
 
 public enum OperationType : byte
@@ -17,5 +17,6 @@ public enum StatusCode : byte
     Canceled = 3,
     NotExists = 4,
     Exception = 5,
-    Duplicate = 6
+    Duplicate = 6,
+    Forbidden = 7
 }
