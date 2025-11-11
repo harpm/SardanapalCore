@@ -1,4 +1,4 @@
-﻿
+
 namespace Sardanapal.ViewModel.Models;
 
 public interface IGridSearchVM
@@ -18,7 +18,7 @@ public abstract record GridSearchModelVM<TKey> : IGridSearchVM
     public virtual string SortId { get; set; }
     public virtual bool SortAsccending { get; set; } = true;
     public virtual int PageIndex { get; set; }
-    public virtual int PageSize { get; set; }
+    public virtual int PageSize { get; set; } = 25;
     public virtual int TotalCount { get; set; }
     public virtual TKey LastIdentifier { get; set; }
 }
@@ -27,6 +27,5 @@ public record GridSearchModelVM<TKey, TSearchVM> : GridSearchModelVM<TKey>
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where TSearchVM : class
 {
-    public override int PageSize { get; set; } = 25;
     public TSearchVM? Fields { get; set; }
 }

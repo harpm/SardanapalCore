@@ -26,7 +26,20 @@ public static class QueryHelper
 
         if (!string.IsNullOrWhiteSpace(searchModel.SortId))
         {
-            query = query.OrderBy(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
+            //var paramExpr = Expression.Parameter(typeof(TEntity), "x");
+            //var propertyExpr = Expression.PropertyOrField(paramExpr, searchModel.SortId);
+            //Expression<Func<TEntity, object>> propertySelectorExpr = Expression.Lambda<Func<TEntity, object>>(propertyExpr);
+
+            if (searchModel.SortAsccending)
+            {
+                query = query.OrderBy(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
+                //query = query.OrderBy(propertySelectorExpr);
+            }
+            else
+            {
+                query = query.OrderByDescending(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
+                //query = query.OrderByDescending(propertySelectorExpr);
+            }
         }
 
         if (searchModel.PageSize > 0)
