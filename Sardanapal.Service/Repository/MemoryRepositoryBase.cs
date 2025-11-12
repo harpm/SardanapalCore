@@ -13,6 +13,11 @@ public abstract class MemoryRepositoryBase<TKey, TModel> : IMemoryRepository<TKe
     protected virtual ConcurrentDictionary<TKey, TModel> _db { get; set; }
         = new ConcurrentDictionary<TKey, TModel>();
 
+    protected virtual ConcurrentDictionary<TKey, TModel> GetInternalDB()
+    {
+        return _db;
+    }
+
     public virtual TKey Add(TModel model, CancellationToken ct = default)
     {
         var res = _db.TryAdd(model.Id, model);
@@ -26,22 +31,22 @@ public abstract class MemoryRepositoryBase<TKey, TModel> : IMemoryRepository<TKe
     }
     public virtual IEnumerable<TModel> FetchAll(CancellationToken ct = default)
     {
-        return _db.Select(kvp => kvp.Value).AsEnumerable();
+        return GetInternalDB().Select(kvp => kvp.Value).AsEnumerable();
     }
 
     public virtual Task<IEnumerable<TModel>> FetchAllAsync(CancellationToken ct = default)
     {
-        return Task.FromResult(_db.Select(kvp => kvp.Value).ToList().AsEnumerable());
+        return Task.FromResult(GetInternalDB().Select(kvp => kvp.Value).ToList().AsEnumerable());
     }
 
     public virtual TModel FetchById(TKey id, CancellationToken ct = default)
     {
-        return _db.TryGetValue(id, out TModel model) ? model : default;
+        return GetInternalDB().TryGetValue(id, out TModel model) ? model : default;
     }
 
     public virtual Task<TModel> FetchByIdAsync(TKey id, CancellationToken ct = default)
     {
-        return Task.FromResult(_db.TryGetValue(id, out TModel model) ? model : default);
+        return Task.FromResult(GetInternalDB().TryGetValue(id, out TModel model) ? model : default);
     }
     public virtual bool Update(TKey key, TModel model, CancellationToken ct = default)
     {

@@ -18,6 +18,11 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFCrudReposito
         this._unitOfWork = context;
     }
 
+    protected virtual IQueryable<TModel> GetInternalQuery()
+    {
+        return _unitOfWork.Set<TModel>();
+    }
+
     public virtual TKey Add(TModel model, CancellationToken ct = default)
     {
         EnsureNotNullReference(model);
@@ -38,24 +43,24 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFCrudReposito
 
     public IQueryable<TModel> FetchAll(CancellationToken ct = default)
     {
-        return _unitOfWork.Set<TModel>();
+        return GetInternalQuery();
     }
 
     public async Task<IQueryable<TModel>> FetchAllAsync(CancellationToken ct = default)
     {
-        return _unitOfWork.Set<TModel>();
+        return GetInternalQuery();
     }
 
     public TModel FetchById(TKey id, CancellationToken ct = default)
     {
         EnsureNotNullReference(id);
-        return _unitOfWork.Set<TModel>().Where(x => x.Id.Equals(id)).FirstOrDefault();
+        return GetInternalQuery().Where(x => x.Id.Equals(id)).FirstOrDefault();
     }
 
     public async Task<TModel> FetchByIdAsync(TKey id, CancellationToken ct = default)
     {
         EnsureNotNullReference(id);
-        return await _unitOfWork.Set<TModel>().Where(x => x.Id.Equals(id)).FirstOrDefaultAsync();
+        return await GetInternalQuery().Where(x => x.Id.Equals(id)).FirstOrDefaultAsync();
     }
 
     public bool Update(TKey key, TModel model, CancellationToken ct = default)
