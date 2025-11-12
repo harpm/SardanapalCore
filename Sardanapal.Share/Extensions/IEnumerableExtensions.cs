@@ -6,6 +6,33 @@ namespace Sardanapal.Share.Extensions;
 
 public static class IEnumerableExtensions
 {
+    public static IEnumerable<TListItemVM> SelectDynamicColumns<TListItemVM>(this IEnumerable<TListItemVM> list, string[]? columns)
+    {
+        if (columns == null || columns.Length == 0)
+        {
+            return list;
+        }
+        var listType = typeof(TListItemVM);
+
+        var parameter = Expression.Parameter(listType, "x");
+
+        var bindings = new List<MemberBinding>();
+        foreach (var column in columns)
+        {
+            var property = listType.GetProperty(column);
+            if (property != null)
+            {
+                var propertyAccess = Expression.Property(parameter, property);
+                var binding = Expression.Bind(property, propertyAccess);
+                bindings.Add(binding);
+            }
+        }
+        var body = Expression.MemberInit(Expression.New(listType), bindings);
+        var lambda = Expression.Lambda<Func<TListItemVM, TListItemVM>>(body, parameter);
+
+        return list.Select(lambda.Compile());
+    }
+
     public static IEnumerable<T> DynamicSearch<T>(this IEnumerable<T> list, string searchKeyword)
     {
         var fields = typeof(T).GetProperties()
@@ -62,6 +89,7 @@ public static class IEnumerableExtensions
 
         return list;
     }
+
     /// <summary>
     /// Searches all the fields in the T class
     /// inside the queryable

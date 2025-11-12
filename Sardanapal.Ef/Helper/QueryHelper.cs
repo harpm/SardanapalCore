@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Linq.Expressions;
 using Sardanapal.Domain.Attributes;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.Share.Extensions;
@@ -27,8 +28,8 @@ public static class QueryHelper
         if (!string.IsNullOrWhiteSpace(searchModel.SortId))
         {
             //var paramExpr = Expression.Parameter(typeof(TEntity), "x");
-            //var propertyExpr = Expression.PropertyOrField(paramExpr, searchModel.SortId);
-            //Expression<Func<TEntity, object>> propertySelectorExpr = Expression.Lambda<Func<TEntity, object>>(propertyExpr);
+            //var propertyAccessExpr = Expression.PropertyOrField(paramExpr, searchModel.SortId);
+            //Expression<Func<TEntity, object>> propertySelectorExpr = Expression.Lambda<Func<TEntity, object>>(propertyAccessExpr);
 
             if (searchModel.SortAsccending)
             {
@@ -55,5 +56,31 @@ public static class QueryHelper
         }
 
         return query;
+    }
+    public static IQueryable<TListItemVM> SelectDynamicColumns<TListItemVM>(this IQueryable<TListItemVM> query, string[]? columns)
+        where TListItemVM : class
+    {
+        if (columns == null || columns.Length == 0)
+        {
+            return query;
+        }
+        var listType = typeof(TListItemVM);
+
+        var parameter = Expression.Parameter(listType, "x");
+
+        var bindings = new List<MemberBinding>();
+        foreach (var column in columns)
+        {
+            var property = listType.GetProperty(column);
+            if (property != null)
+            {
+                var propertyAccess = Expression.Property(parameter, property);
+                var binding = Expression.Bind(property, propertyAccess);
+                bindings.Add(binding);
+            }
+        }
+        var body = Expression.MemberInit(Expression.New(listType), bindings);
+        var lambda = Expression.Lambda<Func<TListItemVM, TListItemVM>>(body, parameter);
+        return query.Select(lambda);
     }
 }

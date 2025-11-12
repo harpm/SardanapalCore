@@ -9,6 +9,7 @@ public interface IGridSearchVM
     int PageIndex { get; set; }
     int PageSize { get; set; }
     int TotalCount { get; set; }
+    string[]? Columns { get; set; }
 }
 
 public abstract record GridSearchModelVM<TKey> : IGridSearchVM
@@ -20,6 +21,7 @@ public abstract record GridSearchModelVM<TKey> : IGridSearchVM
     public virtual int PageIndex { get; set; }
     public virtual int PageSize { get; set; } = 25;
     public virtual int TotalCount { get; set; }
+    public virtual string[]? Columns { get; set; }
     public virtual TKey LastIdentifier { get; set; }
 }
 
