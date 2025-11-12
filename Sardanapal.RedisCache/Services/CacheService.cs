@@ -1,12 +1,13 @@
 using AutoMapper;
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
+using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.IModel;
 using Sardanapal.ViewModel.Response;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.Contract.IService;
 using Sardanapal.Localization;
+using Sardanapal.Share.Extensions;
 
 namespace Sardanapal.RedisCache.Services;
 
@@ -25,9 +26,10 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
     protected IMapper mapper { get; set; }
     protected readonly ILogger _logger;
 
-    protected virtual int expireTime { get; set; }
 
+    protected abstract int expireTime { get; set; }
     protected abstract string key { get; }
+
     protected RedisKey rKey
     {
         get
@@ -100,7 +102,8 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
             var resultValue = new GridVM<TKey, T>(model);
             var items = await InternalGetAll();
             var list = Search(items, model.Fields)
-                .Select(x => mapper.Map<T>(x));
+                .Select(x => mapper.Map<T>(x))
+                .SelectDynamicColumns(model.Columns);
 
             resultValue.SearchModel.TotalCount = items.Count();
             resultValue.List = list.ToList();

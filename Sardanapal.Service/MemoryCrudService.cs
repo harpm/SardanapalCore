@@ -6,6 +6,7 @@ using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
 using Sardanapal.Service.Utilities;
+using Sardanapal.Share.Extensions;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 
@@ -82,7 +83,11 @@ public abstract class MemoryCrudServiceBase<TRepository, TModel, TKey, TSearchVM
 
             data.SearchModel.TotalCount = entities.Count();
 
-            var list = EnumerableHelper.Search(entities, searchModel).Select(x => _mapper.Map<T>(x)).ToList();
+            var list = EnumerableHelper.Search(entities, searchModel)
+                .Select(x => _mapper.Map<T>(x))
+                .SelectDynamicColumns(searchModel.Columns)
+                .ToList();
+
             data.List = list;
 
             result.Set(StatusCode.Succeeded, data);

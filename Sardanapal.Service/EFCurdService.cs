@@ -79,7 +79,9 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
         return result;
     }
 
-    public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> searchModel = null, CancellationToken ct = default) where T : class
+    public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> searchModel = null
+        , CancellationToken ct = default)
+        where T : class
     {
         IResponse<GridVM<TKey, T>> result = new Response<GridVM<TKey, T>>(ServiceName, OperationType.Fetch, _logger);
 
@@ -99,6 +101,7 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
 
             var list = QueryHelper.Search(entities, searchModel)
                 .ProjectTo<T>(_mapper.ConfigurationProvider)
+                .SelectDynamicColumns(searchModel.Columns)
                 .ToList();
             data.List = list;
 
