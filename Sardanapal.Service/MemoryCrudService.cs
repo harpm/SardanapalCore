@@ -37,7 +37,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchV
 
     protected abstract IEnumerable<TEntity> Search(IEnumerable<TEntity> entities, TSearchVM searchVM);
 
-    public async Task<IResponse<TKey>> Add(TNewVM model, CancellationToken ct = default)
+    public virtual async Task<IResponse<TKey>> Add(TNewVM model, CancellationToken ct = default)
     {
         IResponse<TKey> result = new Response<TKey>(ServiceName, OperationType.Add, _logger);
 
@@ -51,7 +51,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchV
         return result;
     }
 
-    public async Task<IResponse<TVM>> Get(TKey id, CancellationToken ct = default)
+    public virtual async Task<IResponse<TVM>> Get(TKey id, CancellationToken ct = default)
     {
         IResponse<TVM> result = new Response<TVM>(ServiceName, OperationType.Fetch, _logger);
 
@@ -65,7 +65,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchV
         return result;
     }
 
-    public async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> searchModel = null, CancellationToken ct = default) where T : class
+    public virtual async Task<IResponse<GridVM<TKey, T>>> GetAll<T>(GridSearchModelVM<TKey, TSearchVM> searchModel = null, CancellationToken ct = default) where T : class
     {
         IResponse<GridVM<TKey, T>> result = new Response<GridVM<TKey, T>>(ServiceName, OperationType.Fetch, _logger);
 
@@ -109,7 +109,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchV
 
         return result;
     }
-    public async Task<IResponse<bool>> Edit(TKey id, TEditableVM model, CancellationToken ct = default)
+    public virtual async Task<IResponse<bool>> Edit(TKey id, TEditableVM model, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
 
@@ -131,7 +131,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchV
         return result;
     }
 
-    public async Task<IResponse<bool>> Delete(TKey id, CancellationToken ct = default)
+    public virtual async Task<IResponse<bool>> Delete(TKey id, CancellationToken ct = default)
     {
         IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Delete, _logger);
 
