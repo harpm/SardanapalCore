@@ -27,19 +27,19 @@ public static class QueryHelper
 
         if (!string.IsNullOrWhiteSpace(searchModel.SortId))
         {
-            //var paramExpr = Expression.Parameter(typeof(TEntity), "x");
-            //var propertyAccessExpr = Expression.PropertyOrField(paramExpr, searchModel.SortId);
-            //Expression<Func<TEntity, object>> propertySelectorExpr = Expression.Lambda<Func<TEntity, object>>(propertyAccessExpr);
+            var paramExpr = Expression.Parameter(typeof(TEntity), "x");
+            var propertyAccessExpr = Expression.Property(paramExpr, searchModel.SortId);
+            Expression<Func<TEntity, object>> propertySelectorExpr = Expression.Lambda<Func<TEntity, object>>(propertyAccessExpr);
 
             if (searchModel.SortAsccending)
             {
-                query = query.OrderBy(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
-                //query = query.OrderBy(propertySelectorExpr);
+                //query = query.OrderBy(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
+                query = query.OrderBy(propertySelectorExpr);
             }
             else
             {
-                query = query.OrderByDescending(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
-                //query = query.OrderByDescending(propertySelectorExpr);
+                //query = query.OrderByDescending(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
+                query = query.OrderByDescending(propertySelectorExpr);
             }
         }
 

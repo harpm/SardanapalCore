@@ -12,10 +12,10 @@ using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.Service;
 
-public abstract class MemoryCrudServiceBase<TRepository, TModel, TKey, TSearchVM, TVM, TNewVM, TEditableVM>
+public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
     : ICrudService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
-    where TRepository : class, IMemoryRepository<TKey, TModel>
-    where TModel : class, IBaseEntityModel<TKey>, new()
+    where TRepository : class, IMemoryRepository<TKey, TEntity>
+    where TEntity : class, IBaseEntityModel<TKey>, new()
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TSearchVM : class, new()
     where TVM : class, new()
@@ -35,7 +35,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TModel, TKey, TSearchVM
         this._logger = logger;
     }
 
-    protected abstract IEnumerable<TModel> Search(IEnumerable<TModel> entities, TSearchVM searchVM);
+    protected abstract IEnumerable<TEntity> Search(IEnumerable<TEntity> entities, TSearchVM searchVM);
 
     public async Task<IResponse<TKey>> Add(TNewVM model, CancellationToken ct = default)
     {
@@ -43,7 +43,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TModel, TKey, TSearchVM
 
         await result.FillAsync(async () =>
         {
-            var entity = _mapper.Map<TModel>(model);
+            var entity = _mapper.Map<TEntity>(model);
             var newId = await _repository.AddAsync(entity, ct);
             result.Set(StatusCode.Succeeded, newId);
         });

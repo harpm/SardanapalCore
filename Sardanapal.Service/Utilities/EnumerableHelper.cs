@@ -30,18 +30,19 @@ public static class EnumerableHelper
 
         if (!string.IsNullOrWhiteSpace(searchModel.SortId))
         {
-            //var paramExpr = Expression.Parameter(typeof(TEntity), "x");
-            //var propertyExpr = Expression.PropertyOrField(paramExpr, searchModel.SortId);
-            //Func<TEntity, object> propertySelectorFund = Expression.Lambda<Func<TEntity, object>>(propertyExpr).Compile();
+            var paramExpr = Expression.Parameter(typeof(TEntity), "x");
+            var propertyExpr = Expression.PropertyOrField(paramExpr, searchModel.SortId);
+            Func<TEntity, object> propertySelectorFunc = Expression.Lambda<Func<TEntity, object>>(propertyExpr).Compile();
 
             if (searchModel.SortAsccending)
             {
-                //query = query.OrderBy(propertySelectorFund);
-                query = query.OrderBy(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
+                query = query.OrderBy(propertySelectorFunc);
+                //query = query.OrderBy(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
             }
             else
             {
-                query = query.OrderByDescending(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
+                query = query.OrderByDescending(propertySelectorFunc);
+                //query = query.OrderByDescending(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
             }
         }
 
