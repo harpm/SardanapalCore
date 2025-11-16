@@ -7,8 +7,8 @@ namespace Sardanapal.Contract.Data;
 public interface IEFDatabaseManager
 {
     IDbContextTransaction CreatTransaction();
-    Task<IDbContextTransaction> CreatTransactionAsync(CancellationToken ct);
+    Task<IDbContextTransaction> CreatTransactionAsync(CancellationToken ct = default);
     int SaveChanges();
-    Task<int> SaveChangesAsync(CancellationToken ct);
+    Task<int> SaveChangesAsync(CancellationToken ct = default);
 
 }
