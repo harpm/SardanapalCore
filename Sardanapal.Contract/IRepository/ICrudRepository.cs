@@ -14,12 +14,6 @@ public interface IEFCrudRepository<TKey, TModel> : IReadRepository<TKey, TModel>
 {
     IQueryable<TModel> FetchAll(CancellationToken ct = default);
     Task<IQueryable<TModel>> FetchAllAsync(CancellationToken ct = default);
-
-    IDbContextTransaction BeginTransaction();
-    Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct = default);
-
-    bool SaveChanges(CancellationToken ct = default);
-    Task<bool> SaveChangesAsync(CancellationToken ct = default);
 }
 
 

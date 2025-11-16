@@ -2,6 +2,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Logging;
+using Sardanapal.Contract.Data;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
@@ -12,8 +13,9 @@ using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.Service;
 
-public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
+public abstract class EFCurdServiceBase<TEFDatabaseManager, TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
     : IEFCrudService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
+    where TEFDatabaseManager : IEFDatabaseManager
     where TRepository : IEFCrudRepository<TKey, TEntity>
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where TEntity : class, IBaseEntityModel<TKey>, new()
@@ -24,11 +26,13 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
 {
     protected abstract string ServiceName { get; }
     protected readonly TRepository _repository;
+    protected readonly TEFDatabaseManager _dbManager;
     protected readonly IMapper _mapper;
     protected readonly ILogger _logger;
 
-    protected EFCurdServiceBase(TRepository repository, IMapper mapper, ILogger logger)
+    protected EFCurdServiceBase(TEFDatabaseManager dbManager, TRepository repository, IMapper mapper, ILogger logger)
     {
+        this._dbManager = dbManager;
         this._repository = repository;
         this._mapper = mapper;
         this._logger = logger;
@@ -51,7 +55,7 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
             var entityModel = _mapper.Map<TNewVM, TEntity>(model);
             await FillEntityKey(entityModel);
             TKey addedId = await _repository.AddAsync(entityModel, ct);
-            await _repository.SaveChangesAsync(ct);
+            await _dbManager.SaveChangesAsync(ct);
             result.Set(StatusCode.Succeeded, addedId);
         });
 
@@ -136,6 +140,7 @@ public abstract class EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, T
             {
                 _mapper.Map(Model, entity);
                 var data = await _repository.UpdateAsync(id, entity, ct);
+                await _dbManager.SaveChangesAsync(ct);
                 result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
             }
             else

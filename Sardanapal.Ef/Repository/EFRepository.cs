@@ -1,6 +1,5 @@
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 
@@ -123,26 +122,5 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFCrudReposito
     protected void EnsureNotNullCollection<T>(IEnumerable<T> values, CancellationToken ct = default)
     {
         if (values == null || values.Count() == 0) throw new ArgumentNullException(nameof(values));
-    }
-
-    public IDbContextTransaction BeginTransaction()
-    {
-        return _unitOfWork.Database.BeginTransaction();
-    }
-
-    public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct = default)
-    {
-        return _unitOfWork.Database.BeginTransactionAsync(ct);
-    }
-
-    public bool SaveChanges(CancellationToken ct = default)
-    {
-        return _unitOfWork.SaveChanges() > 0;
-    }   
-
-    public async Task<bool> SaveChangesAsync(CancellationToken ct = default)
-    {
-        var res = await _unitOfWork.SaveChangesAsync();
-        return res > 0;
     }
 }

@@ -2,6 +2,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Logging;
+using Sardanapal.Contract.Data;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
@@ -11,9 +12,10 @@ using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.Service;
 
-public abstract class EFPanelServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
-    : EFCurdServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
+public abstract class EFPanelServiceBase<TEFDatabaseManager, TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
+    : EFCurdServiceBase<TEFDatabaseManager, TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
     , IEFPanelService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
+    where TEFDatabaseManager : IEFDatabaseManager
     where TRepository : IEFCrudRepository<TKey, TEntity>
     where TKey : IComparable<TKey>, IEquatable<TKey>
     where TEntity : class, IBaseEntityModel<TKey>, new()
@@ -22,8 +24,8 @@ public abstract class EFPanelServiceBase<TRepository, TKey, TEntity, TSearchVM, 
     where TNewVM : class, new()
     where TEditableVM : class, new()
 {
-    protected EFPanelServiceBase(TRepository repository, IMapper mapper, ILogger logger)
-    : base(repository, mapper, logger)
+    protected EFPanelServiceBase(TEFDatabaseManager dbManager, TRepository repository, IMapper mapper, ILogger logger)
+    : base(dbManager, repository, mapper, logger)
     {
 
     }
