@@ -13,7 +13,7 @@ public abstract class SardanapalUnitOfWork : DbContext, ISdUnitOfWork
     public SardanapalUnitOfWork(DbContextOptions opt)
         : base(opt)
     {
-
+        base.SavingChanges += SetBaseValues;
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -56,7 +56,7 @@ public abstract class SardanapalUnitOfWork : DbContext, ISdUnitOfWork
         }
     }
 
-    protected virtual void SetBaseValues()
+    protected virtual void SetBaseValues(object? sender, SavingChangesEventArgs e)
     {
         var EntityModels = ChangeTracker
             .Entries()
@@ -70,5 +70,17 @@ public abstract class SardanapalUnitOfWork : DbContext, ISdUnitOfWork
             entity.IsDeleted = true;
             model.State = EntityState.Modified;
         }
+    }
+
+    public override void Dispose()
+    {
+        this.SavingChanges -= SetBaseValues;
+        base.Dispose();
+    }
+
+    public override ValueTask DisposeAsync()
+    {
+        this.SavingChanges -= SetBaseValues;
+        return base.DisposeAsync();
     }
 }
