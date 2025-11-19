@@ -3,7 +3,7 @@ namespace Sardanapal.Share.Extensions;
 
 public static class TypesExtensions
 {
-    public static bool ImplementsRawGeneric(Type type, Type generic)
+    public static bool ImplementsRawGeneric(this Type type, Type generic)
     {
         // check interfaces
         if (type.GetInterfaces()
