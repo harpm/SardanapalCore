@@ -27,19 +27,32 @@ public static class QueryHelper
 
         if (!string.IsNullOrWhiteSpace(searchModel.SortId))
         {
+            var propertyType = typeof(TEntity).GetProperty(searchModel.SortId).PropertyType;
             var paramExpr = Expression.Parameter(typeof(TEntity), "x");
             var propertyAccessExpr = Expression.Property(paramExpr, searchModel.SortId);
-            Expression<Func<TEntity, object>> propertySelectorExpr = Expression.Lambda<Func<TEntity, object>>(propertyAccessExpr);
+
+            var fType = typeof(Func<,>)
+                .MakeGenericType(typeof(TEntity), propertyType);
+            var propertySelectorExpr = typeof(Expression).GetMethods().Where(m => m.Name == nameof(Expression.Lambda)
+                    && m.GetParameters().Length == 2).First()
+                .MakeGenericMethod(fType)
+                .Invoke(null, new object[] { propertyAccessExpr, new ParameterExpression[] { paramExpr } });
+
+
 
             if (searchModel.SortAsccending)
             {
-                //query = query.OrderBy(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
-                query = query.OrderBy(propertySelectorExpr);
+                query = typeof(Queryable).GetMethods().Where(m => m.Name == nameof(Queryable.OrderBy)
+                        && m.GetParameters().Length == 2).First()
+                    .MakeGenericMethod(typeof(TEntity), propertyType)
+                    .Invoke(null, new object[] { query, propertySelectorExpr }) as IQueryable<TEntity>;
             }
             else
             {
-                //query = query.OrderByDescending(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
-                query = query.OrderByDescending(propertySelectorExpr);
+                query = typeof(Queryable).GetMethods().Where(m => m.Name == nameof(Queryable.OrderByDescending)
+                        && m.GetParameters().Length == 2).First()
+                    .MakeGenericMethod(typeof(TEntity), propertyType)
+                    .Invoke(null, new object[] { query, propertySelectorExpr }) as IQueryable<TEntity>;
             }
         }
 
