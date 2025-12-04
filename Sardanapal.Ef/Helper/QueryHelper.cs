@@ -9,7 +9,7 @@ namespace Sardanapal.Ef.Helper;
 
 public static class QueryHelper
 {
-    public static IQueryable<TEntity> Search<TKey, TEntity>(this IQueryable<TEntity> query, GridSearchModelVM<TKey> searchModel = null)
+    public static IQueryable<TEntity> Search<TKey, TEntity>(this IQueryable<TEntity> query, GridSearchModelVM<TKey> searchModel)
         where TKey : IComparable<TKey>, IEquatable<TKey>
         where TEntity : IBaseEntityModel<TKey>
     {
