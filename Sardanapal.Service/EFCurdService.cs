@@ -14,7 +14,7 @@ using Sardanapal.ViewModel.Response;
 namespace Sardanapal.Service;
 
 public abstract class EFCurdServiceBase<TEFDatabaseManager, TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
-    : IEFCrudService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
+    : ICrudService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     where TEFDatabaseManager : IEFDatabaseManager
     where TRepository : IEFCrudRepository<TKey, TEntity>
     where TKey : IComparable<TKey>, IEquatable<TKey>

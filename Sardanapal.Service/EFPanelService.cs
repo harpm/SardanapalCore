@@ -14,7 +14,7 @@ namespace Sardanapal.Service;
 
 public abstract class EFPanelServiceBase<TEFDatabaseManager, TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
     : EFCurdServiceBase<TEFDatabaseManager, TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
-    , IEFPanelService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
+    , IPanelService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     where TEFDatabaseManager : IEFDatabaseManager
     where TRepository : IEFCrudRepository<TKey, TEntity>
     where TKey : IComparable<TKey>, IEquatable<TKey>
