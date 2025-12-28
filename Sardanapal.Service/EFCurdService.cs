@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.Data;
 using Sardanapal.Contract.IModel;
@@ -68,15 +69,19 @@ public abstract class EFCurdServiceBase<TEFDatabaseManager, TRepository, TKey, T
 
         await result.FillAsync(async () =>
         {
-            var fetchModel = await _repository.FetchByIdAsync(id, ct);
-            if (fetchModel != null)
+            var model = await _repository.FetchAll(ct)
+                .AsNoTracking()
+                .Where(x => x.Id.Equals(id))
+                .ProjectTo<TVM>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+
+            if (model != null)
             {
-                TVM model = _mapper.Map<TEntity, TVM>(fetchModel);
                 result.Set(StatusCode.Succeeded, model);
             }
             else
             {
-                result.Set(StatusCode.NotExists, [], Messages.NotExist);
+                result.Set(StatusCode.NotExists, Messages.NotExist);
             }
         });
 
@@ -121,9 +126,20 @@ public abstract class EFCurdServiceBase<TEFDatabaseManager, TRepository, TKey, T
 
         await result.FillAsync(async () =>
         {
-            var fetchModel = await _repository.FetchByIdAsync(id, ct);
-            TEditableVM model = _mapper.Map<TEntity, TEditableVM>(fetchModel);
-            result.Set(StatusCode.Succeeded, model);
+            var model = await _repository.FetchAll(ct)
+                .AsNoTracking()
+                .Where(x => x.Id.Equals(id))
+                .ProjectTo<TEditableVM>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+
+            if (model != null)
+            {
+                result.Set(StatusCode.Succeeded, model);
+            }
+            else
+            {
+                result.Set(StatusCode.NotExists, Messages.NotExist);
+            }
         });
 
         return result;
