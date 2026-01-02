@@ -96,23 +96,23 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFCrudReposito
         return res.State == EntityState.Deleted;
     }
 
-
     public void DeleteRange(IEnumerable<TKey> keys, CancellationToken ct = default)
     {
         EnsureNotNullCollection(keys);
 
-        var deletingEntries = this.FetchAll().AsQueryable().Where(x => keys.Contains(x.Id)).ToArray();
-        _unitOfWork.Set<TModel>().RemoveRange(deletingEntries);
+        _unitOfWork.Set<TModel>()
+            .Where(x => keys.Contains(x.Id))
+            .ExecuteDelete();
     }
 
-    public async Task DeleteRangeAsync(IEnumerable<TKey> keys, CancellationToken ct = default)
+    public Task DeleteRangeAsync(IEnumerable<TKey> keys, CancellationToken ct = default)
     {
         EnsureNotNullCollection(keys);
 
-        var deletingEntries = await this.FetchAll().AsQueryable().Where(x => keys.Contains(x.Id)).ToArrayAsync();
-        _unitOfWork.Set<TModel>().RemoveRange(deletingEntries);
+        return _unitOfWork.Set<TModel>()
+            .Where(x => keys.Contains(x.Id))
+            .ExecuteDeleteAsync();
     }
-
 
     protected void EnsureNotNullReference<T>(T values, CancellationToken ct = default)
     {
