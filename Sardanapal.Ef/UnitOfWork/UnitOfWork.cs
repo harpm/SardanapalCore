@@ -58,18 +58,62 @@ public abstract class SardanapalUnitOfWork : DbContext, ISdUnitOfWork
 
     protected virtual void SetBaseValues(object? sender, SavingChangesEventArgs e)
     {
-        var EntityModels = ChangeTracker
-            .Entries()
-            .Where(e => typeof(ILogicalEntityModel).IsAssignableFrom(e.Entity.GetType()) && (e.State == EntityState.Deleted))
-            .ToArray();
+        object currentUserKey = GetCurrentUserKey();
 
-        foreach (var model in EntityModels)
+        foreach (var entry in ChangeTracker.Entries().ToArray())
         {
-            ILogicalEntityModel entity = (ILogicalEntityModel)model.Entity;
+            var entityType = entry.Entity.GetType();
+            var originalState = entry.State;
 
-            entity.IsDeleted = true;
-            model.State = EntityState.Modified;
+            if (typeof(ILogicalEntityModel).IsAssignableFrom(entityType) && originalState == EntityState.Deleted)
+            {
+                ILogicalEntityModel logicalEntity = (ILogicalEntityModel)entry.Entity;
+                logicalEntity.IsDeleted = true;
+                entry.State = EntityState.Modified;
+            }
+
+            var auditInterface = entityType.GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType
+                    && i.GetGenericTypeDefinition() == typeof(IEntityModel<,>));
+
+            if (auditInterface != null)
+            {
+                var nowUtc = DateTime.UtcNow;
+                var createdOnProp = entityType.GetProperty(nameof(IEntityModel<int, int>.CreatedOnUtc));
+                var modifiedOnProp = entityType.GetProperty(nameof(IEntityModel<int, int>.ModifiedOnUtc));
+                var createByProp = entityType.GetProperty(nameof(IEntityModel<int, int>.CreateBy));
+                var modifiedByProp = entityType.GetProperty(nameof(IEntityModel<int, int>.ModifiedBy));
+
+                if (originalState == EntityState.Added)
+                {
+                    createdOnProp?.SetValue(entry.Entity, nowUtc);
+                    modifiedOnProp?.SetValue(entry.Entity, nowUtc);
+                    if (currentUserKey != null)
+                    {
+                        createByProp?.SetValue(entry.Entity, currentUserKey);
+                        modifiedByProp?.SetValue(entry.Entity, currentUserKey);
+                    }
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    modifiedOnProp?.SetValue(entry.Entity, nowUtc);
+                    if (currentUserKey != null)
+                    {
+                        modifiedByProp?.SetValue(entry.Entity, currentUserKey);
+                    }
+                }
+            }
         }
+    }
+
+    /// <summary>
+    /// Returns the current user key used to fill audit fields
+    /// (CreateBy/ModifiedBy). Default is null (no user context).
+    /// Override in a derived DbContext to supply the authenticated user.
+    /// </summary>
+    protected virtual object GetCurrentUserKey()
+    {
+        return null;
     }
 
     public override void Dispose()
