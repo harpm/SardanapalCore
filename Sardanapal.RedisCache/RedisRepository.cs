@@ -56,9 +56,19 @@ public abstract class RedisRepository<TKey, TModel> : IMemoryRepository<TKey, TM
         return result;
     }
 
-    public Task<IEnumerable<TModel>> FetchAllAsync(CancellationToken ct = default)
+    public async Task<IEnumerable<TModel>> FetchAllAsync(CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        var result = Enumerable.Empty<TModel>();
+
+        var items = await GetCurrentDatabase()
+            .HashGetAllAsync(rKey);
+
+        if (items != null && items.Length > 0)
+        {
+            result = items.Select(x => JsonSerializer.Deserialize<TModel>(x.Value));
+        }
+
+        return result;
     }
 
     public TModel FetchById(TKey id, CancellationToken ct = default)
@@ -163,12 +173,18 @@ public abstract class RedisRepository<TKey, TModel> : IMemoryRepository<TKey, TM
 
     public void DeleteRange(IEnumerable<TKey> keys, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        EnsureNotNullCollection(keys);
+
+        GetCurrentDatabase().HashDelete(rKey
+            , keys.Select(k => new RedisValue(k.ToString())).ToArray());
     }
 
     public Task DeleteRangeAsync(IEnumerable<TKey> keys, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        EnsureNotNullCollection(keys);
+
+        return GetCurrentDatabase().HashDeleteAsync(rKey
+            , keys.Select(k => new RedisValue(k.ToString())).ToArray());
     }
 
     public bool Delete(TKey id, CancellationToken ct = default)
