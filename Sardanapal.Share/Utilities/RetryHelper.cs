@@ -48,16 +48,38 @@ public static class RetryHelper
     {
         return Task.Run(async () =>
         {
+            Exception lastException = null;
+
             for (int i = 0; i < retryCount; i++)
             {
-                if (ct.IsCancellationRequested) throw new OperationCanceledException(ct);
+                ct.ThrowIfCancellationRequested();
 
-                var res = await actToRetry();
-                if (!res)
+                try
                 {
-                    await Task.Delay(offsetTime * 1000);
+                    if (await actToRetry())
+                    {
+                        return;
+                    }
+                    lastException = null;
                 }
-                else break;
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    lastException = ex;
+                }
+
+                if (i < retryCount - 1)
+                {
+                    await Task.Delay(offsetTime * 1000, ct);
+                }
+            }
+
+            if (lastException != null)
+            {
+                throw lastException;
             }
         });
     }
@@ -66,16 +88,38 @@ public static class RetryHelper
     {
         return Task.Run(async () =>
         {
+            Exception lastException = null;
+
             for (int i = 0; i < retryCount; i++)
             {
-                if (ct.IsCancellationRequested) throw new OperationCanceledException(ct);
+                ct.ThrowIfCancellationRequested();
 
-                var res = actToRetry();
-                if (!res)
+                try
                 {
-                    await Task.Delay(offsetTime * 1000);
+                    if (actToRetry())
+                    {
+                        return;
+                    }
+                    lastException = null;
                 }
-                else break;
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    lastException = ex;
+                }
+
+                if (i < retryCount - 1)
+                {
+                    await Task.Delay(offsetTime * 1000, ct);
+                }
+            }
+
+            if (lastException != null)
+            {
+                throw lastException;
             }
         });
     }
