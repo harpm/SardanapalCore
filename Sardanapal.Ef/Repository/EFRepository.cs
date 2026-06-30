@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
+using Sardanapal.Localization;
 
 namespace Sardanapal.Ef.Repository;
 
@@ -76,20 +77,20 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFCrudReposito
         return Task.FromResult(res.State == EntityState.Modified);
     }
 
-    public bool Delete(TKey key, CancellationToken ct = default)
+    public void Delete(TKey key, CancellationToken ct = default)
     {
         EnsureNotNullReference(key);
         var deletingEntry = this.FetchById(key);
-        var res = _unitOfWork.Set<TModel>().Remove(deletingEntry);
-        return res.State == EntityState.Deleted;
+        if (deletingEntry == null) throw new KeyNotFoundException(ResourceHelper.CreateNotFoundByKeyMessage(key));
+        _unitOfWork.Set<TModel>().Remove(deletingEntry);
     }
 
-    public async Task<bool> DeleteAsync(TKey key, CancellationToken ct = default)
+    public async Task DeleteAsync(TKey key, CancellationToken ct = default)
     {
         EnsureNotNullReference(key);
         var deletingEntry = await this.FetchByIdAsync(key);
-        var res = _unitOfWork.Set<TModel>().Remove(deletingEntry);
-        return res.State == EntityState.Deleted;
+        if (deletingEntry == null) throw new KeyNotFoundException(ResourceHelper.CreateNotFoundByKeyMessage(key));
+        _unitOfWork.Set<TModel>().Remove(deletingEntry);
     }
 
     public void DeleteRange(IEnumerable<TKey> keys, CancellationToken ct = default)

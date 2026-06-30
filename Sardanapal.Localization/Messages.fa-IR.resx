@@ -123,6 +123,9 @@
   <data name="NotExist" xml:space="preserve">
     <value>موجودیت مورد نظر یافت نشد.</value>
   </data>
+  <data name="NotFoundByKey" xml:space="preserve">
+    <value>موجودیتی با کلید '{0}' یافت نشد.</value>
+  </data>
   <data name="OperationCancelled" xml:space="preserve">
     <value>عملیات مورد نظر لغو شد.</value>
   </data>

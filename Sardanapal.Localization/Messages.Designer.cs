@@ -79,6 +79,15 @@ namespace Sardanapal.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No entry found with key &apos;{0}&apos;..
+        /// </summary>
+        public static string NotFoundByKey {
+            get {
+                return ResourceManager.GetString("NotFoundByKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Operation has been cancelled..
         /// </summary>
         public static string OperationCancelled {

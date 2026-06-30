@@ -14,4 +14,9 @@ public class ResourceHelper
     {
         return string.Format(Messages.RabbitMQMessagePublished, id, date);
     }
+
+    public static string CreateNotFoundByKeyMessage(object key)
+    {
+        return string.Format(Messages.NotFoundByKey, key);
+    }
 }

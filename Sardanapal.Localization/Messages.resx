@@ -123,6 +123,9 @@
   <data name="NotExist" xml:space="preserve">
     <value>Entry looking for has not found.</value>
   </data>
+  <data name="NotFoundByKey" xml:space="preserve">
+    <value>No entry found with key '{0}'.</value>
+  </data>
   <data name="OperationCancelled" xml:space="preserve">
     <value>Operation has been cancelled.</value>
   </data>

@@ -82,9 +82,9 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
         {
             await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
             {
-                var data = await _repository.DeleteAsync(id);
+                await _repository.DeleteAsync(id);
 
-                result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
+                result.Set(StatusCode.Succeeded, true);
 
                 return result.IsSuccess;
             }, ct);

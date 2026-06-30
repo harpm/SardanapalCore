@@ -4,6 +4,7 @@ using System.Text.Json;
 using StackExchange.Redis;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
+using Sardanapal.Localization;
 
 namespace Sardanapal.RedisCache;
 
@@ -169,34 +170,26 @@ public abstract class RedisRepository<TKey, TModel> : IMemoryRepository<TKey, TM
             , keys.Select(k => new RedisValue(k.ToString())).ToArray());
     }
 
-    public bool Delete(TKey id, CancellationToken ct = default)
+    public void Delete(TKey id, CancellationToken ct = default)
     {
         EnsureNotNullReference(id);
-
-        var result = false;
 
         var value = GetCurrentDatabase().HashGet(rKey, new RedisValue(id.ToString()));
-        if (!string.IsNullOrWhiteSpace(value))
-        {
-            result = GetCurrentDatabase().HashDelete(rKey, new RedisValue(id.ToString()));
-        }
+        if (string.IsNullOrWhiteSpace(value))
+            throw new KeyNotFoundException(ResourceHelper.CreateNotFoundByKeyMessage(id));
 
-        return result;
+        GetCurrentDatabase().HashDelete(rKey, new RedisValue(id.ToString()));
     }
 
-    public async Task<bool> DeleteAsync(TKey id, CancellationToken ct = default)
+    public async Task DeleteAsync(TKey id, CancellationToken ct = default)
     {
         EnsureNotNullReference(id);
 
-        var result = false;
-
         var value = await GetCurrentDatabase().HashGetAsync(rKey, new RedisValue(id.ToString()));
-        if (!string.IsNullOrWhiteSpace(value))
-        {
-            result = await GetCurrentDatabase().HashDeleteAsync(rKey, new RedisValue(id.ToString()));
-        }
+        if (string.IsNullOrWhiteSpace(value))
+            throw new KeyNotFoundException(ResourceHelper.CreateNotFoundByKeyMessage(id));
 
-        return result;
+        await GetCurrentDatabase().HashDeleteAsync(rKey, new RedisValue(id.ToString()));
     }
 
     protected void EnsureNotNullReference<T>(T values, CancellationToken ct = default)

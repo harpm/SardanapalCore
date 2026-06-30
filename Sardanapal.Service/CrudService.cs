@@ -106,9 +106,9 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
 
         await result.FillAsync(async () =>
         {
-            var data = await _repository.DeleteAsync(id, ct);
+            await _repository.DeleteAsync(id, ct);
 
-            result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
+            result.Set(StatusCode.Succeeded, true);
         });
 
         return result;

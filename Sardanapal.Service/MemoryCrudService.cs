@@ -137,8 +137,8 @@ public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchV
 
         await result.FillAsync(async () =>
         {
-            var isDeleted = await _repository.DeleteAsync(id, ct);
-            result.Set(isDeleted ? StatusCode.Succeeded : StatusCode.Failed, isDeleted);
+            await _repository.DeleteAsync(id, ct);
+            result.Set(StatusCode.Succeeded, true);
         });
 
         return result;

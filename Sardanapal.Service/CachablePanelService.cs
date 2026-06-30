@@ -111,11 +111,11 @@ public abstract class CachablePanelServiceBase<TRepository, TCacheRepository, TK
 
         await result.FillAsync(async () =>
         {
-            var data = await _repository.DeleteAsync(Id, ct);
+            await _repository.DeleteAsync(Id, ct);
 
             await _cacheRepository.DeleteAsync(Id, ct);
 
-            result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
+            result.Set(StatusCode.Succeeded, true);
         });
 
         return result;

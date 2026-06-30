@@ -3,6 +3,7 @@
 using System.Collections.Concurrent;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
+using Sardanapal.Localization;
 
 namespace Sardanapal.Service.Repository;
 
@@ -65,15 +66,18 @@ public abstract class MemoryRepositoryBase<TKey, TModel> : IMemoryRepository<TKe
         }
         else return Task.FromResult(false);
     }
-    public virtual bool Delete(TKey key, CancellationToken ct = default)
+    public virtual void Delete(TKey key, CancellationToken ct = default)
     {
-        return _db.TryRemove(key, out TModel _);
+        if (!_db.TryRemove(key, out TModel _))
+            throw new KeyNotFoundException(ResourceHelper.CreateNotFoundByKeyMessage(key));
     }
 
 
-    public virtual Task<bool> DeleteAsync(TKey key, CancellationToken ct = default)
+    public virtual Task DeleteAsync(TKey key, CancellationToken ct = default)
     {
-        return Task.FromResult(_db.TryRemove(key, out TModel _));
+        if (!_db.TryRemove(key, out TModel _))
+            throw new KeyNotFoundException(ResourceHelper.CreateNotFoundByKeyMessage(key));
+        return Task.CompletedTask;
     }
 
     public virtual void DeleteRange(IEnumerable<TKey> keys, CancellationToken ct = default)
