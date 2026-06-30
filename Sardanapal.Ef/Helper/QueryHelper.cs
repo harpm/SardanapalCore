@@ -64,7 +64,7 @@ public static class QueryHelper
             }
             else
             {
-                query = query.Page(searchModel.PageIndex, searchModel.PageIndex);
+                query = query.Page(searchModel.PageIndex, searchModel.PageSize);
             }
         }
 

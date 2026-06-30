@@ -54,7 +54,7 @@ public static class EnumerableHelper
             }
             else
             {
-                query = query.Page(searchModel.PageIndex, searchModel.PageIndex);
+                query = query.Page(searchModel.PageIndex, searchModel.PageSize);
             }
         }
 
