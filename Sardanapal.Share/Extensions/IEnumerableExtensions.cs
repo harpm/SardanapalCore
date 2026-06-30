@@ -84,7 +84,7 @@ public static class IEnumerableExtensions
         {
             var lambda = Expression.Lambda<Func<T, bool>>(finalPredicate, xParam);
 
-            list.Where(lambda.Compile());
+            list = list.Where(lambda.Compile());
         }
 
         return list;
