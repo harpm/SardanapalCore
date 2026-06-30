@@ -127,7 +127,9 @@ public record Response<TValue> : IResponse<TValue>
     public virtual void Set(StatusCode statusCode, Exception exception, string[] developerMessages, string userMessage)
     {
         Set(statusCode);
-        this.DeveloperMessages = exception.GetHirachicalMessages();
+        this.DeveloperMessages = exception.GetHirachicalMessages()
+            .Concat(developerMessages ?? Array.Empty<string>())
+            .ToArray();
         this.UserMessage = userMessage;
     }
 
