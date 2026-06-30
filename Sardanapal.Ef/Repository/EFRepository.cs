@@ -22,22 +22,18 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFCrudReposito
         return _unitOfWork.Set<TModel>();
     }
 
-    public virtual TKey Add(TModel model, CancellationToken ct = default)
+    public virtual void Add(TModel model, CancellationToken ct = default)
     {
         EnsureNotNullReference(model);
 
         _unitOfWork.Add(model);
-        _unitOfWork.SaveChanges();
-        return model.Id;
     }
 
-    public virtual async Task<TKey> AddAsync(TModel model, CancellationToken ct = default)
+    public virtual async Task AddAsync(TModel model, CancellationToken ct = default)
     {
         EnsureNotNullReference(model);
 
-        await _unitOfWork.AddAsync(model);
-        await _unitOfWork.SaveChangesAsync();
-        return model.Id;
+        await _unitOfWork.AddAsync(model, ct);
     }
 
     public IQueryable<TModel> FetchAll(CancellationToken ct = default)

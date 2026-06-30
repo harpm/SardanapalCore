@@ -37,8 +37,8 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
             await RetryHelper.RetryUntillAsync(_secondsBetweenRetries, _retryCount, async () =>
             {
                 var entityModel = _mapper.Map<TNewVM, TEntity>(model);
-                TKey addedId = await _repository.AddAsync(entityModel);
-                result.Set(StatusCode.Succeeded, addedId);
+                await _repository.AddAsync(entityModel);
+                result.Set(StatusCode.Succeeded, entityModel.Id);
 
                 return result.IsSuccess;
             }, ct);

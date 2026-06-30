@@ -38,11 +38,11 @@ public abstract class CachablePanelServiceBase<TRepository, TCacheRepository, TK
         await result.FillAsync(async () =>
         {
             var entityModel = _mapper.Map<TNewVM, TEntity>(Model);
-            TKey addedId = await _repository.AddAsync(entityModel, ct);
+            await _repository.AddAsync(entityModel, ct);
 
             await _cacheRepository.AddAsync(entityModel, ct);
 
-            result.Set(StatusCode.Succeeded, addedId);
+            result.Set(StatusCode.Succeeded, entityModel.Id);
         });
 
         return result;

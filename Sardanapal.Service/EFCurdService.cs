@@ -55,9 +55,9 @@ public abstract class EFCurdServiceBase<TEFDatabaseManager, TRepository, TKey, T
         {
             var entityModel = _mapper.Map<TNewVM, TEntity>(model);
             await FillEntityKey(entityModel);
-            TKey addedId = await _repository.AddAsync(entityModel, ct);
+            await _repository.AddAsync(entityModel, ct);
             await _dbManager.SaveChangesAsync(ct);
-            result.Set(StatusCode.Succeeded, addedId);
+            result.Set(StatusCode.Succeeded, entityModel.Id);
         });
 
         return result;

@@ -44,8 +44,8 @@ public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchV
         await result.FillAsync(async () =>
         {
             var entity = _mapper.Map<TEntity>(model);
-            var newId = await _repository.AddAsync(entity, ct);
-            result.Set(StatusCode.Succeeded, newId);
+            await _repository.AddAsync(entity, ct);
+            result.Set(StatusCode.Succeeded, entity.Id);
         });
 
         return result;

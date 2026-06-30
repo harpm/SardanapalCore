@@ -10,15 +10,13 @@ public interface ICreateRepository<TKey, TModel>
     /// <summary>
     /// Adds new model in the parameters accordingly into the database
     /// </summary>
-    /// <param name="model">Given model will be added to the database</param>
-    /// <returns>The Id of the new added entry</returns>
-    TKey Add(TModel model, CancellationToken ct = default);
+    /// <param name="model">Given model will be added to the database; its Id is populated after the change is persisted</param>
+    void Add(TModel model, CancellationToken ct = default);
 
 
     /// <summary>
     /// Adds new model in the parameters accordingly into the database
     /// </summary>
-    /// <param name="model">Given model will be added to the database</param>
-    /// <returns>The Id of the new added entry</returns>
-    Task<TKey> AddAsync(TModel model, CancellationToken ct = default);
+    /// <param name="model">Given model will be added to the database; its Id is populated after the change is persisted</param>
+    Task AddAsync(TModel model, CancellationToken ct = default);
 }

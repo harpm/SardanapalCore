@@ -18,16 +18,15 @@ public abstract class MemoryRepositoryBase<TKey, TModel> : IMemoryRepository<TKe
         return _db;
     }
 
-    public virtual TKey Add(TModel model, CancellationToken ct = default)
+    public virtual void Add(TModel model, CancellationToken ct = default)
     {
-        var res = _db.TryAdd(model.Id, model);
-        return res ? model.Id : default;
+        _db.TryAdd(model.Id, model);
     }
 
-    public virtual Task<TKey> AddAsync(TModel model, CancellationToken ct = default)
+    public virtual Task AddAsync(TModel model, CancellationToken ct = default)
     {
-        var res = _db.TryAdd(model.Id, model);
-        return Task.FromResult<TKey>(res ? model.Id : default);
+        _db.TryAdd(model.Id, model);
+        return Task.CompletedTask;
     }
     public virtual IEnumerable<TModel> FetchAll(CancellationToken ct = default)
     {

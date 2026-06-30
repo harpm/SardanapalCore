@@ -105,40 +105,22 @@ public abstract class RedisRepository<TKey, TModel> : IMemoryRepository<TKey, TM
         return result;
     }
 
-    public TKey Add(TModel model, CancellationToken ct = default)
+    public void Add(TModel model, CancellationToken ct = default)
     {
         EnsureNotNullReference(model);
-
-        TKey result = default;
 
         var db = GetCurrentDatabase();
         GenerateId(model);
-        var res = db.HashSet(rKey, new RedisValue(model.Id.ToString()), new RedisValue(JsonSerializer.Serialize(model)));
-
-        if (res)
-        {
-            result = model.Id;
-        }
-
-        return result;
+        db.HashSet(rKey, new RedisValue(model.Id.ToString()), new RedisValue(JsonSerializer.Serialize(model)));
     }
 
-    public async Task<TKey> AddAsync(TModel model, CancellationToken ct = default)
+    public async Task AddAsync(TModel model, CancellationToken ct = default)
     {
         EnsureNotNullReference(model);
 
-        TKey result = default;
-
         var db = GetCurrentDatabase();
         await GenerateIdAsync(model);
-        var res = await db.HashSetAsync(rKey, new RedisValue(model.Id.ToString()), new RedisValue(JsonSerializer.Serialize(model)));
-
-        if (res)
-        {
-            result = model.Id;
-        }
-
-        return result;
+        await db.HashSetAsync(rKey, new RedisValue(model.Id.ToString()), new RedisValue(JsonSerializer.Serialize(model)));
     }
 
     public bool Update(TKey id, TModel model, CancellationToken ct = default)

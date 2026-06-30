@@ -39,8 +39,8 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         await result.FillAsync(async () =>
         {
             var entityModel = _mapper.Map<TNewVM, TEntity>(model);
-            TKey addedId = await _repository.AddAsync(entityModel, ct);
-            result.Set(StatusCode.Succeeded, addedId);
+            await _repository.AddAsync(entityModel, ct);
+            result.Set(StatusCode.Succeeded, entityModel.Id);
         });
 
         return result;
