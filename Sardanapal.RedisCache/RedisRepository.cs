@@ -138,7 +138,7 @@ public abstract class RedisRepository<TKey, TModel> : IMemoryRepository<TKey, TM
         var result = false;
 
         var value = GetCurrentDatabase().HashGet(rKey, new RedisValue(id.ToString()));
-        if (string.IsNullOrWhiteSpace(value))
+        if (!string.IsNullOrWhiteSpace(value))
         {
             result = GetCurrentDatabase().HashSet(rKey, new RedisValue(id.ToString()), new RedisValue(JsonSerializer.Serialize(model)));
         }
@@ -153,7 +153,7 @@ public abstract class RedisRepository<TKey, TModel> : IMemoryRepository<TKey, TM
         var result = false;
 
         var value = await GetCurrentDatabase().HashGetAsync(rKey, new RedisValue(id.ToString()));
-        if (string.IsNullOrWhiteSpace(value))
+        if (!string.IsNullOrWhiteSpace(value))
         {
             result = await GetCurrentDatabase().HashSetAsync(rKey, new RedisValue(id.ToString()), new RedisValue(JsonSerializer.Serialize(model)));
         }
@@ -178,7 +178,7 @@ public abstract class RedisRepository<TKey, TModel> : IMemoryRepository<TKey, TM
         var result = false;
 
         var value = GetCurrentDatabase().HashGet(rKey, new RedisValue(id.ToString()));
-        if (string.IsNullOrWhiteSpace(value))
+        if (!string.IsNullOrWhiteSpace(value))
         {
             result = GetCurrentDatabase().HashDelete(rKey, new RedisValue(id.ToString()));
         }
@@ -193,7 +193,7 @@ public abstract class RedisRepository<TKey, TModel> : IMemoryRepository<TKey, TM
         var result = false;
 
         var value = await GetCurrentDatabase().HashGetAsync(rKey, new RedisValue(id.ToString()));
-        if (string.IsNullOrWhiteSpace(value))
+        if (!string.IsNullOrWhiteSpace(value))
         {
             result = await GetCurrentDatabase().HashDeleteAsync(rKey, new RedisValue(id.ToString()));
         }
