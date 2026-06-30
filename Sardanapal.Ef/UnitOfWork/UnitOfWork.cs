@@ -33,7 +33,7 @@ public abstract class SardanapalUnitOfWork : DbContext, ISdUnitOfWork
 
     public virtual Type[] GetDomainModels()
     {
-        return Assembly.GetExecutingAssembly().GetTypes()
+        return GetType().Assembly.GetTypes()
             .Where(x => x.IsAssignableTo(typeof(IDomainModel)) && x.IsClass && !x.IsAbstract)
             .ToArray();
     }
