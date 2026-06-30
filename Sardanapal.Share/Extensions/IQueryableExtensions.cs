@@ -1,5 +1,3 @@
-using AutoMapper.Execution;
-using Sardanapal.Share.Expressions;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -8,28 +6,88 @@ namespace Sardanapal.Share.Extensions;
 
 public static class IQueryableExtensions
 {
-    public static IQueryable<T> WhereOr<T>(this IQueryable<T> query, Expression<Func<T, bool>> predications)
+    public static IQueryable<T> WhereOr<T>(this IQueryable<T> query, Expression<Func<T, bool>> predicate)
     {
-        if (predications != null)
-        {
-            Expression topestBinaryExp = query.Expression.Find(x => x.Type == typeof(BinaryExpression));
+        if (predicate == null)
+            throw new ArgumentNullException(nameof(predicate));
 
-            if (topestBinaryExp == null)
-            {
-                query = query.Where(predications);
-            }
-            else
-            {
-                var orExpr = Expression.Or(topestBinaryExp, predications);
-                var newCondition = Expression.Lambda<Func<T, bool>>(orExpr);
-                query.Expression.Replace(topestBinaryExp, newCondition);
-            }
-            return query;
-        }
-        else
+        var finder = new LastWhereFinder();
+        var lastWhere = finder.Find(query.Expression);
+
+        if (lastWhere == null)
+            return query.Where(predicate);
+
+        var predicateArg = lastWhere.Arguments[1];
+        LambdaExpression lastLambda = predicateArg is UnaryExpression u && u.NodeType == ExpressionType.Quote
+            ? (LambdaExpression)u.Operand
+            : (LambdaExpression)predicateArg;
+
+        var sharedParam = lastLambda.Parameters[0];
+        var rebinder = new ParameterReplacer(predicate.Parameters[0], sharedParam);
+        var combinedBody = Expression.OrElse(lastLambda.Body, rebinder.Visit(predicate.Body));
+        var combinedLambda = Expression.Lambda<Func<T, bool>>(combinedBody, sharedParam);
+
+        var newWhere = Expression.Call(
+            typeof(Queryable), nameof(Queryable.Where), new[] { typeof(T) },
+            lastWhere.Arguments[0],
+            Expression.Quote(combinedLambda));
+
+        var replacer = new NodeReplacer(lastWhere, newWhere);
+        return query.Provider.CreateQuery<T>(replacer.Visit(query.Expression));
+    }
+
+    private sealed class LastWhereFinder : ExpressionVisitor
+    {
+        private MethodCallExpression _where;
+
+        public MethodCallExpression Find(Expression root)
         {
-            throw new NullReferenceException();
+            _where = null;
+            Visit(root);
+            return _where;
         }
+
+        protected override Expression VisitMethodCall(MethodCallExpression node)
+        {
+            if (_where == null
+                && node.Method.DeclaringType == typeof(Queryable)
+                && node.Method.Name == nameof(Queryable.Where))
+            {
+                _where = node;
+                return node;
+            }
+            return base.VisitMethodCall(node);
+        }
+    }
+
+    private sealed class ParameterReplacer : ExpressionVisitor
+    {
+        private readonly ParameterExpression _from;
+        private readonly ParameterExpression _to;
+
+        public ParameterReplacer(ParameterExpression from, ParameterExpression to)
+        {
+            _from = from;
+            _to = to;
+        }
+
+        protected override Expression VisitParameter(ParameterExpression node)
+            => node == _from ? _to : base.VisitParameter(node);
+    }
+
+    private sealed class NodeReplacer : ExpressionVisitor
+    {
+        private readonly Expression _target;
+        private readonly Expression _replacement;
+
+        public NodeReplacer(Expression target, Expression replacement)
+        {
+            _target = target;
+            _replacement = replacement;
+        }
+
+        protected override Expression VisitMethodCall(MethodCallExpression node)
+            => node == _target ? _replacement : base.VisitMethodCall(node);
     }
 
     /// <summary>
