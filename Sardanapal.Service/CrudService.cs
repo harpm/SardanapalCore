@@ -77,8 +77,16 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         await result.FillAsync(async () =>
         {
             var fetchModel = await _repository.FetchByIdAsync(id, ct);
-            TEditableVM model = _mapper.Map<TEntity, TEditableVM>(fetchModel);
-            result.Set(StatusCode.Succeeded, model);
+
+            if (fetchModel != null)
+            {
+                TEditableVM model = _mapper.Map<TEntity, TEditableVM>(fetchModel);
+                result.Set(StatusCode.Succeeded, model);
+            }
+            else
+            {
+                result.Set(StatusCode.NotExists, Messages.NotExist);
+            }
         });
 
         return result;
@@ -91,10 +99,17 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
         await result.FillAsync(async () =>
         {
             var entity = await _repository.FetchByIdAsync(id, ct);
-            _mapper.Map<TEditableVM, TEntity>(model, entity);
-            var data = await _repository.UpdateAsync(id, entity, ct);
+            if (entity != null)
+            {
+                _mapper.Map<TEditableVM, TEntity>(model, entity);
+                var data = await _repository.UpdateAsync(id, entity, ct);
 
-            result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
+                result.Set(data ? StatusCode.Succeeded : StatusCode.Failed, data);
+            }
+            else
+            {
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
+            }
         });
 
         return result;

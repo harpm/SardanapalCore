@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
+using Sardanapal.Localization;
 using Sardanapal.Service.Utilities;
 using Sardanapal.Share.Extensions;
 using Sardanapal.ViewModel.Models;
@@ -58,8 +59,16 @@ public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchV
         await result.FillAsync(async () =>
         {
             var entity = await _repository.FetchByIdAsync(id, ct);
-            var model = _mapper.Map<TVM>(entity);
-            result.Set(StatusCode.Succeeded, model);
+
+            if (entity != null)
+            {
+                var model = _mapper.Map<TVM>(entity);
+                result.Set(StatusCode.Succeeded, model);
+            }
+            else
+            {
+                result.Set(StatusCode.NotExists, Messages.NotExist);
+            }
         });
 
         return result;
@@ -103,8 +112,16 @@ public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchV
         await result.FillAsync(async () =>
         {
             var entity = await _repository.FetchByIdAsync(id, ct);
-            var model = _mapper.Map<TEditableVM>(entity);
-            result.Set(StatusCode.Succeeded, model);
+
+            if (entity != null)
+            {
+                var model = _mapper.Map<TEditableVM>(entity);
+                result.Set(StatusCode.Succeeded, model);
+            }
+            else
+            {
+                result.Set(StatusCode.NotExists, Messages.NotExist);
+            }
         });
 
         return result;
