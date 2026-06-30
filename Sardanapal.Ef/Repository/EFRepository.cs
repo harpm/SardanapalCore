@@ -96,18 +96,37 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFCrudReposito
     {
         EnsureNotNullCollection(keys);
 
-        _unitOfWork.Set<TModel>()
-            .Where(x => keys.Contains(x.Id))
-            .ExecuteDelete();
+        var query = _unitOfWork.Set<TModel>()
+            .Where(x => keys.Contains(x.Id));
+
+        if (typeof(ILogicalEntityModel).IsAssignableFrom(typeof(TModel)))
+            SoftDelete(query);
+        else
+            query.ExecuteDelete();
     }
 
     public Task DeleteRangeAsync(IEnumerable<TKey> keys, CancellationToken ct = default)
     {
         EnsureNotNullCollection(keys);
 
-        return _unitOfWork.Set<TModel>()
-            .Where(x => keys.Contains(x.Id))
-            .ExecuteDeleteAsync();
+        var query = _unitOfWork.Set<TModel>()
+            .Where(x => keys.Contains(x.Id));
+
+        if (typeof(ILogicalEntityModel).IsAssignableFrom(typeof(TModel)))
+            return SoftDeleteAsync(query);
+        return query.ExecuteDeleteAsync(ct);
+    }
+
+    private void SoftDelete(IQueryable<TModel> query)
+    {
+        query.ExecuteUpdate(s => s.SetProperty(
+            x => ((ILogicalEntityModel)x).IsDeleted, true));
+    }
+
+    private Task SoftDeleteAsync(IQueryable<TModel> query)
+    {
+        return query.ExecuteUpdateAsync(s => s.SetProperty(
+            x => ((ILogicalEntityModel)x).IsDeleted, true));
     }
 
     protected void EnsureNotNullReference<T>(T values, CancellationToken ct = default)
