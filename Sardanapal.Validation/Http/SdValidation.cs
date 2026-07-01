@@ -54,7 +54,8 @@ public class SdValidation : ActionFilterAttribute
 
                     if (paramTypes.Count > 0)
                     {
-                        validationService.ValidateParams(paramTypes.ToArray(), paramValues.ToArray());
+                        validationService.ValidateParams(paramTypes.ToArray(), paramValues.ToArray())
+                            .GetAwaiter().GetResult();
                     }
                 }
             }

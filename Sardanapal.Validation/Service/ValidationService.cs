@@ -37,7 +37,7 @@ public class ValidationService : IValidationService
         _serviceProvider = sp;
     }
 
-    public virtual async void ValidateParams(Type[] paramTypes, object[] paramValues, CancellationToken ct = default)
+    public virtual async Task ValidateParams(Type[] paramTypes, object[] paramValues, CancellationToken ct = default)
     {
         if (_isProceeded) return;
         else _isProceeded = true;
