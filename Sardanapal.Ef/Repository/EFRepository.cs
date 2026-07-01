@@ -37,11 +37,19 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFCrudReposito
         await _unitOfWork.AddAsync(model, ct);
     }
 
+    /// <summary>
+    /// Returns a deferred query bound to this repository's <c>DbContext</c>.
+    /// Enumerate (e.g. via <c>ToListAsync</c>) while the context is still in scope.
+    /// </summary>
     public IQueryable<TModel> FetchAll(CancellationToken ct = default)
     {
         return GetInternalQuery();
     }
 
+    /// <summary>
+    /// Returns a deferred query bound to this repository's <c>DbContext</c>.
+    /// Enumerate (e.g. via <c>ToListAsync</c>) while the context is still in scope.
+    /// </summary>
     public Task<IQueryable<TModel>> FetchAllAsync(CancellationToken ct = default)
     {
         return Task.FromResult(GetInternalQuery());
