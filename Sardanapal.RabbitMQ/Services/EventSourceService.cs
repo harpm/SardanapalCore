@@ -21,13 +21,17 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
     protected abstract string exchangeName { get; set; }
     protected abstract string serviceName { get; set; }
 
+    private readonly Task _initialization;
+
     public EventSourceService(IConnection conn, ILogger logger)
     {
         ampqConnection = conn;
         this._logger = logger;
+
+        _initialization = InitAsync();
     }
 
-    protected virtual async void Init()
+    protected virtual async Task InitAsync()
     {
         using IChannel channel = await ampqConnection.CreateChannelAsync();
         await channel.ExchangeDeclareAsync(exchangeName, ExchangeType.Direct);
@@ -50,6 +54,8 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
 
         result = await result.FillAsync(async () =>
         {
+            await _initialization;
+
             using IChannel channel = await ampqConnection.CreateChannelAsync();
 
             model = await CreateModel(model);
@@ -69,6 +75,8 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
 
         result = await result.FillAsync(async () =>
         {
+            await _initialization;
+
             using var channel = await ampqConnection.CreateChannelAsync();
             AsyncEventingBasicConsumer consumer = new AsyncEventingBasicConsumer(channel);
             consumer.ReceivedAsync += ConsumeMessage(handler);
