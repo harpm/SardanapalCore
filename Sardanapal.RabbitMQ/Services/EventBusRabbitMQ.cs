@@ -10,13 +10,15 @@ using Sardanapal.Localization;
 namespace Sardanapal.RMQ.Services;
 
 
-public class EventBusRabbitMQ : ISardanapalEventBus
+public class EventBusRabbitMQ : ISardanapalEventBus, IDisposable
 {
     protected readonly ILogger _logger;
     protected readonly IRabbitMQPersistentConnection _persistentConnection;
     protected virtual string _exchangeName => "event_bus";
 
     private readonly Task _initialization;
+    private readonly List<IChannel> _consumerChannels = new();
+    private bool _disposed;
 
     public EventBusRabbitMQ(IRabbitMQPersistentConnection persistentConnection, ILogger<EventBusRabbitMQ> logger)
     {
@@ -64,6 +66,8 @@ public class EventBusRabbitMQ : ISardanapalEventBus
         await _initialization;
 
         var channel = await _persistentConnection.CreateModel();
+        _consumerChannels.Add(channel);
+
         var eventName = typeof(T).Name;
         var queueName = eventName + $"_{eventName}";
 
@@ -73,17 +77,40 @@ public class EventBusRabbitMQ : ISardanapalEventBus
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (model, ea) =>
         {
-            var message = Encoding.UTF8.GetString(ea.Body.ToArray());
-            var e = JsonSerializer.Deserialize<T>(message);
+            try
+            {
+                var message = Encoding.UTF8.GetString(ea.Body.ToArray());
+                var e = JsonSerializer.Deserialize<T>(message);
 
-            var handler = new TH();
-            if (handler != null && e != null)
-                await handler.Handle(e);
+                if (e != null)
+                {
+                    var handler = new TH();
+                    await handler.Handle(e);
+                }
 
-            await channel.BasicAckAsync(ea.DeliveryTag, multiple: false);
-            _logger.LogInformation(ResourceHelper.CraeteRabbitMQMessageHandled(e.Id.ToString(), e.CreationDate.ToString("yyyy-MM-dd | HH:mm")));
+                await channel.BasicAckAsync(ea.DeliveryTag, multiple: false);
+                _logger.LogInformation(ResourceHelper.CraeteRabbitMQMessageHandled(e.Id.ToString(), e.CreationDate.ToString("yyyy-MM-dd | HH:mm")));
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to handle message from queue '{QueueName}'. Nacking without requeue.", queueName);
+                await channel.BasicNackAsync(ea.DeliveryTag, multiple: false, requeue: false);
+            }
         };
 
         await channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer);
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+
+        foreach (var channel in _consumerChannels)
+        {
+            try { channel.Dispose(); }
+            catch { }
+        }
+        _consumerChannels.Clear();
+        _disposed = true;
     }
 }
