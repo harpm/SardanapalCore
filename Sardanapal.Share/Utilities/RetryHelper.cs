@@ -14,12 +14,25 @@ public static class RetryHelper
         {
             while (true)
             {
-                if (ct.IsCancellationRequested) throw new OperationCanceledException(ct);
+                ct.ThrowIfCancellationRequested();
 
-                var res = await actToRetry();
-                if (!res)
+                bool succeeded = false;
+                try
                 {
-                    await Task.Delay(offsetTime * 1000);
+                    succeeded = await actToRetry();
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception)
+                {
+                    // Transient failure; retry after delay.
+                }
+
+                if (!succeeded)
+                {
+                    await Task.Delay(offsetTime * 1000, ct);
                 }
                 else break;
             }
@@ -28,16 +41,29 @@ public static class RetryHelper
 
     public static Task RetryUntillSuccess(int offsetTime, Func<bool> actToRetry, CancellationToken ct = default)
     {
-        return Task.Run(async() =>
+        return Task.Run(async () =>
         {
             while (true)
             {
-                if (ct.IsCancellationRequested) throw new OperationCanceledException(ct);
+                ct.ThrowIfCancellationRequested();
 
-                var res = actToRetry();
-                if (!res)
+                bool succeeded = false;
+                try
                 {
-                    await Task.Delay(offsetTime * 1000);
+                    succeeded = actToRetry();
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception)
+                {
+                    // Transient failure; retry after delay.
+                }
+
+                if (!succeeded)
+                {
+                    await Task.Delay(offsetTime * 1000, ct);
                 }
                 else break;
             }
