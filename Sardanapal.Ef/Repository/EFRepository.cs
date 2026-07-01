@@ -42,9 +42,9 @@ public abstract class EFRepositoryBase<TContext, TKey, TModel> : IEFCrudReposito
         return GetInternalQuery();
     }
 
-    public async Task<IQueryable<TModel>> FetchAllAsync(CancellationToken ct = default)
+    public Task<IQueryable<TModel>> FetchAllAsync(CancellationToken ct = default)
     {
-        return GetInternalQuery();
+        return Task.FromResult(GetInternalQuery());
     }
 
     public TModel FetchById(TKey id, CancellationToken ct = default)
