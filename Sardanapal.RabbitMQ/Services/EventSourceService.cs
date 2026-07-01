@@ -12,7 +12,7 @@ using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.RMQ.Services;
 
-public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKey, TModel>, IDisposable
+public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKey, TModel>, IAsyncDisposable, IDisposable
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TModel : IBaseEntityModel<TKey>, new()
 {
@@ -22,6 +22,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
     protected abstract string serviceName { get; set; }
 
     private readonly Task _initialization;
+    private bool _disposed;
 
     public EventSourceService(IConnection conn, ILogger logger)
     {
@@ -106,9 +107,43 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
         };
     }
 
-    public async void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        await ampqConnection.CloseAsync();
-        ampqConnection.Dispose();
+        if (_disposed) return;
+
+        try
+        {
+            await ampqConnection.CloseAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error closing AMQP connection during async disposal.");
+        }
+        finally
+        {
+            ampqConnection.Dispose();
+            _disposed = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+
+        try
+        {
+            ampqConnection.CloseAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error closing AMQP connection during disposal.");
+        }
+        finally
+        {
+            ampqConnection.Dispose();
+            _disposed = true;
+        }
+
+        GC.SuppressFinalize(this);
     }
 }
