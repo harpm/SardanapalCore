@@ -33,16 +33,28 @@ public class SdValidation : ActionFilterAttribute
 
                 if (parameters != null && parameters.Any())
                 {
-                    for (var i = 0; i < parameters.Count; i++)
+                    var paramTypes = new List<Type>();
+                    var paramValues = new List<object>();
+
+                    foreach (var parameter in parameters)
                     {
-                        if (parameters[i].ParameterType == typeof(CancellationToken))
+                        if (parameter.ParameterType == typeof(CancellationToken))
                         {
                             continue;
                         }
 
-                        validationService.ValidateParams(parameters.Select(p => p.ParameterType).ToArray()
-                            , action.ActionArguments.Select(a => a.Value).ToArray());
+                        if (!action.ActionArguments.TryGetValue(parameter.Name, out object value))
+                        {
+                            continue;
+                        }
 
+                        paramTypes.Add(parameter.ParameterType);
+                        paramValues.Add(value);
+                    }
+
+                    if (paramTypes.Count > 0)
+                    {
+                        validationService.ValidateParams(paramTypes.ToArray(), paramValues.ToArray());
                     }
                 }
             }
