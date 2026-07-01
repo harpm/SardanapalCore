@@ -16,22 +16,29 @@ public class EventBusRabbitMQ : ISardanapalEventBus
     protected readonly IRabbitMQPersistentConnection _persistentConnection;
     protected virtual string _exchangeName => "event_bus";
 
+    private readonly Task _initialization;
+
     public EventBusRabbitMQ(IRabbitMQPersistentConnection persistentConnection, ILogger<EventBusRabbitMQ> logger)
     {
         _persistentConnection = persistentConnection;
         _logger = logger;
 
+        _initialization = InitializeAsync();
+    }
+
+    private async Task InitializeAsync()
+    {
         if (!_persistentConnection.IsConnected)
-            _persistentConnection.TryConnect();
-        Task.Run(async () =>
-        {
-            using var channel = await _persistentConnection.CreateModel();
-            await channel.ExchangeDeclareAsync(exchange: _exchangeName, type: ExchangeType.Topic, durable: true);
-        });
+            await _persistentConnection.TryConnect();
+
+        using var channel = await _persistentConnection.CreateModel();
+        await channel.ExchangeDeclareAsync(exchange: _exchangeName, type: ExchangeType.Topic, durable: true);
     }
 
     public async Task Publish(IntegrationEvent e)
     {
+        await _initialization;
+
         using var channel = await _persistentConnection.CreateModel();
 
         var routingKey = e.GetType().Name; // Use event type as routing key
@@ -54,6 +61,8 @@ public class EventBusRabbitMQ : ISardanapalEventBus
         where T : IntegrationEvent
         where TH : IIntegrationEventHandler<T>, new()
     {
+        await _initialization;
+
         var channel = await _persistentConnection.CreateModel();
         var eventName = typeof(T).Name;
         var queueName = eventName + $"_{eventName}";
