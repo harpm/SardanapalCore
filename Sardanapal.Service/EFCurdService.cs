@@ -106,12 +106,12 @@ public abstract class EFCurdServiceBase<TEFDatabaseManager, TRepository, TKey, T
             var entities = await _repository.FetchAllAsync(ct);
             entities = Search(entities, searchModel.Fields);
 
-            data.SearchModel.TotalCount = entities.Count();
+            data.SearchModel.TotalCount = await entities.CountAsync(ct);
 
-            var list = QueryHelper.Search(entities, searchModel)
+            var list = await QueryHelper.Search(entities, searchModel)
                 .ProjectTo<T>(_mapper.ConfigurationProvider)
                 .SelectDynamicColumns(searchModel.Columns)
-                .ToList();
+                .ToListAsync(ct);
             data.List = list;
 
             result.Set(StatusCode.Succeeded, data);

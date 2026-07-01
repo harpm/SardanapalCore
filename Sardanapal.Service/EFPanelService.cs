@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Sardanapal.Contract.Data;
 using Sardanapal.Contract.IModel;
@@ -48,11 +49,11 @@ public abstract class EFPanelServiceBase<TEFDatabaseManager, TRepository, TKey, 
             var entities = await _repository.FetchAllAsync(ct);
             entities = Search(entities, searchModel.Fields);
 
-            data.SearchModel.TotalCount = entities.Count();
+            data.SearchModel.TotalCount = await entities.CountAsync(ct);
 
-            var list = QueryHelper.Search(entities, searchModel)
+            var list = await QueryHelper.Search(entities, searchModel)
                 .ProjectTo<SelectOptionVM<TKey, object>>(_mapper.ConfigurationProvider)
-                .ToList();
+                .ToListAsync(ct);
 
             data.List = list;
 
