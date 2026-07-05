@@ -1,6 +1,6 @@
 ﻿
+using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace Sardanapal.Http.Service.Middlewares;
@@ -8,28 +8,37 @@ namespace Sardanapal.Http.Service.Middlewares;
 public class SdLoggingMiddlwere
 {
     private readonly RequestDelegate _next;
-    
-    public SdLoggingMiddlwere(RequestDelegate next)
+    private readonly ILogger<SdLoggingMiddlwere> _logger;
+
+    public SdLoggingMiddlwere(RequestDelegate next, ILogger<SdLoggingMiddlwere> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
-    protected virtual Task ProcessResponse(HttpContext context)
+    public async Task InvokeAsync(HttpContext context)
     {
-        var logger = context?.RequestServices?.GetService(typeof(ILogger));
+        var request = context.Request;
+        _logger.LogInformation("Request started: {Method} {Scheme}://{Host}{Path}{QueryString}",
+            request.Method,
+            request.Scheme,
+            request.Host,
+            request.Path,
+            request.QueryString);
 
-        if (logger == null) throw new NullReferenceException(nameof(logger));
-
-        var metadata = context?.GetEndpoint()?.Metadata;
-        if (metadata != null)
+        var stopwatch = Stopwatch.StartNew();
+        try
         {
-            var action = metadata.GetMetadata<ActionDescriptor>();
-            // Get action return type
-            // check if it is assignable to IResponse
-            // check if its status is exception
-            // log the developer message
+            await _next(context);
         }
-
-        return Task.CompletedTask;
+        finally
+        {
+            stopwatch.Stop();
+            _logger.LogInformation("Request finished: {Method} {Path} responded {StatusCode} in {ElapsedMs} ms",
+                request.Method,
+                request.Path,
+                context.Response.StatusCode,
+                stopwatch.ElapsedMilliseconds);
+        }
     }
 }

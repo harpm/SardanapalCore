@@ -1,35 +1,61 @@
 ﻿
+using System.Net;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.Extensions.Logging;
+using Sardanapal.Localization;
+using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.Http.Service.Middlewares;
 
 public class SdHandleExceptionMiddlwere
 {
     private readonly RequestDelegate _next;
-    
-    public SdHandleExceptionMiddlwere(RequestDelegate next)
+    private readonly ILogger<SdHandleExceptionMiddlwere> _logger;
+    private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
+
+    public SdHandleExceptionMiddlwere(RequestDelegate next, ILogger<SdHandleExceptionMiddlwere> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
-    protected virtual Task ProcessResponse(HttpContext context)
+    public async Task InvokeAsync(HttpContext context)
     {
-        var logger = context?.RequestServices?.GetService(typeof(ILogger));
-
-        if (logger == null) throw new NullReferenceException(nameof(logger));
-
-        var metadata = context?.GetEndpoint()?.Metadata;
-        if (metadata != null)
+        try
         {
-            var action = metadata.GetMetadata<ActionDescriptor>();
-            // Get action return type
-            // check if it is assignable to IResponse
-            // check if its status is exception
-            // change the status code of the response to 500 (Internal error)
+            await _next(context);
+        }
+        catch (OperationCanceledException) when (context.RequestAborted.IsCancellationRequested)
+        {
+            // Client cancelled the request; nothing useful to return.
+            _logger.LogWarning("Request cancelled by client: {Method} {Path}",
+                context.Request.Method, context.Request.Path);
+        }
+        catch (Exception ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+    }
+
+    private async Task HandleExceptionAsync(HttpContext context, Exception ex)
+    {
+        _logger.LogError(ex, "Unhandled exception for {Method} {Path}",
+            context.Request.Method, context.Request.Path);
+
+        if (context.Response.HasStarted)
+        {
+            throw new InvalidOperationException(
+                "The response has already started; the exception response cannot be written.", ex);
         }
 
-        return Task.CompletedTask;
+        var response = new Response<object>(nameof(SdHandleExceptionMiddlwere), _logger);
+        response.Set(StatusCode.Exception, ex, Messages.InternalError);
+
+        context.Response.Clear();
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.ContentType = "application/json; charset=utf-8";
+
+        await JsonSerializer.SerializeAsync(context.Response.Body, response, _jsonOptions);
     }
 }
