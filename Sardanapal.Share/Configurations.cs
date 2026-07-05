@@ -9,19 +9,22 @@ public static class SharedConfigurations
 {
     public static void AddAutoMapper(this IServiceCollection services, params Assembly[] assemblies)
     {
-        services.AddScoped<IConfigurationProvider>(sp =>
+        services.AddSingleton<IConfigurationProvider>(sp =>
         {
             return new MapperConfiguration(config =>
             {
-                config.AddProfiles(assemblies
-                    .SelectMany(x => x.GetTypes()
-                        .Where(t => t.IsSubclassOf(typeof(Profile)) && !t.IsAbstract)
-                        .Select(t => t.GetConstructors().First().Invoke(null) as Profile)
-                        .ToArray()));
+                var profiles = assemblies
+                    .SelectMany(x => x.GetTypes())
+                    .Where(t => t.IsSubclassOf(typeof(Profile)) && !t.IsAbstract)
+                    .Select(t => Activator.CreateInstance(t) as Profile)
+                    .Where(p => p != null)
+                    .ToArray();
+
+                config.AddProfiles(profiles);
             });
         });
 
-        services.AddScoped<IMapper>(sp =>
+        services.AddSingleton<IMapper>(sp =>
         {
             return new Mapper(sp.GetRequiredService<IConfigurationProvider>(), sp.GetService);
         });
