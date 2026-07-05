@@ -7,6 +7,6 @@ public static class Configure
 {
     public static void AddSardanapalRedisCach(this IServiceCollection services, string connString)
     {
-        services.AddSingleton<IConnectionMultiplexer>(opt => ConnectionMultiplexer.Connect(connString));
+        services.AddSingleton<IConnectionMultiplexer>(opt => ConnectionMultiplexer.ConnectAsync(connString).GetAwaiter().GetResult());
     }
 }
