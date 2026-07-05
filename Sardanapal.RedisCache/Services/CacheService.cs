@@ -126,12 +126,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
                 , new RedisValue(newId.ToString())
                 , new RedisValue(JsonSerializer.Serialize(newItem)));
 
-            bool setExpiration = true;
-
-            if (expireTime > 0)
-            {
-                await GetCurrentDatabase().ExecuteAsync($"HEXPIRE {key} {expireTime * 60} FIELDS 1 {newId.ToString()}");
-            }
+            await SetExpiry(newId);
 
             result.Set(StatusCode.Succeeded, newId);
         });
@@ -148,10 +143,7 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
                 , new RedisValue(newId.ToString())
                 , new RedisValue(JsonSerializer.Serialize(model)));
 
-            if (expireTime > 0)
-            {
-                await GetCurrentDatabase().ExecuteAsync($"HEXPIRE {key} {expireTime * 60} FIELDS 1 {newId.ToString()}");
-            }
+            await SetExpiry(newId);
 
             if (added)
                 result.Set(StatusCode.Succeeded, newId);
@@ -247,5 +239,13 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
             result.Set(StatusCode.Succeeded, resultValue!);
         });
+    }
+
+    protected virtual async Task SetExpiry(TKey uniqueId)
+    {
+        if (expireTime > 0)
+        {
+            await GetCurrentDatabase().ExecuteAsync("HEXPIRE", key, (long)(expireTime * 60), "FIELDS", 1, new RedisValue(uniqueId.ToString()));
+        }
     }
 }
