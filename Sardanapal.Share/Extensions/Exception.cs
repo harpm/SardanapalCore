@@ -3,7 +3,7 @@ namespace Sardanapal.Share.Extensions;
 
 public static class Exceptions
 {
-    public static string[] GetHirachicalMessages(this Exception exception)
+    public static string[] GetHierarchicalMessages(this Exception exception)
     {
         List<string> result = new List<string>();
 
@@ -13,7 +13,7 @@ public static class Exceptions
 
             if (exception.InnerException != null)
             {
-                string[] InnerResult = exception.InnerException.GetHirachicalMessages();
+                string[] InnerResult = exception.InnerException.GetHierarchicalMessages();
                 result.AddRange(InnerResult);
             }
         }

@@ -55,7 +55,7 @@ public class EventBusRabbitMQ : ISardanapalEventBus, IDisposable
             routingKey: routingKey,
             body: body);
 
-        _logger.LogInformation(ResourceHelper.CraeteRabbitMQMessagePublished(e.Id.ToString(), e.CreationDate.ToString("yyyy-MM-dd | HH:mm")));
+        _logger.LogInformation(ResourceHelper.CreateRabbitMQMessagePublished(e.Id.ToString(), e.CreationDate.ToString("yyyy-MM-dd | HH:mm")));
     }
 
     public async Task Subscribe<T, TH>(string eventType)
@@ -88,7 +88,7 @@ public class EventBusRabbitMQ : ISardanapalEventBus, IDisposable
                 }
 
                 await channel.BasicAckAsync(ea.DeliveryTag, multiple: false);
-                _logger.LogInformation(ResourceHelper.CraeteRabbitMQMessageHandled(e.Id.ToString(), e.CreationDate.ToString("yyyy-MM-dd | HH:mm")));
+                _logger.LogInformation(ResourceHelper.CreateRabbitMQMessageHandled(e.Id.ToString(), e.CreationDate.ToString("yyyy-MM-dd | HH:mm")));
             }
             catch (Exception ex)
             {

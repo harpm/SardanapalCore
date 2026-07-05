@@ -5,7 +5,7 @@ public interface IGridSearchVM
 {
     string DynamicField { get; set; }
     string SortId { get; set; }
-    bool SortAsccending { get; set; }
+    bool SortAscending { get; set; }
     int PageIndex { get; set; }
     int PageSize { get; set; }
     int TotalCount { get; set; }
@@ -17,7 +17,7 @@ public abstract record GridSearchModelVM<TKey> : IGridSearchVM
 {
     public virtual string DynamicField { get; set; }
     public virtual string SortId { get; set; }
-    public virtual bool SortAsccending { get; set; } = true;
+    public virtual bool SortAscending { get; set; } = true;
     public virtual int PageIndex { get; set; }
     public virtual int PageSize { get; set; } = 25;
     public virtual int TotalCount { get; set; }

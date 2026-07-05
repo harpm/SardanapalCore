@@ -14,7 +14,7 @@ using Sardanapal.ViewModel.Response;
 namespace Sardanapal.Service;
 
 public abstract class EFPanelServiceBase<TEFDatabaseManager, TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
-    : EFCurdServiceBase<TEFDatabaseManager, TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
+    : EFCrudServiceBase<TEFDatabaseManager, TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
     , IPanelService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     where TEFDatabaseManager : IEFDatabaseManager
     where TRepository : IEFCrudRepository<TKey, TEntity>

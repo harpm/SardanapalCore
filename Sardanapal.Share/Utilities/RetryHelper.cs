@@ -8,7 +8,7 @@ namespace Sardanapal.Share.Utilities;
 /// </summary>
 public static class RetryHelper
 {
-    public static Task RetryUntillSuccessAsync(int offsetTime, Func<Task<bool>> actToRetry, CancellationToken ct = default)
+    public static Task RetryUntilSuccessAsync(int offsetTime, Func<Task<bool>> actToRetry, CancellationToken ct = default)
     {
         return Task.Run(async () =>
         {
@@ -39,7 +39,7 @@ public static class RetryHelper
         });
     }
 
-    public static Task RetryUntillSuccess(int offsetTime, Func<bool> actToRetry, CancellationToken ct = default)
+    public static Task RetryUntilSuccess(int offsetTime, Func<bool> actToRetry, CancellationToken ct = default)
     {
         return Task.Run(async () =>
         {
@@ -70,7 +70,7 @@ public static class RetryHelper
         });
     }
 
-    public static Task RetryUntillAsync(int offsetTime, int retryCount, Func<Task<bool>> actToRetry, CancellationToken ct = default)
+    public static Task RetryUntilAsync(int offsetTime, int retryCount, Func<Task<bool>> actToRetry, CancellationToken ct = default)
     {
         return Task.Run(async () =>
         {
@@ -110,7 +110,7 @@ public static class RetryHelper
         });
     }
 
-    public static Task RetryUntill(int offsetTime, int retryCount, Func<bool> actToRetry, CancellationToken ct = default)
+    public static Task RetryUntil(int offsetTime, int retryCount, Func<bool> actToRetry, CancellationToken ct = default)
     {
         return Task.Run(async () =>
         {

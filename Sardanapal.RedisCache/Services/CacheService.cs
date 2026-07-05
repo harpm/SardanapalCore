@@ -16,9 +16,9 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
     where TModel : IBaseEntityModel<TKey>, new()
     where TKey : IEquatable<TKey>, IComparable<TKey>
     where TSearchVM : class, new()
-    where TVM : class, ICachModel<TKey>, new()
-    where TNewVM : class, ICachModel<TKey>, new()
-    where TEditableVM : class, ICachModel<TKey>, new()
+    where TVM : class, ICacheModel<TKey>, new()
+    where TNewVM : class, ICacheModel<TKey>, new()
+    where TEditableVM : class, ICacheModel<TKey>, new()
 {
     public virtual string ServiceName => "ServiceName";
 

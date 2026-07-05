@@ -63,7 +63,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
 
         await result.FillAsync(async () =>
         {
-            await RetryHelper.RetryUntillAsync(SecondsBetweenRetries, MaxRetries, async () =>
+            await RetryHelper.RetryUntilAsync(SecondsBetweenRetries, MaxRetries, async () =>
             {
                 var entityModel = _mapper.Map<TNewVM, TEntity>(model);
                 await _repository.AddAsync(entityModel);
@@ -82,7 +82,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
 
         await result.FillAsync(async () =>
         {
-            await RetryHelper.RetryUntillAsync(SecondsBetweenRetries, MaxRetries, async () =>
+            await RetryHelper.RetryUntilAsync(SecondsBetweenRetries, MaxRetries, async () =>
             {
                 var entity = await _repository.FetchByIdAsync(id, ct);
                 if (entity != null)
@@ -109,7 +109,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
 
         await result.FillAsync(async () =>
         {
-            await RetryHelper.RetryUntillAsync(SecondsBetweenRetries, MaxRetries, async () =>
+            await RetryHelper.RetryUntilAsync(SecondsBetweenRetries, MaxRetries, async () =>
             {
                 await _repository.DeleteAsync(id);
 

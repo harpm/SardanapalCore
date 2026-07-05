@@ -1,7 +1,7 @@
 ﻿
 namespace Sardanapal.Contract.IModel;
 
-public interface ICachModel<TKey> : IBaseEntityModel<TKey>
+public interface ICacheModel<TKey> : IBaseEntityModel<TKey>
     where TKey : IEquatable<TKey>, IComparable<TKey>
 {
 

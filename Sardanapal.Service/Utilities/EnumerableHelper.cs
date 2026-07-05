@@ -40,7 +40,7 @@ public static class EnumerableHelper
                 var propertyExpr = Expression.PropertyOrField(paramExpr, sortId);
                 Func<TEntity, object> propertySelectorFunc = Expression.Lambda<Func<TEntity, object>>(propertyExpr).Compile();
 
-                if (searchModel.SortAsccending)
+                if (searchModel.SortAscending)
                 {
                     query = query.OrderBy(propertySelectorFunc);
                 }

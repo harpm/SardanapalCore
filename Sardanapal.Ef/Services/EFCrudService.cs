@@ -14,7 +14,7 @@ using Sardanapal.ViewModel.Response;
 
 namespace Sardanapal.Service;
 
-public abstract class EFCurdServiceBase<TEFDatabaseManager, TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
+public abstract class EFCrudServiceBase<TEFDatabaseManager, TRepository, TKey, TEntity, TSearchVM, TVM, TNewVM, TEditableVM>
     : ICrudService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     where TEFDatabaseManager : IEFDatabaseManager
     where TRepository : IEFCrudRepository<TKey, TEntity>
@@ -31,7 +31,7 @@ public abstract class EFCurdServiceBase<TEFDatabaseManager, TRepository, TKey, T
     protected readonly IMapper _mapper;
     protected readonly ILogger _logger;
 
-    protected EFCurdServiceBase(TEFDatabaseManager dbManager, TRepository repository, IMapper mapper, ILogger logger)
+    protected EFCrudServiceBase(TEFDatabaseManager dbManager, TRepository repository, IMapper mapper, ILogger logger)
     {
         this._dbManager = dbManager;
         this._repository = repository;

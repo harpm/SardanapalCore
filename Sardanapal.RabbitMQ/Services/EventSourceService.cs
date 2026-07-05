@@ -103,7 +103,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
             });
 
             await (ch as IChannel).BasicAckAsync(ea.DeliveryTag, true);
-            _logger.LogInformation(ResourceHelper.CraeteRabbitMQMessageHandled(model.Id.ToString(), DateTime.UtcNow.ToString("yyyy-MM-dd | HH:mm")));
+            _logger.LogInformation(ResourceHelper.CreateRabbitMQMessageHandled(model.Id.ToString(), DateTime.UtcNow.ToString("yyyy-MM-dd | HH:mm")));
         };
     }
 

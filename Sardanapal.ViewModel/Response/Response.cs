@@ -114,20 +114,20 @@ public class Response<TValue> : IResponse<TValue>
     public virtual void Set(StatusCode statusCode, Exception exception)
     {
         Set(statusCode);
-        this.DeveloperMessages = exception.GetHirachicalMessages();
+        this.DeveloperMessages = exception.GetHierarchicalMessages();
     }
 
     public virtual void Set(StatusCode statusCode, Exception exception, string userMessage)
     {
         Set(statusCode);
-        this.DeveloperMessages = exception.GetHirachicalMessages();
+        this.DeveloperMessages = exception.GetHierarchicalMessages();
         this.UserMessage = userMessage;
     }
 
     public virtual void Set(StatusCode statusCode, Exception exception, string[] developerMessages, string userMessage)
     {
         Set(statusCode);
-        this.DeveloperMessages = exception.GetHirachicalMessages()
+        this.DeveloperMessages = exception.GetHierarchicalMessages()
             .Concat(developerMessages ?? Array.Empty<string>())
             .ToArray();
         this.UserMessage = userMessage;

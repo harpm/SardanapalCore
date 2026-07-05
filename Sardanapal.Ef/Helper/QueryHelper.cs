@@ -48,7 +48,7 @@ public static class QueryHelper
 
 
 
-                    if (searchModel.SortAsccending)
+                    if (searchModel.SortAscending)
                     {
                         query = typeof(Queryable).GetMethods().Where(m => m.Name == nameof(Queryable.OrderBy)
                                 && m.GetParameters().Length == 2).First()
