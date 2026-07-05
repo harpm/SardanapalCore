@@ -38,7 +38,7 @@ public interface IResponse<TValue> : IResponse
 
 }
 
-public record Response<TValue> : IResponse<TValue>
+public class Response<TValue> : IResponse<TValue>
 {
     public virtual bool IsSuccess
     {
@@ -234,7 +234,7 @@ public record Response<TValue> : IResponse<TValue>
     }
 }
 
-public record Response : Response<bool>
+public class Response : Response<bool>
 {
     public Response(ILogger logger) : base(logger)
     {
