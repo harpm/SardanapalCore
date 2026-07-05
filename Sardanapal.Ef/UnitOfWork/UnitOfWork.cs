@@ -2,7 +2,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Sardanapal.Contract.Data;
 using Sardanapal.Contract.IModel;
 using Sardanapal.Domain.Config;
 

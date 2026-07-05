@@ -5,11 +5,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="RabbitMQ.Client" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\Sardanapal.ViewModel\Sardanapal.ViewModel.csproj" />
 	</ItemGroup>
 

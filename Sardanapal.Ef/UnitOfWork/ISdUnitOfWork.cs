@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sardanapal.Contract.IModel;
 
-namespace Sardanapal.Contract.Data;
+namespace Sardanapal.Ef.UnitOfWork;
 
 public interface ISdUnitOfWork
 {

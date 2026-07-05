@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using Sardanapal.Contract.IService;
 using Sardanapal.Localization;
 
 namespace Sardanapal.RMQ.Services;

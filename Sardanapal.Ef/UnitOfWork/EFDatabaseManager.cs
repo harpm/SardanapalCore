@@ -2,7 +2,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using Sardanapal.Contract.Data;
 
 namespace Sardanapal.Ef.UnitOfWork;
 

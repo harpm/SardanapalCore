@@ -1,7 +1,7 @@
-﻿
+
 using Sardanapal.Share.EventArgModels;
 
-namespace Sardanapal.Contract.IService;
+namespace Sardanapal.RMQ;
 
 public interface IIntegrationEventHandler<in TIntegrationEvent>
     where TIntegrationEvent : IntegrationEvent

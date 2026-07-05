@@ -2,7 +2,7 @@
 
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Sardanapal.Contract.Data;
+namespace Sardanapal.Ef.UnitOfWork;
 
 public interface IEFDatabaseManager
 {

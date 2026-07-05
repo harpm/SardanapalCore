@@ -5,7 +5,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="RabbitMQ.Client" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\Sardanapal.Contract\Sardanapal.Contract.csproj" />
+		<ProjectReference Include="..\Sardanapal.Share\Sardanapal.Share.csproj" />
 	</ItemGroup>
 
 </Project>

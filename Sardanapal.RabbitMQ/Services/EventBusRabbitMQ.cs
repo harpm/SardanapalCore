@@ -3,7 +3,6 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
-using Sardanapal.Contract.IService;
 using Sardanapal.Share.EventArgModels;
 using Sardanapal.Localization;
 

@@ -1,7 +1,7 @@
-﻿
+
 using RabbitMQ.Client;
 
-namespace Sardanapal.Contract.IService;
+namespace Sardanapal.RMQ;
 
 public interface IRabbitMQPersistentConnection : IDisposable
 {
