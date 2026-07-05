@@ -16,49 +16,61 @@ public static class QueryHelper
         if (searchModel == null)
             return query;
 
-        if (string.IsNullOrWhiteSpace(searchModel.SortId))
+        string sortId = searchModel.SortId;
+        if (string.IsNullOrWhiteSpace(sortId))
         {
             var opt = (EntityOptions)typeof(TEntity).GetCustomAttribute(typeof(EntityOptions));
-            if (opt != null)
+            if (opt != null && !string.IsNullOrWhiteSpace(opt.OrderBy))
             {
-                searchModel.SortId = opt.OrderBy;
+                sortId = opt.OrderBy;
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(searchModel.SortId))
+        bool orderedById = false;
+        if (!string.IsNullOrWhiteSpace(sortId))
         {
-            var propertyType = typeof(TEntity).GetProperty(searchModel.SortId).PropertyType;
-            var paramExpr = Expression.Parameter(typeof(TEntity), "x");
-            var propertyAccessExpr = Expression.Property(paramExpr, searchModel.SortId);
-
-            var fType = typeof(Func<,>)
-                .MakeGenericType(typeof(TEntity), propertyType);
-            var propertySelectorExpr = typeof(Expression).GetMethods().Where(m => m.Name == nameof(Expression.Lambda)
-                    && m.GetParameters().Length == 2).First()
-                .MakeGenericMethod(fType)
-                .Invoke(null, new object[] { propertyAccessExpr, new ParameterExpression[] { paramExpr } });
-
-
-
-            if (searchModel.SortAsccending)
+            var property = typeof(TEntity).GetProperty(sortId);
+            if (property != null)
             {
-                query = typeof(Queryable).GetMethods().Where(m => m.Name == nameof(Queryable.OrderBy)
-                        && m.GetParameters().Length == 2).First()
-                    .MakeGenericMethod(typeof(TEntity), propertyType)
-                    .Invoke(null, new object[] { query, propertySelectorExpr }) as IQueryable<TEntity>;
-            }
-            else
-            {
-                query = typeof(Queryable).GetMethods().Where(m => m.Name == nameof(Queryable.OrderByDescending)
-                        && m.GetParameters().Length == 2).First()
-                    .MakeGenericMethod(typeof(TEntity), propertyType)
-                    .Invoke(null, new object[] { query, propertySelectorExpr }) as IQueryable<TEntity>;
+                orderedById = string.Equals(sortId, nameof(IBaseEntityModel<TKey>.Id), StringComparison.OrdinalIgnoreCase);
+                if (orderedById)
+                {
+                    var propertyType = property.PropertyType;
+                    var paramExpr = Expression.Parameter(typeof(TEntity), "x");
+                    var propertyAccessExpr = Expression.Property(paramExpr, sortId);
+
+                    var fType = typeof(Func<,>)
+                        .MakeGenericType(typeof(TEntity), propertyType);
+                    var propertySelectorExpr = typeof(Expression).GetMethods().Where(m => m.Name == nameof(Expression.Lambda)
+                            && m.GetParameters().Length == 2).First()
+                        .MakeGenericMethod(fType)
+                        .Invoke(null, new object[] { propertyAccessExpr, new ParameterExpression[] { paramExpr } });
+
+
+
+                    if (searchModel.SortAsccending)
+                    {
+                        query = typeof(Queryable).GetMethods().Where(m => m.Name == nameof(Queryable.OrderBy)
+                                && m.GetParameters().Length == 2).First()
+                            .MakeGenericMethod(typeof(TEntity), propertyType)
+                            .Invoke(null, new object[] { query, propertySelectorExpr }) as IQueryable<TEntity>;
+                    }
+                    else
+                    {
+                        query = typeof(Queryable).GetMethods().Where(m => m.Name == nameof(Queryable.OrderByDescending)
+                                && m.GetParameters().Length == 2).First()
+                            .MakeGenericMethod(typeof(TEntity), propertyType)
+                            .Invoke(null, new object[] { query, propertySelectorExpr }) as IQueryable<TEntity>;
+                    }
+                }
             }
         }
 
         if (searchModel.PageSize > 0)
         {
-            if (searchModel.LastIdentifier != null)
+            // Keyset paging (Id > LastIdentifier) is only valid when ordering by Id;
+            // for any other sort column it excludes arbitrary rows, so fall back to offset paging.
+            if (orderedById && searchModel.LastIdentifier != null)
             {
                 query = query.Page(searchModel.PageIndex, searchModel.PageSize, searchModel.LastIdentifier);
             }

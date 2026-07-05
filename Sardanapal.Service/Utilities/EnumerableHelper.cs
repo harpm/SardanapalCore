@@ -18,37 +18,44 @@ public static class EnumerableHelper
         if (searchModel == null)
             return query;
 
-        //TODO: Add Domain as reference
-        if (string.IsNullOrWhiteSpace(searchModel.SortId))
+        string sortId = searchModel.SortId;
+        if (string.IsNullOrWhiteSpace(sortId))
         {
             var opt = (EntityOptions)typeof(TEntity).GetCustomAttribute(typeof(EntityOptions));
-            if (opt != null)
+            if (opt != null && !string.IsNullOrWhiteSpace(opt.OrderBy))
             {
-                searchModel.SortId = opt.OrderBy;
+                sortId = opt.OrderBy;
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(searchModel.SortId))
+        bool orderedById = false;
+        if (!string.IsNullOrWhiteSpace(sortId))
         {
-            var paramExpr = Expression.Parameter(typeof(TEntity), "x");
-            var propertyExpr = Expression.PropertyOrField(paramExpr, searchModel.SortId);
-            Func<TEntity, object> propertySelectorFunc = Expression.Lambda<Func<TEntity, object>>(propertyExpr).Compile();
+            var property = typeof(TEntity).GetProperty(sortId);
+            if (property != null)
+            {
+                orderedById = string.Equals(sortId, nameof(IBaseEntityModel<TKey>.Id), StringComparison.OrdinalIgnoreCase);
 
-            if (searchModel.SortAsccending)
-            {
-                query = query.OrderBy(propertySelectorFunc);
-                //query = query.OrderBy(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
-            }
-            else
-            {
-                query = query.OrderByDescending(propertySelectorFunc);
-                //query = query.OrderByDescending(x => x.GetType().GetProperty(searchModel.SortId).GetValue(x));
+                var paramExpr = Expression.Parameter(typeof(TEntity), "x");
+                var propertyExpr = Expression.PropertyOrField(paramExpr, sortId);
+                Func<TEntity, object> propertySelectorFunc = Expression.Lambda<Func<TEntity, object>>(propertyExpr).Compile();
+
+                if (searchModel.SortAsccending)
+                {
+                    query = query.OrderBy(propertySelectorFunc);
+                }
+                else
+                {
+                    query = query.OrderByDescending(propertySelectorFunc);
+                }
             }
         }
 
         if (searchModel.PageSize > 0)
         {
-            if (searchModel.LastIdentifier != null)
+            // Keyset paging (Id > LastIdentifier) is only valid when ordering by Id;
+            // for any other sort column it excludes arbitrary rows, so fall back to offset paging.
+            if (orderedById && searchModel.LastIdentifier != null)
             {
                 query = query.Page(searchModel.PageIndex, searchModel.PageSize, searchModel.LastIdentifier);
             }
