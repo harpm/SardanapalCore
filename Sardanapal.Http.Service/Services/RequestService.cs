@@ -14,7 +14,7 @@ public abstract class RequestService<TUserKey> : IRequestService<TUserKey>
 
     public RequestService(IHttpContextAccessor _http, ILogger logger)
     {
-        IP = _http.HttpContext.Connection.RemoteIpAddress.ToString();
+        IP = _http?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? string.Empty;
         this._logger = logger;
     }
 
