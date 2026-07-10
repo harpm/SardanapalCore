@@ -12,14 +12,16 @@ no `Program.cs` entry point, and no test projects. Every project under `Src/` bu
 ## Repository layout
 
 ```
-SDBuild.go                  Go build/release orchestrator (reads Build.json)
-Build.json                  Build config: version, nuget feed, ordered list of projects to publish
-Directory.Build.props       Shared MSBuild props (net8.0, CPM on, Nullable, ImplicitUsings, ...)
-Directory.Packages.props    Central Package Management — ALL package versions live here
+Sardanapal Core.sln          Solution file (at repo root) containing every project
+SDBuild.go                   Go build/release orchestrator (reads Build.json)
+Build.json                   Build config: version, nuget feed, ordered list of projects to publish
+Directory.Build.props        Shared MSBuild props (net8.0, CPM on, Nullable, ImplicitUsings, ...)
+Directory.Packages.props     Central Package Management — ALL package versions live here
+Tests/
+  Sardanapal.*.Tests         Test projects (xUnit), one per source project, with Unit/ & Integration/ subfolders
 Src/
-  Sardanapal Core.sln       Solution containing every project
-  .editorconfig             C# style/naming rules (enforced: _camelCase private fields)
-  Sardanapal.Share          Shared utilities, extensions, types (no project refs)
+  .editorconfig              C# style/naming rules (enforced: _camelCase private fields)
+  Sardanapal.Share           Shared utilities, extensions, types (no project refs)
   Sardanapal.Localization   ResX translation resources (Messages.resx); no project refs
   Sardanapal.ViewModel      -> Localization, Share            (IResponse, GridVM, VMs)
   Sardanapal.Contract       -> ViewModel                     (IModel, IRepository, IService)
@@ -40,14 +42,14 @@ higher-level package; keep the dependency direction leafward.
 
 ```bash
 # Restore / build the whole solution
-dotnet restore "Src/Sardanapal Core.sln"
-dotnet build "Src/Sardanapal Core.sln" -c release
+dotnet restore "Sardanapal Core.sln"
+dotnet build "Sardanapal Core.sln" -c release
 
 # Build a single project
 dotnet build Src/Sardanapal.Service -c release
 
 # Apply .editorconfig formatting (run before submitting changes)
-dotnet format "Src/Sardanapal Core.sln"
+dotnet format "Sardanapal Core.sln"
 ```
 
 The release pipeline (`SDBuild.go`) iterates `Build.json`, running for each project:
@@ -100,7 +102,7 @@ These rules govern how an agent operates in this repo. Follow them strictly.
 
 1. Create the project folder under `Src/` (e.g. `Src/Sardanapal.Foo/`) with a `*.csproj` matching
    the `Microsoft.NET.Sdk` style of the others.
-2. Add it to `Src/Sardanapal Core.sln`.
+2. Add it to `Sardanapal Core.sln`.
 3. Add the project path to `Build.json` → `projects_path` (order matters: dependencies should be
    listed before dependents, since publish iterates this list).
 4. Declare any external dependencies as `<PackageVersion>` in `Directory.Packages.props`.
