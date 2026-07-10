@@ -33,7 +33,7 @@ public class RabbitMQConnectionTests : IAsyncLifetime
         // Arrange
         var factory = new ConnectionFactory
         {
-            Uri = new Uri($"amqp://guest:guest@{_container!.GetConnectionString()}")
+            Uri = new Uri(_container!.GetConnectionString())
         };
         var logger = Substitute.For<ILogger<RabbitMQPersistentConnection>>();
         var connection = new RabbitMQPersistentConnection(factory, logger);
@@ -53,7 +53,7 @@ public class RabbitMQConnectionTests : IAsyncLifetime
         // Arrange
         var factory = new ConnectionFactory
         {
-            Uri = new Uri($"amqp://guest:guest@{_container!.GetConnectionString()}")
+            Uri = new Uri(_container!.GetConnectionString())
         };
         var logger = Substitute.For<ILogger<RabbitMQPersistentConnection>>();
         using var connection = new RabbitMQPersistentConnection(factory, logger);
