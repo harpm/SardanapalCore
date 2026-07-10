@@ -59,6 +59,20 @@ the publish step hard-codes CI runner paths and will fail.
 There is no test suite. Verify changes by building the solution and (where applicable) exercising
 the public API in a downstream consumer.
 
+## Workflow rules
+
+These rules govern how an agent operates in this repo. Follow them strictly.
+
+1. **Never commit without explicit permission.** Stage changes and stop; do not run `git commit`
+   (or push, amend, open PRs, etc.) unless the user explicitly asks for it.
+2. **Commit messages must match the existing pattern.** Look at `git log --oneline` first; this repo
+   uses the format `<type>: <description>`, where `<type>` is one of the prefixes already in use
+   (`resolve`, `refactor`, `release`, `implement`, `docs`, `rm`, …). Mimic that style exactly.
+3. **Log any issue you notice while working.** If you spot a bug, inconsistency, or improvement
+   opportunity during a task (even one unrelated to the current prompt), append a row to
+   **`Issue.csv`** rather than silently fixing it. The file has a `State` column with one of these
+   values: `pending`, `fixed`, `rejected`. Create the file with headers if it does not yet exist.
+
 ## Conventions you must follow
 
 ### C# style (enforced by `Src/.editorconfig`)
