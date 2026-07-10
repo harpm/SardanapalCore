@@ -103,7 +103,7 @@ func main() {
 	}
 
 	for i := 0; i < len(data.Projects_Path[:]); i++ {
-		fullPath := `.\Src\` + data.Projects_Path[i]
+		fullPath := `./Src/` + data.Projects_Path[i]
 		Log(fmt.Sprintf("Publishing project artifacts...\n\tPath: %s", fullPath), Info_Level)
 
 		publish_cmd := exec.Command("dotnet",
