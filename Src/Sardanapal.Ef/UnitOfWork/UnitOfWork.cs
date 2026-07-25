@@ -25,9 +25,20 @@ public abstract class SardanapalUnitOfWork : DbContext, ISdUnitOfWork
                 .MakeGenericMethod(t)
                 .Invoke(builder, null);
             this.GetType().GetMethod(nameof(ApplyFluentConfigs))?.MakeGenericMethod(t).Invoke(this, [entity]);
+
+            if (typeof(ILogicalEntityModel).IsAssignableFrom(t))
+            {
+                this.GetType().GetMethod(nameof(ApplySoftDeleteFilter))?.MakeGenericMethod(t).Invoke(this, [entity]);
+            }
         }
 
         base.OnModelCreating(builder);
+    }
+
+    public virtual void ApplySoftDeleteFilter<T>(EntityTypeBuilder<T> entity)
+        where T : class, ILogicalEntityModel
+    {
+        entity.HasQueryFilter(e => !((ILogicalEntityModel)e).IsDeleted);
     }
 
     public virtual Type[] GetDomainModels()
