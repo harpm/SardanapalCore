@@ -22,6 +22,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
     protected abstract string serviceName { get; set; }
 
     private readonly Task _initialization;
+    private readonly List<IChannel> _consumerChannels = new();
     private bool _disposed;
 
     public EventSourceService(IConnection conn, ILogger logger)
@@ -78,10 +79,11 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
         {
             await _initialization;
 
-            using var channel = await ampqConnection.CreateChannelAsync();
+            var channel = await ampqConnection.CreateChannelAsync();
             AsyncEventingBasicConsumer consumer = new AsyncEventingBasicConsumer(channel);
             consumer.ReceivedAsync += ConsumeMessage(handler);
             await channel.BasicConsumeAsync(await GetQueueName(queueName.ToString()), false, consumer);
+            _consumerChannels.Add(channel);
             result.Set(StatusCode.Succeeded, true);
         });
 
@@ -111,6 +113,13 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
     {
         if (_disposed) return;
 
+        foreach (var channel in _consumerChannels)
+        {
+            try { await channel.CloseAsync(); channel.Dispose(); }
+            catch (Exception ex) { _logger?.LogError(ex, "Error closing consumer channel during async disposal."); }
+        }
+        _consumerChannels.Clear();
+
         try
         {
             await ampqConnection.CloseAsync();
@@ -129,6 +138,13 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
     public void Dispose()
     {
         if (_disposed) return;
+
+        foreach (var channel in _consumerChannels)
+        {
+            try { channel.CloseAsync().GetAwaiter().GetResult(); channel.Dispose(); }
+            catch (Exception ex) { _logger?.LogError(ex, "Error closing consumer channel during disposal."); }
+        }
+        _consumerChannels.Clear();
 
         try
         {
