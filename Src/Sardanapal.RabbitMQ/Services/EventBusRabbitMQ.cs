@@ -81,11 +81,15 @@ public class EventBusRabbitMQ : ISardanapalEventBus, IDisposable
                 var message = Encoding.UTF8.GetString(ea.Body.ToArray());
                 var e = JsonSerializer.Deserialize<T>(message);
 
-                if (e != null)
+                if (e == null)
                 {
-                    var handler = new TH();
-                    await handler.Handle(e);
+                    _logger?.LogWarning("Received a null/empty message payload on queue '{QueueName}'; nacking without requeue.", queueName);
+                    await channel.BasicNackAsync(ea.DeliveryTag, multiple: false, requeue: false);
+                    return;
                 }
+
+                var handler = new TH();
+                await handler.Handle(e);
 
                 await channel.BasicAckAsync(ea.DeliveryTag, multiple: false);
                 _logger.LogInformation(ResourceHelper.CreateRabbitMQMessageHandled(e.Id.ToString(), e.CreationDate.ToString("yyyy-MM-dd | HH:mm")));
