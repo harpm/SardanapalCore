@@ -76,6 +76,8 @@ These rules govern how an agent operates in this repo. Follow them strictly.
    values: `pending`, `fixed`, `rejected`. Create the file with headers if it does not yet exist.
 4. **Never commit `Issue.csv`.** It is local-only tracking (gitignored). Do not stage or commit it,
    even when committing a fix described by a row in it. Update its `State` locally only.
+5. **Do not commit if the tests are failed.** Run the test suite before committing; if any test
+   fails, fix the failure (or the code that broke it) before staging the commit.
 
 ## Conventions you must follow
 
