@@ -191,12 +191,13 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
             if (!string.IsNullOrWhiteSpace(oldJson))
             {
-                var newValue = mapper.Map<TEditableVM, TModel>(model);
+                var existingValue = JsonSerializer.Deserialize<TModel>(oldJson);
+                mapper.Map(model, existingValue);
 
                 var value = await GetCurrentDatabase()
                     .HashSetAsync(rKey
                         , idValue
-                        , new RedisValue(JsonSerializer.Serialize(newValue)));
+                        , new RedisValue(JsonSerializer.Serialize(existingValue)));
 
                 result.Set(StatusCode.Succeeded, value);
             }
