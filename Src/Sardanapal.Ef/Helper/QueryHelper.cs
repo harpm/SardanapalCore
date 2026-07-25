@@ -33,35 +33,32 @@ public static class QueryHelper
             if (property != null)
             {
                 orderedById = string.Equals(sortId, nameof(IBaseEntityModel<TKey>.Id), StringComparison.OrdinalIgnoreCase);
-                if (orderedById)
+                var propertyType = property.PropertyType;
+                var paramExpr = Expression.Parameter(typeof(TEntity), "x");
+                var propertyAccessExpr = Expression.Property(paramExpr, sortId);
+
+                var fType = typeof(Func<,>)
+                    .MakeGenericType(typeof(TEntity), propertyType);
+                var propertySelectorExpr = typeof(Expression).GetMethods().Where(m => m.Name == nameof(Expression.Lambda)
+                        && m.GetParameters().Length == 2).First()
+                    .MakeGenericMethod(fType)
+                    .Invoke(null, new object[] { propertyAccessExpr, new ParameterExpression[] { paramExpr } });
+
+
+
+                if (searchModel.SortAscending)
                 {
-                    var propertyType = property.PropertyType;
-                    var paramExpr = Expression.Parameter(typeof(TEntity), "x");
-                    var propertyAccessExpr = Expression.Property(paramExpr, sortId);
-
-                    var fType = typeof(Func<,>)
-                        .MakeGenericType(typeof(TEntity), propertyType);
-                    var propertySelectorExpr = typeof(Expression).GetMethods().Where(m => m.Name == nameof(Expression.Lambda)
+                    query = typeof(Queryable).GetMethods().Where(m => m.Name == nameof(Queryable.OrderBy)
                             && m.GetParameters().Length == 2).First()
-                        .MakeGenericMethod(fType)
-                        .Invoke(null, new object[] { propertyAccessExpr, new ParameterExpression[] { paramExpr } });
-
-
-
-                    if (searchModel.SortAscending)
-                    {
-                        query = typeof(Queryable).GetMethods().Where(m => m.Name == nameof(Queryable.OrderBy)
-                                && m.GetParameters().Length == 2).First()
-                            .MakeGenericMethod(typeof(TEntity), propertyType)
-                            .Invoke(null, new object[] { query, propertySelectorExpr }) as IQueryable<TEntity>;
-                    }
-                    else
-                    {
-                        query = typeof(Queryable).GetMethods().Where(m => m.Name == nameof(Queryable.OrderByDescending)
-                                && m.GetParameters().Length == 2).First()
-                            .MakeGenericMethod(typeof(TEntity), propertyType)
-                            .Invoke(null, new object[] { query, propertySelectorExpr }) as IQueryable<TEntity>;
-                    }
+                        .MakeGenericMethod(typeof(TEntity), propertyType)
+                        .Invoke(null, new object[] { query, propertySelectorExpr }) as IQueryable<TEntity>;
+                }
+                else
+                {
+                    query = typeof(Queryable).GetMethods().Where(m => m.Name == nameof(Queryable.OrderByDescending)
+                            && m.GetParameters().Length == 2).First()
+                        .MakeGenericMethod(typeof(TEntity), propertyType)
+                        .Invoke(null, new object[] { query, propertySelectorExpr }) as IQueryable<TEntity>;
                 }
             }
         }
