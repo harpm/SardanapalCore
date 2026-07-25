@@ -38,7 +38,7 @@ public static class EnumerableHelper
 
                 var paramExpr = Expression.Parameter(typeof(TEntity), "x");
                 var propertyExpr = Expression.PropertyOrField(paramExpr, sortId);
-                Func<TEntity, object> propertySelectorFunc = Expression.Lambda<Func<TEntity, object>>(propertyExpr).Compile();
+                Func<TEntity, object> propertySelectorFunc = Expression.Lambda<Func<TEntity, object>>(propertyExpr, paramExpr).Compile();
 
                 if (searchModel.SortAscending)
                 {

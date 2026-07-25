@@ -449,3 +449,6 @@ $RECYCLE.BIN/
 ##
 .vscode/*
 /.vscode/
+
+# Local issue tracking
+Issue.csv
