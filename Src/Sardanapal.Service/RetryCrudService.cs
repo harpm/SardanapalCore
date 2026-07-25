@@ -105,7 +105,7 @@ public abstract class RetryCrudServiceBase<TRepository, TKey, TEntity, TListItem
 
     public override async Task<IResponse<bool>> Delete(TKey id, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Delete, _logger);
 
         await result.FillAsync(async () =>
         {

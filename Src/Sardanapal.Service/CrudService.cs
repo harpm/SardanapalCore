@@ -117,7 +117,7 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
 
     public virtual async Task<IResponse<bool>> Delete(TKey id, CancellationToken ct = default)
     {
-        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Edit, _logger);
+        IResponse<bool> result = new Response<bool>(ServiceName, OperationType.Delete, _logger);
 
         await result.FillAsync(async () =>
         {
