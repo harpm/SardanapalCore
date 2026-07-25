@@ -98,6 +98,14 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
         {
             var jsonBody = Encoding.Default.GetString(ea.Body.ToArray());
             var model = JsonSerializer.Deserialize<TModel>(jsonBody);
+
+            if (model == null)
+            {
+                _logger.LogWarning("Received a null/empty message payload on delivery tag {DeliveryTag}; nacking without requeue.", ea.DeliveryTag);
+                await (ch as IChannel).BasicNackAsync(ea.DeliveryTag, multiple: false, requeue: false);
+                return;
+            }
+
             handler(ch, new EventSourceEventArgs<TKey, TModel>()
             {
                 Id = NewId(model),
