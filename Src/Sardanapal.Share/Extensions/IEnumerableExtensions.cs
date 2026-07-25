@@ -67,21 +67,19 @@ public static class IEnumerableExtensions
             // with input of the dynamicField parameter
             MethodCallExpression containsCallExpression = Expression.Call(fieldToStrExpression, strContainsMethod, searchKeywordExpression);
 
-            // finally convert the whole expression into lambda expression
-            var predicate = Expression.Lambda<Func<T, bool>>(containsCallExpression, xParam);
-
             if (finalPredicate == null)
             {
-                finalPredicate = predicate;
+                finalPredicate = containsCallExpression;
             }
             else
             {
-                finalPredicate = Expression.Or(finalPredicate, predicate);
+                finalPredicate = Expression.Or(finalPredicate, containsCallExpression);
             }
         }
 
         if (finalPredicate != null)
         {
+            // finally convert the whole expression into lambda expression
             var lambda = Expression.Lambda<Func<T, bool>>(finalPredicate, xParam);
 
             list = list.Where(lambda.Compile());
