@@ -81,7 +81,7 @@ public abstract class EFCrudServiceBase<TEFDatabaseManager, TRepository, TKey, T
             }
             else
             {
-                result.Set(StatusCode.NotExists, Messages.NotExist);
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
             }
         });
 
@@ -138,7 +138,7 @@ public abstract class EFCrudServiceBase<TEFDatabaseManager, TRepository, TKey, T
             }
             else
             {
-                result.Set(StatusCode.NotExists, Messages.NotExist);
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
             }
         });
 

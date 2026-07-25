@@ -18,7 +18,6 @@ public interface IResponse
     string UserMessage { get; set; }
 
     void Set(StatusCode statusCode);
-    void Set(StatusCode statusCode, string userMessage);
     void Set(StatusCode statusCode, string[] developerMessages, string userMessage);
     void Set(StatusCode statusCode, Exception exception);
     void Set(StatusCode statusCode, Exception exception, string userMessage);
@@ -96,12 +95,6 @@ public class Response<TValue> : IResponse<TValue>
         Set(statusCode);
         this.Data = data;
         UserMessage = userMessage;
-    }
-
-    public virtual void Set(StatusCode statusCode, string userMessage)
-    {
-        Set(statusCode);
-        this.UserMessage = userMessage;
     }
 
     public virtual void Set(StatusCode statusCode, string[] developerMessages, string userMessage)

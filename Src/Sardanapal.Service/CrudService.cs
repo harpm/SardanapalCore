@@ -85,7 +85,7 @@ public abstract class CrudServiceBase<TRepository, TKey, TEntity, TSearchVM, TVM
             }
             else
             {
-                result.Set(StatusCode.NotExists, Messages.NotExist);
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
             }
         });
 

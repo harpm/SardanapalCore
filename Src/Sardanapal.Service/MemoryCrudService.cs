@@ -67,7 +67,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchV
             }
             else
             {
-                result.Set(StatusCode.NotExists, Messages.NotExist);
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
             }
         });
 
@@ -120,7 +120,7 @@ public abstract class MemoryCrudServiceBase<TRepository, TKey, TEntity, TSearchV
             }
             else
             {
-                result.Set(StatusCode.NotExists, Messages.NotExist);
+                result.Set(StatusCode.NotExists, [], Messages.NotExist);
             }
         });
 
