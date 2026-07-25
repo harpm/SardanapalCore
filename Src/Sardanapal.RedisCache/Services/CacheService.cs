@@ -99,6 +99,11 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
         return await result.FillAsync(async () =>
         {
+            if (model is null)
+                model = new();
+            if (model.Fields is null)
+                model.Fields = new();
+
             var resultValue = new GridVM<TKey, T>(model);
             var items = await InternalGetAll();
             var list = Search(items, model.Fields)
@@ -228,6 +233,11 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
 
         return await result.FillAsync(async () =>
         {
+            if (model is null)
+                model = new();
+            if (model.Fields is null)
+                model.Fields = new();
+
             var resultValue = new GridVM<TKey, SelectOptionVM<TKey, object>>(model);
             var items = await InternalGetAll();
 
