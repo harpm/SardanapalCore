@@ -74,6 +74,8 @@ These rules govern how an agent operates in this repo. Follow them strictly.
    opportunity during a task (even one unrelated to the current prompt), append a row to
    **`Issue.csv`** rather than silently fixing it. The file has a `State` column with one of these
    values: `pending`, `fixed`, `rejected`. Create the file with headers if it does not yet exist.
+4. **Never commit `Issue.csv`.** It is local-only tracking (gitignored). Do not stage or commit it,
+   even when committing a fix described by a row in it. Update its `State` locally only.
 
 ## Conventions you must follow
 
