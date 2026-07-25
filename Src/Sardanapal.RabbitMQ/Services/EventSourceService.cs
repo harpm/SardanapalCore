@@ -149,22 +149,21 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
 
         foreach (var channel in _consumerChannels)
         {
-            try { channel.CloseAsync().GetAwaiter().GetResult(); channel.Dispose(); }
-            catch (Exception ex) { _logger?.LogError(ex, "Error closing consumer channel during disposal."); }
+            try { channel.Dispose(); }
+            catch (Exception ex) { _logger?.LogError(ex, "Error disposing consumer channel during disposal."); }
         }
         _consumerChannels.Clear();
 
         try
         {
-            ampqConnection.CloseAsync().GetAwaiter().GetResult();
+            ampqConnection.Dispose();
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Error closing AMQP connection during disposal.");
+            _logger?.LogError(ex, "Error disposing AMQP connection during disposal.");
         }
         finally
         {
-            ampqConnection.Dispose();
             _disposed = true;
         }
 
