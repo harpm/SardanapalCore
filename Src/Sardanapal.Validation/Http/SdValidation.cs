@@ -15,10 +15,8 @@ public class SdValidation : ActionFilterAttribute
 
     }
 
-    public override void OnActionExecuting(ActionExecutingContext action)
+    public override async Task OnActionExecutionAsync(ActionExecutingContext action, ActionExecutionDelegate next)
     {
-        base.OnActionExecuting(action);
-
         try
         {
             ILogger logger = action.HttpContext.RequestServices.GetService(typeof(ILogger<SdValidation>)) as ILogger<SdValidation>;
@@ -54,8 +52,7 @@ public class SdValidation : ActionFilterAttribute
 
                     if (paramTypes.Count > 0)
                     {
-                        validationService.ValidateParams(paramTypes.ToArray(), paramValues.ToArray())
-                            .GetAwaiter().GetResult();
+                        await validationService.ValidateParams(paramTypes.ToArray(), paramValues.ToArray());
                     }
                 }
             }
@@ -77,5 +74,7 @@ public class SdValidation : ActionFilterAttribute
             action.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             action.Result = new BadRequestResult();
         }
+
+        await next();
     }
 }
