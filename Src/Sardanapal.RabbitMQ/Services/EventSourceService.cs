@@ -62,7 +62,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
 
             model = await CreateModel(model);
             string jsonModel = JsonSerializer.Serialize(model);
-            var body = new ReadOnlyMemory<byte>(Encoding.Default.GetBytes(jsonModel));
+            var body = new ReadOnlyMemory<byte>(Encoding.UTF8.GetBytes(jsonModel));
             await channel.BasicPublishAsync(exchangeName, await GetQueueName(queue.ToString()), body);
 
             result.Set(StatusCode.Succeeded, model.Id);
@@ -96,7 +96,7 @@ public abstract class EventSourceService<TKey, TModel> : IEventSourceService<TKe
     {
         return async (ch, ea) =>
         {
-            var jsonBody = Encoding.Default.GetString(ea.Body.ToArray());
+            var jsonBody = Encoding.UTF8.GetString(ea.Body.ToArray());
             var model = JsonSerializer.Deserialize<TModel>(jsonBody);
 
             if (model == null)
