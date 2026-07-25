@@ -11,6 +11,7 @@
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="NSubstitute" />
         <PackageReference Include="AutoMapper" />
+        <PackageReference Include="ClosedXML" />
     </ItemGroup>
 
     <ItemGroup>

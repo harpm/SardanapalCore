@@ -5,6 +5,7 @@ using Sardanapal.Contract.IModel;
 using Sardanapal.Contract.IRepository;
 using Sardanapal.Contract.IService;
 using Sardanapal.Service.Utilities;
+using Sardanapal.Share.Helpers;
 using Sardanapal.ViewModel.Models;
 using Sardanapal.ViewModel.Response;
 
@@ -54,6 +55,33 @@ public abstract class MemoryPanelServiceBase<TRepository, TKey, TEntity, TSearch
             data.List = list;
 
             result.Set(StatusCode.Succeeded, data);
+        });
+
+        return result;
+    }
+
+    public virtual async Task<IResponse<byte[]>> GetExcel<T>(GridSearchModelVM<TKey, TSearchVM> searchModel = null, CancellationToken ct = default)
+        where T : class
+    {
+        IResponse<byte[]> result = new Response<byte[]>(ServiceName, OperationType.Fetch, _logger);
+
+        await result.FillAsync(async () =>
+        {
+            GridSearchModelVM<TKey, TSearchVM> exportModel = searchModel is null
+                ? new GridSearchModelVM<TKey, TSearchVM>()
+                : searchModel with { PageSize = 0, PageIndex = 0 };
+
+            IResponse<GridVM<TKey, T>> grid = await GetAll<T>(exportModel, ct);
+
+            if (!grid.IsSuccess)
+            {
+                result.Set(grid.StatusCode, grid.DeveloperMessages ?? [], grid.UserMessage);
+                return;
+            }
+
+            byte[] excel = ExcelHelper.ToExcel(grid.Data?.List, exportModel.Columns);
+
+            result.Set(StatusCode.Succeeded, excel);
         });
 
         return result;

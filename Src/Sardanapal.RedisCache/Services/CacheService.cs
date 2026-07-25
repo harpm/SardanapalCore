@@ -8,6 +8,7 @@ using Sardanapal.ViewModel.Models;
 using Sardanapal.Contract.IService;
 using Sardanapal.Localization;
 using Sardanapal.Share.Extensions;
+using Sardanapal.Share.Helpers;
 
 namespace Sardanapal.RedisCache.Services;
 
@@ -249,6 +250,31 @@ public abstract class CacheService<TModel, TKey, TSearchVM, TVM, TNewVM, TEditab
             resultValue.List = list.ToList();
 
             result.Set(StatusCode.Succeeded, resultValue!);
+        });
+    }
+
+    public virtual async Task<IResponse<byte[]>> GetExcel<T>(GridSearchModelVM<TKey, TSearchVM> model = null, CancellationToken ct = default)
+        where T : class
+    {
+        var result = new Response<byte[]>(GetType().Name, OperationType.Fetch, _logger);
+
+        return await result.FillAsync(async () =>
+        {
+            GridSearchModelVM<TKey, TSearchVM> exportModel = model is null
+                ? new GridSearchModelVM<TKey, TSearchVM>()
+                : model with { PageSize = 0, PageIndex = 0 };
+
+            IResponse<GridVM<TKey, T>> grid = await GetAll<T>(exportModel, ct);
+
+            if (!grid.IsSuccess)
+            {
+                result.Set(grid.StatusCode, grid.DeveloperMessages ?? [], grid.UserMessage);
+                return;
+            }
+
+            byte[] excel = ExcelHelper.ToExcel(grid.Data?.List, exportModel.Columns);
+
+            result.Set(StatusCode.Succeeded, excel);
         });
     }
 

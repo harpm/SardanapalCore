@@ -7,6 +7,7 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+		<PackageReference Include="ClosedXML" />
 	</ItemGroup>
 
 </Project>

@@ -12,4 +12,6 @@ public interface IPanelService<TKey, TSearchVM, TVM, TNewVM, TEditableVM>
     where TEditableVM : class, new()
 {
     Task<IResponse<GridVM<TKey, SelectOptionVM<TKey, object>>>> GetDictionary(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default);
+
+    Task<IResponse<byte[]>> GetExcel<T>(GridSearchModelVM<TKey, TSearchVM> SearchModel = null, CancellationToken ct = default) where T : class;
 }
