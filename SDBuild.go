@@ -144,6 +144,24 @@ func main() {
 			fmt.Printf("Output: \t%s", string(output[:]))
 		}
 
+		publish_cmd := exec.Command("dotnet",
+			"nuget",
+			"push",
+			fmt.Sprintf("/home/runner/work/SardanapalCore/SardanapalCore/%s/bin/debug/%s.%s-debug.nupkg", fullPath, data.Projects_Path[i], data.Version),
+			"-s",
+			data.Nuget_Provider,
+			"--skip-duplicate")
+
+		output, err := publish_cmd.Output()
+
+		if err != nil {
+			Log(fmt.Sprintf("Failed project %s\nResult:%s\nError: %s", fullPath, output, err), Error_Level)
+		}
+
+		if output != nil {
+			fmt.Printf("Output: \t%s", string(output[:]))
+		}
+
 		Log(fmt.Sprintf("-------------------- Ended pipeline for project: %s --------------------", fullPath), Info_Level)
 	}
 
